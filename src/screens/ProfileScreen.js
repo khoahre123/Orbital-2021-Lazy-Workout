@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Button, Text, SafeAreaView, StyleSheet } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 

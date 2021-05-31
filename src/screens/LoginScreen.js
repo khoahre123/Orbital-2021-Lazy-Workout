@@ -20,6 +20,8 @@ export default LoginScreen = ({ navigation }) => {
     const handleLogin = () => {
         Keyboard.dismiss();
         setIsLoginLoading(true);
+        setEmail("");
+        setPassword("");
 
         Authentication.signIn(
             { email, password },

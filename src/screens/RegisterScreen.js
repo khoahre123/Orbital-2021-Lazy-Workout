@@ -25,6 +25,10 @@ export default RegisterScreen = ({ navigation }) => {
     const handleRegister = () => {
         Keyboard.dismiss();
         setIsRegisterLoading(true);
+        setUsername("");
+        setEmail("");
+        setTelegram("");
+        setPassword("");
 
         Authentication.createAccount(
             { name: username, email, telegram: telegram, password },
