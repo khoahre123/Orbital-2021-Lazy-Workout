@@ -4,10 +4,11 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import HomeScreen from "./src/screens/HomeScreen";
+import ProfileScreen from "./src/screens/ProfileScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import MainScreen from "./src/screens/MainScreen";
+import LockSettingScreen from "./src/screens/LockSettingScreen";
 
 import firebase from "./api/firebase";
 
@@ -17,7 +18,8 @@ const screens = [
   { name: "Main", component: MainScreen },
   { name: "Login", component: LoginScreen },
   { name: "Register", component: RegisterScreen },
-  { name: "Home", component: HomeScreen },
+  { name: "Profile", component: ProfileScreen },
+  {name: "LockSetting", component: LockSettingScreen}
 ];
 
 // unfixable "bug" due to Firebase JS SDK's use of long setTimeout

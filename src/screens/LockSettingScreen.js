@@ -4,24 +4,18 @@ import { CommonActions } from "@react-navigation/native";
 
 import * as Authentication from "../../api/auth";
 
-let HomeScreen;
-export default HomeScreen = ({ navigation }) => {
+let LockSettingScreen;
+export default LockSettingScreen = ({ navigation }) => {
     const userName = Authentication.getCurrentUserName();
 
-    const handleLogout = () => {
-        Authentication.signOut(
-            () => navigation.dispatch(CommonActions.reset({
-                index: 0,
-                routes: [{ name: "Login" }]
-            })),
-            console.error
-        );
-    }
+    const goToProfile = () => navigation.navigate("Profile");
+    
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text>Hi {userName}</Text>
-            <Button onPress={handleLogout} title="Log out" />
+            <Text>Welcome {userName}. This is Lock Setting screen where you can
+             customize Lock App behaviour</Text>
+            <Button onPress={goToProfile} title="Go to Profile" />
         </SafeAreaView>
     );
 }

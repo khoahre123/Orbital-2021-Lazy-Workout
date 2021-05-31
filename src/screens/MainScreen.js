@@ -9,7 +9,7 @@ let MainScreen;
 export default MainScreen = ({ navigation }) => {
     useEffect(() => {
         return Authentication.setOnAuthStateChanged(
-            () => navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Home" }] })),
+            () => navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Profile" }] })),
             () => navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Login" }] })),
         );
     }, []);

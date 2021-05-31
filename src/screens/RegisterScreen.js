@@ -31,7 +31,7 @@ export default RegisterScreen = ({ navigation }) => {
             (user) => navigation.dispatch(CommonActions.reset({
                 index: 0,
                 routes: [{
-                    name: "Home",
+                    name: "LockSetting",
                     params: { name: user.displayName }
                 }]
             })),

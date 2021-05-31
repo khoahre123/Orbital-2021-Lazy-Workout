@@ -26,7 +26,7 @@ export default LoginScreen = ({ navigation }) => {
             (user) => navigation.dispatch(CommonActions.reset({
                 index: 0,
                 routes: [{
-                    name: "Home",
+                    name: "Profile",
                     params: { name: user.displayName }
                 }]
             })),
