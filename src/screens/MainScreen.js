@@ -7,14 +7,14 @@ import * as Authentication from "../../api/auth";
 
 let MainScreen;
 export default MainScreen = ({ navigation }) => {
-    useEffect(() => {
-        return Authentication.setOnAuthStateChanged(
-            () => navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Profile" }] })),
-            () => navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Login" }] })),
-        );
-    }, []);
-
-    return (
-        <ActivityIndicator animating size="large" color="black" />
+  useEffect(() => {
+    return Authentication.setOnAuthStateChanged(
+      () => navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Profile" }] })),
+      () => navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "Login" }] })),
     );
+  }, []);
+
+  return (
+    <ActivityIndicator animating size="large" color="black" />
+  );
 }
