@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "481368698812",
+    "project_id": "lazyworkout-af7ac",
+    "storage_bucket": "lazyworkout-af7ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481368698812:android:bc73abdd0a2a2eb477c5b9",
+        "android_client_info": {
+          "package_name": "com.example.lazyworkout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481368698812-b7oj3iuu7roo7h4ij23m69fs784ml7vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCai0kkpi4mgLg7qqAZMDVN6i__W3hZg7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481368698812-b7oj3iuu7roo7h4ij23m69fs784ml7vr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
