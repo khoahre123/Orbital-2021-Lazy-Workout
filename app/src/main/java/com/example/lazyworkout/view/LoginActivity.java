@@ -19,8 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import com.example.lazyworkout.view.RegisterActivity;
-import com.example.lazyworkout.view.ProfileActivity;
+import com.example.lazyworkout.pedometer.ProfileActivity;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -52,8 +52,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
     private void initViews() {
-        Log.d(TAG, "initViews: started");
 
         txtInputFieldEmail = findViewById(R.id.loginTextFieldEmail);
         txtInputFieldPassword = findViewById(R.id.loginTextFieldPassword);
@@ -90,6 +107,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void userLogin() {
 
         if (!(validateEmail() && validatePassword())) {
+//            inputEmail.setText("");
+//            inputPassword.setText("");
             return;
         } else {
             String email = inputEmail.getText().toString();
@@ -109,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if (isFirstTimeUser) {
                                 startActivity(new Intent(LoginActivity.this, LockSettingActivity.class));
                             } else {
-                                startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                                startActivity(new Intent(LoginActivity.this, OverviewActivity.class));
                             }
 
                         } else {
@@ -131,6 +150,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
 
                     } else {
+
+                        Log.d("Error", task.getException().getMessage());
                         Snackbar snackbar = Snackbar.make(loginView, task.getException().getMessage(), Snackbar.LENGTH_INDEFINITE)
                                 .setAction("Try Again", new View.OnClickListener() {
                                     @Override

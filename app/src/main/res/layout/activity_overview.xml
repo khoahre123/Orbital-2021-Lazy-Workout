@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.OverviewActivity">
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/overviewProgressCircular"
+        android:layout_centerInParent="true"
+        app:cpb_background_progressbar_width="20dp"
+        app:cpb_progressbar_width="15dp"
+        app:cpb_round_border="true"
+        app:cpb_progress_max="2500"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/overviewStats"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/overviewStepsTaken"
+            android:layout_centerInParent="true"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/overviewGoal"
+            android:layout_below="@id/overviewStepsTaken"
+            android:layout_centerInParent="true"
+            android:textSize="30dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/overviewUnit"
+        android:layout_below="@id/overviewStats"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        android:text="steps" />
+
+
+</RelativeLayout>

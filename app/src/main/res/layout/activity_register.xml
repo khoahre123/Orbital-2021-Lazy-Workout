@@ -73,9 +73,10 @@
             android:visibility="visible">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/registerInputPw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/registerInputPw"/>
+                android:password="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,7 +96,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:clickable="true"
-            android:text="Already have an account? Sign up" />
+            android:text="Already have an account? Login" />
 
         <TextView
             android:id="@+id/registerPaT"

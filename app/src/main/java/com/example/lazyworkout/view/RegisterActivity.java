@@ -42,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -54,6 +55,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         txtSignup.setOnClickListener(this);
         txtPaT.setOnClickListener(this);
 
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
     }
 
     private void initViews() {
@@ -101,6 +120,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void registerUser() {
 
         if (!(validateUsername() && validateEmail() && validatePassword())) {
+            inputName.setText("");
+            inputEmail.setText("");
+            inputPassword.setText("");
             return;
         } else {
             String email = inputEmail.getText().toString();
