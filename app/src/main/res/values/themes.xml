@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.LazyWorkout" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#FFCDD2</item>
+        <item name="colorPrimary">#131313</item>
         <item name="colorPrimaryVariant">#ADD8E6</item>
         <item name="colorOnPrimary">@android:color/background_light</item>
         <!-- Secondary brand color. -->

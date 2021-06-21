@@ -4,22 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E1FFA5AB"
     tools:context=".view.RegisterActivity">
-    
+
     <RelativeLayout
+        android:id="@+id/registerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="30dp"
-        android:id="@+id/registerView">
+        android:layout_marginHorizontal="30dp">
 
         <ImageView
             android:id="@+id/registerLogo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_alignParentStart="true"
+            android:layout_marginStart="9dp"
             android:layout_marginTop="50dp"
             android:clickable="true"
-            android:src="@drawable/ic_launcher_background" />
+            android:scaleType="fitXY"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:src="@drawable/logo" />
 
         <TextView
             android:id="@+id/registerWelcomeText"
@@ -27,8 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/registerLogo"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="50dp"
             android:text="welcome"
+            android:textSize="50dp"
             android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -41,9 +47,9 @@
             android:visibility="visible">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/registerInputName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/registerInputName"/>
+                android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,9 +63,9 @@
             android:visibility="visible">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/registerInputEmail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/registerInputEmail"/>
+                android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -73,19 +79,27 @@
             android:visibility="visible">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/registerInputPw"
+                android:password="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/registerInputPw"/>
+                android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/registerCreateAccountBtn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/registerInputFieldPw"
-            android:layout_marginTop="90dp"
-            android:text="create account" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="55dp"
+            android:layout_marginEnd="35dp"
+            android:background="@drawable/roundbutton"
+            android:text="create account"
+            android:textColor="#050505"
+            app:backgroundTint="#D551EAFD" />
 
         <TextView
             android:id="@+id/registerSignup"

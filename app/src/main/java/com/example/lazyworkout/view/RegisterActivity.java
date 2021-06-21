@@ -5,11 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -53,6 +63,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         registerBtn.setOnClickListener(this);
         txtSignup.setOnClickListener(this);
         txtPaT.setOnClickListener(this);
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(this.getResources().getColor(R.color.pink));
+        }
+
 
     }
 
@@ -71,7 +88,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         registerBtn = findViewById(R.id.registerCreateAccountBtn);
 
+        SpannableString ss = new SpannableString("Already have an account? Sign up");
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+        ss.setSpan(clickableSpan, 25,32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new ForegroundColorSpan(Color.BLACK), 25, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         txtSignup = findViewById(R.id.registerSignup);
+        txtSignup.setText(ss);
+        txtSignup.setMovementMethod(LinkMovementMethod.getInstance());
+
         txtPaT = findViewById(R.id.registerPaT);
 
         registerView = findViewById(R.id.registerView);
@@ -122,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                             public void onClick(DialogInterface dialog, int which) {
                                                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                             }
-                                        });
+                                        }).setCancelable(false);;
                                 alert.show();
 
                             } else {
@@ -137,7 +171,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                 inputPassword.setText("");
                                             }
                                         });
-
+                                snackbar.setActionTextColor(getResources().getColor(R.color.red));
                                 View snackbarView = snackbar.getView();
                                 TextView tv = (TextView) snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
                                 tv.setMaxLines(3);
