@@ -5,10 +5,13 @@
     <uses-feature
         android:name="android.hardware.sensor.stepcounter"
         android:required="true" />
+
     <uses-feature
         android:name="android.hardware.sensor.accelerometer"
-        android:required="true" /> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+        android:required="true" />
+
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -21,18 +24,17 @@
             android:name=".service.StepCountingService"
             android:enabled="true"
             android:exported="true"></service>
+        <receiver
+            android:name=".service.SensorRestarterBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped">
+        </receiver>
 
         <activity android:name=".view.OverviewActivity" />
 
-        <service
-            android:name=".pedometer.SensorListener"
-            android:enabled="true"
-            android:exported="true" />
-
-        <activity android:name=".pedometer.SensorListener" />
         <activity android:name=".view.ForgotPasswordActivity" />
         <activity android:name=".view.LockSettingActivity" />
-        <activity android:name=".pedometer.ProfileActivity" />
         <activity android:name=".view.RegisterActivity" />
         <activity android:name=".view.LoginActivity" />
         <activity android:name=".MainActivity">

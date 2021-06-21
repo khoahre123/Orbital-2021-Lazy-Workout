@@ -1,9 +1,15 @@
 package com.example.lazyworkout.view;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,10 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.example.lazyworkout.R;
-import com.example.lazyworkout.util.Time;
+import com.example.lazyworkout.service.StepCountingService;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
+import java.security.Permission;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalTime;
@@ -29,8 +37,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
     public static final int DEFAULT_GOAL = 2500;
     public static final double DEFAULT_STEP_SIZE = 0.00075;
-    public static final int DEFAULT_SENSOR = Sensor.TYPE_ACCELEROMETER;
-    public static final boolean IS_STEP_COUNTER = false;
+    public static final int DEFAULT_SENSOR = Sensor.TYPE_STEP_COUNTER;
+    private static final int PHYSICAL_ACTIVITY = 1;
     DecimalFormat formatter = new DecimalFormat("#.##");
 
 
@@ -38,26 +46,38 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     private TextView stepsTaken, goal, unit;
     private LinearLayout stats;
 
+    private Intent intent;
+
     private SensorManager sensorManager;
 
     private boolean running = false;
     private float totalSteps = 0;
     private float previousTotalSteps = 0;
-    private float currentSteps = 0;
+    
     private boolean showSteps = true;
 
+    private float currentSteps;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
-        loadData();
         initViews();
 
-        Log.d(TAG, "onCreate: " + "current steps = " + String.valueOf(currentSteps));
-//        resetSteps();
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
+            //ask for permission
+            requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PHYSICAL_ACTIVITY);
+        }
+
+        intent = new Intent(this, StepCountingService.class);
+        startService(new Intent(getBaseContext(), StepCountingService.class));
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));
     }
 
     @Override
@@ -75,56 +95,20 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initViews() {
+        Log.d(TAG, "initViews");
         progressBar = findViewById(R.id.overviewProgressCircular);
-        stepsTaken = findViewById(R.id.overviewStepsTaken);
+        stepsTaken = (TextView) findViewById(R.id.overviewStepsTaken);
         goal = findViewById(R.id.overviewGoal);
         stats = findViewById(R.id.overviewStats);
         unit = findViewById(R.id.overviewUnit);
 
-        stepsTaken.setText(formatter.format(currentSteps));
+        progressBar.setProgressWithAnimation(currentSteps);
+        stepsTaken.setText(String.valueOf((int) currentSteps));
         goal.setText("/" + formatter.format(DEFAULT_GOAL));
+
         stats.setOnClickListener(this);
 
-    }
 
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume: " + "current steps = " + String.valueOf(currentSteps));
-        super.onResume();
-        running = true;
-        Sensor sensor = (Sensor) sensorManager.getDefaultSensor(DEFAULT_SENSOR);
-
-        if (sensor == null) {
-            Toast.makeText(this, "No sensor detected in this device",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
-        }
-
-        if (System.currentTimeMillis() == Time.MIDNIGHT) {
-            resetSteps();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy: " + "current steps = " + String.valueOf(currentSteps));
-        super.onDestroy();
-        saveData();
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (running) {
-            totalSteps = computeSteps(event);
-            currentSteps = ((int) totalSteps) - ((int) previousTotalSteps);
-            if (showSteps) {
-                stepsTaken.setText(formatter.format(currentSteps));
-                progressBar.setProgressWithAnimation(currentSteps);
-            } else {
-                stepsTaken.setText(formatter.format(currentSteps * DEFAULT_STEP_SIZE));
-            }
-        }
     }
 
     private void changedToDistance() {
@@ -141,16 +125,59 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         unit.setText("steps");
     }
 
-    private float computeSteps(SensorEvent event) {
-        if (IS_STEP_COUNTER) {
-            float realSteps = event.values[0];
-            return realSteps;
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //TODO: IMPL SENSORMANAGER
+        Sensor sensor = (Sensor) sensorManager.getDefaultSensor(DEFAULT_SENSOR);
+
+        if (sensor == null) {
+            Toast.makeText(this, "No sensor detected in this device",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+        private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        // call updateUI passing in our intent which is holding the data to display.
+        updateViews(intent);
+    }
+};
+
+    private void updateViews(Intent intent) {
+        currentSteps = intent.getExtras().getFloat("since_boot");
+        Log.d(TAG, formatter.format(currentSteps));
+
+        progressBar.setProgressWithAnimation(currentSteps);
+
+        if (showSteps) {
+            changedToStep();
         } else {
-            float X = event.values[0];
-            float Y = event.values[1];
-            float Z = event.values[2];
-            float fakeSteps = (float) (currentSteps + (float) 0.1 * Math.sqrt(X*X + Y*Y + Z*Z));
-            return fakeSteps;
+            changedToDistance();
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        currentSteps = event.values[0];
+        Log.d(TAG, formatter.format(currentSteps));
+        if (showSteps) {
+            stepsTaken.setText(formatter.format(currentSteps));
+            progressBar.setProgressWithAnimation(currentSteps);
+        } else {
+            stepsTaken.setText(formatter.format(currentSteps * DEFAULT_STEP_SIZE));
         }
     }
 
@@ -158,35 +185,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-
-    private void resetSteps() {
-        currentSteps = 0;
-        previousTotalSteps = totalSteps;
-        stepsTaken.setText(formatter.format(0));
-        saveData();
-        initViews();
-    }
-
-    private void saveData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        sharedPreferences.edit().putFloat("steps_before_today", previousTotalSteps).apply();
-        sharedPreferences.edit().putFloat("steps_today", currentSteps).apply();
-    }
-
-    private void loadData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        float savedStepsBefore = sharedPreferences.getFloat("steps_before_today", 0);
-        float savedStepsToday = sharedPreferences.getFloat("steps_today", 0);
-        Log.d(TAG, formatter.format(savedStepsBefore));
-        Log.d(TAG, formatter.format(savedStepsToday));
-        previousTotalSteps = savedStepsBefore;
-        currentSteps = savedStepsToday;
-        Log.d(TAG, "load data: " + "current steps = " + String.valueOf(currentSteps));
-    }
-
-
-
-
 }
 
 
