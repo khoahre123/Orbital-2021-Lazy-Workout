@@ -37,7 +37,9 @@
         <activity android:name=".view.LockSettingActivity" />
         <activity android:name=".view.RegisterActivity" />
         <activity android:name=".view.LoginActivity" />
+        <activity android:name=".view.SetGoalActivity" />
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

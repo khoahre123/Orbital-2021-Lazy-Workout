@@ -17,7 +17,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,8 @@ import java.text.NumberFormat;
 import java.time.LocalTime;
 import java.util.Locale;
 
+import kotlin.collections.IntIterator;
+
 public class OverviewActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
     private static final String TAG = "OverviewActivity";
 
@@ -45,6 +49,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     private CircularProgressBar progressBar;
     private TextView stepsTaken, goal, unit;
     private LinearLayout stats;
+    private RelativeLayout overview;
+    private Button edit;
 
     private Intent intent;
 
@@ -78,6 +84,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+
+        }
     }
 
     @Override
@@ -85,11 +95,20 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         showSteps = !showSteps;
         switch (v.getId()) {
             case (R.id.overviewStats):
+            case (R.id.overviewLayout):
                 if (showSteps) {
                     changedToStep();
                 } else {
                     changedToDistance();
                 }
+                break;
+
+            case (R.id.editGoal):
+                onPause();
+                startActivity(new Intent(this, SetGoalActivity.class));
+                break;
+
+            default:
                 break;
         }
     }
@@ -98,15 +117,19 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         Log.d(TAG, "initViews");
         progressBar = findViewById(R.id.overviewProgressCircular);
         stepsTaken = (TextView) findViewById(R.id.overviewStepsTaken);
+        overview = findViewById(R.id.overviewLayout);
         goal = findViewById(R.id.overviewGoal);
         stats = findViewById(R.id.overviewStats);
         unit = findViewById(R.id.overviewUnit);
+        edit = findViewById(R.id.editGoal);
 
         progressBar.setProgressWithAnimation(currentSteps);
         stepsTaken.setText(String.valueOf((int) currentSteps));
         goal.setText("/" + formatter.format(DEFAULT_GOAL));
 
         stats.setOnClickListener(this);
+        overview.setOnClickListener(this);
+        edit.setOnClickListener(this);
 
 
     }

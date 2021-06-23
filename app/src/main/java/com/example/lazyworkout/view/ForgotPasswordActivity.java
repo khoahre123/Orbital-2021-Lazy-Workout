@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -37,6 +40,12 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         initViews();
 
         resetPasswordBtn.setOnClickListener(this);
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(this.getResources().getColor(R.color.pink));
+        }
     }
 
     private void initViews() {
@@ -77,11 +86,12 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                                     public void onClick(DialogInterface dialog, int which) {
                                         startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
                                     }
-                                });
+                                }).setCancelable(false);
                         alert.show();
                     } else {
-                        Toast.makeText(ForgotPasswordActivity.this, "Try again! Something wrong happened!",
+                        Toast.makeText(ForgotPasswordActivity.this, "No email found, please try again!",
                                 Toast.LENGTH_LONG).show();
+                        inputEmail.setText("");
                     }
                 }
             });
