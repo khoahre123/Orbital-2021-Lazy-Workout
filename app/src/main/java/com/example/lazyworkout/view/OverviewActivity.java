@@ -1,5 +1,6 @@
 package com.example.lazyworkout.view;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -16,6 +17,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,7 +26,10 @@ import android.widget.Toast;
 
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.service.StepCountingService;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.security.Permission;
 import java.text.DecimalFormat;
@@ -32,7 +37,7 @@ import java.text.NumberFormat;
 import java.time.LocalTime;
 import java.util.Locale;
 
-public class OverviewActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
+public class OverviewActivity extends AppCompatActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener, SensorEventListener {
     private static final String TAG = "OverviewActivity";
 
     public static final int DEFAULT_GOAL = 2500;
@@ -45,9 +50,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     private CircularProgressBar progressBar;
     private TextView stepsTaken, goal, unit;
     private LinearLayout stats;
+    private BottomNavigationView bottomNav;
 
     private Intent intent;
-
     private SensorManager sensorManager;
 
     private boolean running = false;
@@ -80,6 +85,27 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));
     }
 
+    private void initViews() {
+        Log.d(TAG, "initViews");
+        progressBar = findViewById(R.id.overviewProgressCircular);
+        stepsTaken = (TextView) findViewById(R.id.overviewStepsTaken);
+        goal = findViewById(R.id.overviewGoal);
+        stats = findViewById(R.id.overviewStats);
+        unit = findViewById(R.id.overviewUnit);
+        bottomNav = findViewById(R.id.bottomNav);
+
+        progressBar.setProgressWithAnimation(currentSteps);
+        stepsTaken.setText(String.valueOf((int) currentSteps));
+        goal.setText("/" + formatter.format(DEFAULT_GOAL));
+
+        stats.setOnClickListener(this);
+
+        bottomNav.setSelectedItemId(R.id.navOverview);
+
+        bottomNav.setOnNavigationItemSelectedListener(this);
+
+    }
+
     @Override
     public void onClick(View v) {
         showSteps = !showSteps;
@@ -94,21 +120,29 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void initViews() {
-        Log.d(TAG, "initViews");
-        progressBar = findViewById(R.id.overviewProgressCircular);
-        stepsTaken = (TextView) findViewById(R.id.overviewStepsTaken);
-        goal = findViewById(R.id.overviewGoal);
-        stats = findViewById(R.id.overviewStats);
-        unit = findViewById(R.id.overviewUnit);
+    @Override
+    public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navOverview:
+                return true;
 
-        progressBar.setProgressWithAnimation(currentSteps);
-        stepsTaken.setText(String.valueOf((int) currentSteps));
-        goal.setText("/" + formatter.format(DEFAULT_GOAL));
+            case R.id.navAchievement:
+                startActivity(new Intent(OverviewActivity.this, AchievementActivity.class));
+                overridePendingTransition(0,0);
+                return true;
 
-        stats.setOnClickListener(this);
+            case R.id.navCommunity:
+                startActivity(new Intent(OverviewActivity.this, CommunityActivity.class));
+                overridePendingTransition(0,0);
+                return true;
 
+            case R.id.navSetting:
+                startActivity(new Intent(OverviewActivity.this, SettingActivity.class));
+                overridePendingTransition(0,0);
+                return true;
 
+        }
+        return false;
     }
 
     private void changedToDistance() {
@@ -157,7 +191,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 };
 
     private void updateViews(Intent intent) {
-        currentSteps = intent.getExtras().getFloat("since_boot");
+        currentSteps = intent.getExtras().getFloat("today_distance");
         Log.d(TAG, formatter.format(currentSteps));
 
         progressBar.setProgressWithAnimation(currentSteps);

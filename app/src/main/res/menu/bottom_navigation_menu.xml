@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navOverview"
+        android:enabled="true"
+        android:title="Overview"
+        android:icon="@drawable/ic_stats" />
+
+    <item
+        android:id="@+id/navAchievement"
+        android:enabled="true"
+        android:title="Achievement"
+        android:icon="@drawable/ic_achievement" />
+
+    <item
+        android:id="@+id/navCommunity"
+        android:enabled="true"
+        android:title="Community"
+        android:icon="@drawable/ic_community" />
+
+    <item
+        android:id="@+id/navSetting"
+        android:enabled="true"
+        android:title="Setting"
+        android:icon="@drawable/ic_setting" />
+
+</menu>

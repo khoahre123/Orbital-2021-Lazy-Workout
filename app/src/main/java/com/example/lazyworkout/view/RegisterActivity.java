@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lazyworkout.R;
+import com.example.lazyworkout.model.User;
+import com.example.lazyworkout.util.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -26,6 +28,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private RelativeLayout registerView;
 
     private FirebaseAuth mAuth;
+    private Database db = new Database();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +130,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             inputPassword.setText("");
             return;
         } else {
+            String name = inputName.getText().toString();
             String email = inputEmail.getText().toString();
             String password = inputPassword.getText().toString();
 
@@ -135,7 +141,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                             if (task.isSuccessful()) {
                                 FirebaseUser user = task.getResult().getUser();
+                                updateDispName(user, name);
+                                User newUser = new User(user.getUid(), name);
+                                db.createNewUser(newUser);
                                 user.sendEmailVerification();
+                                Log.d(TAG, "username: " + name);
                                 MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(RegisterActivity.this)
                                         .setTitle("Register Successful")
                                         .setMessage("Last step: Verify your email before logging in with your new account!")
@@ -170,8 +180,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     });
 
         }
+    }
 
+    private void updateDispName(FirebaseUser user, String name) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name)
+                .build();
 
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "User profile updated.");
+                        }
+                    }
+                });
     }
 
     private boolean validateUsername() {

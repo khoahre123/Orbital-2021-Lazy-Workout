@@ -10,7 +10,6 @@ import com.example.lazyworkout.view.OverviewActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import com.example.lazyworkout.pedometer.ProfileActivity;
 import com.example.lazyworkout.view.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
