@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".view.OverviewActivity">
 
+
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:layout_width="200dp"
         android:layout_height="200dp"
@@ -16,38 +17,49 @@
         app:cpb_round_border="true"
         app:cpb_progress_max="2500"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/overviewStats"
+    <RelativeLayout
+        android:id="@+id/overviewLayout"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:layout_centerInParent="true"
-        android:orientation="horizontal">
+        android:background="@drawable/circle"
+        android:visibility="visible">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/overviewStats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/overviewStepsTaken"
             android:layout_centerInParent="true"
-            android:textSize="30sp" />
+            android:orientation="horizontal"
+            tools:ignore="NotSibling">
+
+            <TextView
+                android:id="@+id/overviewStepsTaken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/overviewGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/overviewStepsTaken"
+                android:layout_centerInParent="true"
+                android:textSize="30dp" />
+        </LinearLayout>
 
         <TextView
+            android:id="@+id/overviewUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/overviewGoal"
-            android:layout_below="@id/overviewStepsTaken"
+            android:layout_below="@id/overviewStats"
             android:layout_centerInParent="true"
-            android:textSize="30dp" />
-    </LinearLayout>
+            android:text="steps"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/overviewUnit"
-        android:layout_below="@id/overviewStats"
-        android:layout_centerInParent="true"
-        android:textSize="20sp"
-        android:text="steps" />
-
+<<<<<<< HEAD
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -56,5 +68,15 @@
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu" />
 
+=======
+    <Button
+        android:layout_height="40dp"
+        android:layout_width="150dp"
+        android:layout_below="@+id/overviewProgressCircular"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/editGoal"
+        android:text="Edit Goal" />
+>>>>>>> d2f512f1a0507b0d8191526e3b6cfdf6dac2bbb6
 
 </RelativeLayout>

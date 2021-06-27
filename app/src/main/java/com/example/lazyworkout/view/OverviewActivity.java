@@ -19,7 +19,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +39,13 @@ import java.text.NumberFormat;
 import java.time.LocalTime;
 import java.util.Locale;
 
+<<<<<<< HEAD
 public class OverviewActivity extends AppCompatActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener, SensorEventListener {
+=======
+import kotlin.collections.IntIterator;
+
+public class OverviewActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
+>>>>>>> d2f512f1a0507b0d8191526e3b6cfdf6dac2bbb6
     private static final String TAG = "OverviewActivity";
 
     public static final int DEFAULT_GOAL = 2500;
@@ -50,7 +58,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     private CircularProgressBar progressBar;
     private TextView stepsTaken, goal, unit;
     private LinearLayout stats;
+<<<<<<< HEAD
     private BottomNavigationView bottomNav;
+=======
+    private RelativeLayout overview;
+    private Button edit;
+>>>>>>> d2f512f1a0507b0d8191526e3b6cfdf6dac2bbb6
 
     private Intent intent;
     private SensorManager sensorManager;
@@ -83,22 +96,59 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+
+        }
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    public void onClick(View v) {
+        showSteps = !showSteps;
+        switch (v.getId()) {
+            case (R.id.overviewStats):
+            case (R.id.overviewLayout):
+                if (showSteps) {
+                    changedToStep();
+                } else {
+                    changedToDistance();
+                }
+                break;
+
+            case (R.id.editGoal):
+                onPause();
+                startActivity(new Intent(this, SetGoalActivity.class));
+                break;
+
+            default:
+                break;
+        }
+    }
+
+>>>>>>> d2f512f1a0507b0d8191526e3b6cfdf6dac2bbb6
     private void initViews() {
         Log.d(TAG, "initViews");
         progressBar = findViewById(R.id.overviewProgressCircular);
         stepsTaken = (TextView) findViewById(R.id.overviewStepsTaken);
+        overview = findViewById(R.id.overviewLayout);
         goal = findViewById(R.id.overviewGoal);
         stats = findViewById(R.id.overviewStats);
         unit = findViewById(R.id.overviewUnit);
+<<<<<<< HEAD
         bottomNav = findViewById(R.id.bottomNav);
+=======
+        edit = findViewById(R.id.editGoal);
+>>>>>>> d2f512f1a0507b0d8191526e3b6cfdf6dac2bbb6
 
         progressBar.setProgressWithAnimation(currentSteps);
         stepsTaken.setText(String.valueOf((int) currentSteps));
         goal.setText("/" + formatter.format(DEFAULT_GOAL));
 
         stats.setOnClickListener(this);
+        overview.setOnClickListener(this);
+        edit.setOnClickListener(this);
 
         bottomNav.setSelectedItemId(R.id.navOverview);
 
