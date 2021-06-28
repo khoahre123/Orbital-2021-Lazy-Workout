@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.OverviewActivity">
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/overviewProgressCircular"
+        android:layout_centerInParent="true"
+        app:cpb_background_progressbar_width="20dp"
+        app:cpb_progressbar_width="15dp"
+        app:cpb_round_border="true"/>
+
+    <RelativeLayout
+        android:id="@+id/overviewLayout"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/circle"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/overviewStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            tools:ignore="NotSibling">
+
+            <TextView
+                android:id="@+id/overviewStepsTaken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/overviewGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/overviewStepsTaken"
+                android:layout_centerInParent="true"
+                android:textSize="30dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/overviewUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/overviewStats"
+            android:layout_centerInParent="true"
+            android:text="km"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <Button
+        android:layout_height="40dp"
+        android:layout_width="150dp"
+        android:layout_below="@+id/overviewProgressCircular"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/editGoal"
+        android:text="Edit Goal" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_navigation_menu" />
+
+
+</RelativeLayout>
