@@ -1,0 +1,2 @@
+rootProject.name = "Lazy Workout"
+include ':app'
