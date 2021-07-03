@@ -1,5 +1,6 @@
 package com.example.lazyworkout.model;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import com.example.lazyworkout.model.UserMessage;
@@ -17,12 +18,15 @@ public class Message {
     public Message(String message, UserMessage userMessageSender) {
         this.message = message;
         this.userMessageSender = userMessageSender;
+        this.dateCreated = Calendar.getInstance().getTime();
+
     }
 
     public Message(String message, String urlImage, UserMessage userMessageSender) {
         this.message = message;
         this.urlImage = urlImage;
         this.userMessageSender = userMessageSender;
+        this.dateCreated = Calendar.getInstance().getTime();
     }
 
     // --- GETTERS ---

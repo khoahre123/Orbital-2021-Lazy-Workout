@@ -1,8 +1,9 @@
-package com.example.lazyworkout.chat;
+package com.example.lazyworkout.adapter;
 
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
     @Override
     protected void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position, @NonNull @NotNull Message model) {
         Message message = this.getItem(position);
-
+        Log.d("Adapter", message.getMessage());
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bind(message);
@@ -93,16 +94,18 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
     @Override
     public int getItemViewType(int position) {
         String userId = this.getItem(position).getUserSender().getUid();
-
-        if (userId.equals(FirebaseAuth.getInstance().getCurrentUser().toString())) {
+        Log.d("Adapter", userId);
+        Log.d("Adapter", FirebaseAuth.getInstance().getUid());
+        if (userId.equals(FirebaseAuth.getInstance().getUid())) {
+            Log.d("Adapter", "1");
             return VIEW_TYPE_MESSAGE_SENT;
         }
-
+        Log.d("Adapter", "2");
         return VIEW_TYPE_MESSAGE_RECEIVED;
     }
 
 
-    private class SentMessageHolder extends RecyclerView.ViewHolder {
+    public class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText;
 
         SentMessageHolder(View itemView) {
@@ -115,7 +118,7 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
         @RequiresApi(api = Build.VERSION_CODES.N)
         void bind(Message message) {
             messageText.setText(message.getMessage());
-
+            // Fix null java.util.Date.getTime()
             // Format the stored timestamp into a readable String using method.
             DateFormat dateFormat = new SimpleDateFormat("hh:mm");
             String strDate = dateFormat.format(message.getDateCreated());
@@ -123,7 +126,7 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
         }
     }
 
-    private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+    public class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, nameText;
         ImageView profileImage;
 

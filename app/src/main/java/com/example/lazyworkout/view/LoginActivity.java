@@ -38,6 +38,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private FirebaseAuth mAuth;
 
+    public LoginActivity() {};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -57,7 +59,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(this.getResources().getColor(R.color.blue));
         }
-
 
     }
 
@@ -115,13 +116,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void userLogin() {
 
-        if (!(validateEmail() && validatePassword())) {
+        String email = getEmail();
+        String password = getPassword();
+
+        if (!(validateEmail(email) && validatePassword(password))) {
 //            inputEmail.setText("");
 //            inputPassword.setText("");
             return;
         } else {
-            String email = inputEmail.getText().toString();
-            String password = inputPassword.getText().toString();
 
             final Task<AuthResult> authResultTask = mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
@@ -181,8 +183,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private boolean validateEmail() {
+    public String getEmail() {
         String email = inputEmail.getText().toString().trim();
+        return email;
+    }
+
+    public boolean validateEmail(String email) {
 
         if (email.isEmpty()) {
             txtInputFieldEmail.setError("Email is required");
@@ -197,8 +203,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private boolean validatePassword() {
+    public String getPassword() {
         String password = inputPassword.getText().toString().trim();
+        return password;
+    }
+
+    public boolean validatePassword(String password) {
 
         if (password.isEmpty()) {
             txtInputFieldPassword.setError("Password is required");

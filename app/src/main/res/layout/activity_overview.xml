@@ -58,13 +58,14 @@
     </RelativeLayout>
 
     <Button
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_width="150dp"
         android:layout_below="@+id/overviewProgressCircular"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/editGoal"
         android:text="Edit Goal" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"

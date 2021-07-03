@@ -6,94 +6,93 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.SettingActivity">
     
-    <ScrollView
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
+
+    <RelativeLayout
+        android:id="@+id/setGoalView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:id="@+id/setGoalView"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="30dp">
+        <ImageView
+            android:id="@+id/setGoalLogo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:scaleType="fitXY"
+            android:scaleX="1.4"
+            android:scaleY="1.4 "
+            android:src="@drawable/logo" />
 
-            <ImageView
-                android:id="@+id/setGoalLogo"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="100dp"
-                android:src="@drawable/logo"
-                android:scaleType="fitXY"
-                android:scaleX="1.4"
-                android:scaleY="1.4 "/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/setGoalTextField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="200dp"
+            android:layout_height="70dp"
+            android:layout_below="@+id/setGoalLogo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:hint="Goal">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/setGoalTextField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                android:layout_width="200dp"
-                android:layout_height="70dp"
-                android:layout_marginTop="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/setGoalLogo"
-                android:hint="Set your goal" >
+            <AutoCompleteTextView
+                android:id="@+id/setGoalInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:inputType="none"
+                android:textSize="27dp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <AutoCompleteTextView
-                    android:id="@+id/setGoalInput"
-                    android:textSize="27dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="false"
-                    android:inputType="none"/>
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/setStepTextField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="200dp"
+            android:layout_height="70dp"
+            android:layout_below="@+id/setGoalTextField"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
+            android:hint="Step size">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                android:layout_width="200dp"
-                android:layout_height="70dp"
-                android:id="@+id/setStepTextField"
-                android:layout_below="@+id/setGoalTextField"
-                android:layout_marginTop="35dp"
-                android:hint="Your foot size?"
-                android:layout_centerHorizontal="true" >
+            <AutoCompleteTextView
+                android:id="@+id/setStepInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:inputType="none"
+                android:textSize="27dp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <AutoCompleteTextView
-                    android:id="@+id/setStepInput"
-                    android:layout_width="match_parent"
-                    android:textSize="27dp"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="false"
-                    android:inputType="none"/>
-            </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/setStepTextField"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="35dp"
+            android:background="@drawable/roundbutton"
+            android:text="Confirm" />
 
-            <Button
-                android:id="@+id/confirmButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/setStepTextField"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginEnd="35dp"
-                android:background="@drawable/roundbutton"
-                android:text="Confirm" />
-
-            <Button
-                android:id="@+id/signOutBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/confirmButton"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginEnd="35dp"
-                android:background="@drawable/roundbutton"
-                android:text="Sign out" />
+        <Button
+            android:id="@+id/signOutBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/confirmButton"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="35dp"
+            android:background="@drawable/roundbutton"
+            android:text="Sign out" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNav"

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +40,7 @@ public class ChatList extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case (R.id.findButton):
-                if (textInputEditText.getText().toString() == null) {
+                if (TextUtils.isEmpty(textInputEditText.getText().toString())) {
                     break;
                 }
                 FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();

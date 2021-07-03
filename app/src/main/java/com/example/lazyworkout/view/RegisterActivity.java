@@ -39,6 +39,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -175,7 +179,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 FirebaseUser user = task.getResult().getUser();
                                 updateDispName(user, name);
                                 User newUser = new User(user.getUid(), name);
+                                Map<String, Object> map = new HashMap<>();
+                                map.put(name, db.getID());
                                 Log.d(TAG, newUser.toString());
+                                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                                firestore.collection("userLookup").document("findUserByEmail").update(map);
                                 db.createNewUser(newUser);
                                 user.sendEmailVerification();
                                 Log.d(TAG, "username: " + name);

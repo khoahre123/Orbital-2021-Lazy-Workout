@@ -49,12 +49,12 @@ public class MessageHelper {
         } else {
             path = ownUid + "_" + chat;
         }
-        Log.d(TAG, path);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 String childPath = "/chats" + path;
                 if (!snapshot.hasChild(childPath)) {
+                    Log.d(TAG, "3");
                     FirebaseFirestore.getInstance().collection("chats").document(path).collection(COLLECTION_NAME);
                 }
             }
@@ -64,6 +64,7 @@ public class MessageHelper {
                 Log.wtf(TAG, error.getMessage());
             }
         });
+        Log.d(TAG, path);
         return ChatHelper.getChatCollection()
                 .document(path)
                 .collection(COLLECTION_NAME)
@@ -71,11 +72,13 @@ public class MessageHelper {
                 .limit(50);
     }
 
-    public static Task<DocumentReference> createMessageForChat(String textMessage, String chat,     UserMessage userMessageSender){
+    public static Task<DocumentReference> createMessageForChat(String textMessage, String chat,  UserMessage userMessageSender){
 
         // 1 - Create the Message object
         Message message = new Message(textMessage, userMessageSender);
-
+        Log.d(TAG, ChatHelper.getChatCollection()
+                .document(chat)
+                .collection(COLLECTION_NAME).toString());
         // 2 - Store Message to Firestore
         return ChatHelper.getChatCollection()
                 .document(chat)
