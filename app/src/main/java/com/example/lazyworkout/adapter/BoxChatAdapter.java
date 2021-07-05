@@ -35,6 +35,7 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
     private final RequestManager glide;
     private final String idCurrentUser;
     private List<Message> messageList;
+    private String date;
 
     //FOR COMMUNICATION
     private Listener callback;
@@ -106,13 +107,14 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
 
 
     public class SentMessageHolder extends RecyclerView.ViewHolder {
-        TextView messageText, timeText;
+        TextView messageText, timeText, dateText;
 
         SentMessageHolder(View itemView) {
             super(itemView);
 
             messageText = (TextView) itemView.findViewById(R.id.ownMessage);
             timeText = (TextView) itemView.findViewById(R.id.ownTime);
+            dateText = itemView.findViewById(R.id.ownDate);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -123,11 +125,20 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
             DateFormat dateFormat = new SimpleDateFormat("hh:mm");
             String strDate = dateFormat.format(message.getDateCreated());
             timeText.setText(strDate);
+
+            DateFormat newDateFormat = new SimpleDateFormat("MMM d");
+            String newStrDate = newDateFormat.format(message.getDateCreated());
+            if (newStrDate.equals(BoxChatAdapter.this.date)) {
+                dateText.setVisibility(View.GONE);
+            } else {
+                dateText.setText(newStrDate);
+                BoxChatAdapter.this.date = newStrDate;
+            }
         }
     }
 
     public class ReceivedMessageHolder extends RecyclerView.ViewHolder {
-        TextView messageText, timeText, nameText;
+        TextView messageText, timeText, nameText, dateText;
         ImageView profileImage;
 
         ReceivedMessageHolder(View itemView) {
@@ -137,6 +148,7 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
             timeText = (TextView) itemView.findViewById(R.id.otherTime);
             nameText = (TextView) itemView.findViewById(R.id.otherChatName);
             profileImage = (ImageView) itemView.findViewById(R.id.otherPicture);
+            dateText = itemView.findViewById(R.id.otherChatDate);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -148,6 +160,14 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
             String strDate = dateFormat.format(message.getDateCreated());
             timeText.setText(strDate);
 
+            DateFormat newDateFormat = new SimpleDateFormat("MMM d");
+            String newStrDate = newDateFormat.format(message.getDateCreated());
+            if (newStrDate.equals(BoxChatAdapter.this.date)) {
+                dateText.setVisibility(View.GONE);
+            } else {
+                dateText.setText(newStrDate);
+                BoxChatAdapter.this.date = newStrDate;
+            }
             nameText.setText(message.getUserSender().getUsername());
 
             // Insert the profile image from the URL into the ImageView.

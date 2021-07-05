@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 });
 
                         View snackbarView = snackbar.getView();
-                        TextView tv = (TextView) snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+                        TextView tv = (TextView) snackbarView.findViewById(R.id.snackbar_text);
                         tv.setMaxLines(3);
                         snackbar.show();
                     }
