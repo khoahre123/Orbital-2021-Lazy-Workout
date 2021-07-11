@@ -64,7 +64,8 @@ public class ChatMessage extends AppCompatActivity implements BoxChatAdapter.Lis
         switch (v.getId()) {
             case (R.id.sendButton):
                 if (!TextUtils.isEmpty(chatInput.getText()) && modelCurrentUserMessage != null) {
-                    MessageHelper.createMessageForChat(chatInput.getText().toString(), this.combineString, modelCurrentUserMessage)
+                    MessageHelper.createMessageForChat(chatInput.getText().toString(), this.combineString, modelCurrentUserMessage,
+                            currentChatName)
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull @NotNull Exception e) {

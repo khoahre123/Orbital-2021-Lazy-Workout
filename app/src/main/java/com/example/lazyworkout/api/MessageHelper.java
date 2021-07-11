@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.lazyworkout.model.Message;
+import com.example.lazyworkout.model.UserList;
 import com.example.lazyworkout.model.UserMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -72,13 +73,24 @@ public class MessageHelper {
                 .limit(50);
     }
 
-    public static Task<DocumentReference> createMessageForChat(String textMessage, String chat,  UserMessage userMessageSender){
+    public static Query getAllListMessage() {
+        String ownUid = FirebaseAuth.getInstance().getUid();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        return ChatHelper.getChatCollection().whereArrayContains("listUser", ownUid);
+    }
+
+    public static Task<DocumentReference> createMessageForChat(String textMessage, String chat,  UserMessage userMessageSender,
+                                                               String userMessageReceiver){
 
         // 1 - Create the Message object
         Message message = new Message(textMessage, userMessageSender);
+        UserList userList = new UserList(textMessage, userMessageSender, userMessageReceiver);
         Log.d(TAG, ChatHelper.getChatCollection()
                 .document(chat)
                 .collection(COLLECTION_NAME).toString());
+
+        Log.d(TAG, userList.getUserList().toString());
+        ChatHelper.getChatCollection().document(chat).set(userList.getUserList());
         // 2 - Store Message to Firestore
         return ChatHelper.getChatCollection()
                 .document(chat)

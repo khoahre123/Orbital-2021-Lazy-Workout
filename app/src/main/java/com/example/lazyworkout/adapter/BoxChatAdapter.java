@@ -24,7 +24,10 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerView.ViewHolder> {
 
@@ -35,7 +38,11 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
     private final RequestManager glide;
     private final String idCurrentUser;
     private List<Message> messageList;
-    private String date;
+    private String date = "Nah";
+    private int posit;
+    private Set<Integer> samePosList = new HashSet<>();
+    private Set<Integer> diffPosList = new HashSet<>();
+
 
     //FOR COMMUNICATION
     private Listener callback;
@@ -43,14 +50,20 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position, @NonNull @NotNull Message model) {
+        this.posit = position;
         Message message = this.getItem(position);
+        if (checkNewDate(message) && (!diffPosList.contains(position))) {
+            samePosList.add(position);
+        } else {
+            diffPosList.add(position);
+        }
         Log.d("Adapter", message.getMessage());
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
-                ((SentMessageHolder) holder).bind(message);
+                ((SentMessageHolder) holder).bind(message, position);
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
-                ((ReceivedMessageHolder) holder).bind(message);
+                ((ReceivedMessageHolder) holder).bind(message, position);
         }
     }
 
@@ -95,16 +108,19 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
     @Override
     public int getItemViewType(int position) {
         String userId = this.getItem(position).getUserSender().getUid();
-        Log.d("Adapter", userId);
-        Log.d("Adapter", FirebaseAuth.getInstance().getUid());
         if (userId.equals(FirebaseAuth.getInstance().getUid())) {
-            Log.d("Adapter", "1");
             return VIEW_TYPE_MESSAGE_SENT;
         }
-        Log.d("Adapter", "2");
         return VIEW_TYPE_MESSAGE_RECEIVED;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public boolean checkNewDate(Message message) {
+        DateFormat newDateFormat = new SimpleDateFormat("MMM d");
+        String newStrDate = newDateFormat.format(message.getDateCreated());
+        Boolean b = newStrDate.equals(BoxChatAdapter.this.date);
+        return b;
+    }
 
     public class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, dateText;
@@ -118,7 +134,7 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
-        void bind(Message message) {
+        void bind(Message message, int position) {
             messageText.setText(message.getMessage());
             // Fix null java.util.Date.getTime()
             // Format the stored timestamp into a readable String using method.
@@ -128,12 +144,16 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
 
             DateFormat newDateFormat = new SimpleDateFormat("MMM d");
             String newStrDate = newDateFormat.format(message.getDateCreated());
-            if (newStrDate.equals(BoxChatAdapter.this.date)) {
+            Boolean b = newStrDate.equals(BoxChatAdapter.this.date);
+            Log.d("Adapter 2", samePosList.toString());
+            if (samePosList.contains(position)) {
                 dateText.setVisibility(View.GONE);
             } else {
+                dateText.setVisibility(View.VISIBLE);
+                Log.d("Set visible send", "yes");
                 dateText.setText(newStrDate);
-                BoxChatAdapter.this.date = newStrDate;
             }
+            BoxChatAdapter.this.date = newStrDate;
         }
     }
 
@@ -152,7 +172,7 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
-        void bind(Message message) {
+        void bind(Message message, int position) {
             messageText.setText(message.getMessage());
 
             // Format the stored timestamp into a readable String using method.
@@ -162,12 +182,16 @@ public class BoxChatAdapter extends FirestoreRecyclerAdapter<Message, RecyclerVi
 
             DateFormat newDateFormat = new SimpleDateFormat("MMM d");
             String newStrDate = newDateFormat.format(message.getDateCreated());
-            if (newStrDate.equals(BoxChatAdapter.this.date)) {
+            Boolean b = newStrDate.equals(BoxChatAdapter.this.date);
+            Log.d("Adapter 2", samePosList.toString());
+            if (samePosList.contains(position)) {
                 dateText.setVisibility(View.GONE);
             } else {
+                dateText.setVisibility(View.VISIBLE);
+                Log.d("Set visible receive", "yes");
                 dateText.setText(newStrDate);
-                BoxChatAdapter.this.date = newStrDate;
             }
+            BoxChatAdapter.this.date = newStrDate;
             nameText.setText(message.getUserSender().getUsername());
 
             // Insert the profile image from the URL into the ImageView.
