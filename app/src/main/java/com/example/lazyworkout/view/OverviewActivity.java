@@ -31,6 +31,7 @@ import com.example.lazyworkout.util.Constant;
 import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.card.MaterialCardView;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,9 +53,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     Database db = new Database();
 
     private CircularProgressBar progressBar;
-    private TextView distancesTaken, goal, unit;
+    private TextView distancesTaken, goal, unit, streak, lockStatus, lockTime;
     private LinearLayout stats;
-    private Button editGoal;
+    private MaterialCardView editGoal, editLockApp;
     private BottomNavigationView bottomNav;
 
     private Intent intent;
@@ -100,7 +101,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         goal = findViewById(R.id.overviewGoal);
         stats = findViewById(R.id.overviewStats);
         unit = findViewById(R.id.overviewUnit);
+        streak = findViewById(R.id.overviewStreak); //TODO: impl compute streak
+        lockStatus = findViewById(R.id.overviewLockStatus); //TODO: impl lock app
+        lockTime = findViewById(R.id.overviewLockTime); //TODO: impl initial setting
+
         editGoal = findViewById(R.id.editGoal);
+        editLockApp = findViewById(R.id.editLock); //TODO: routing to setting
+
         bottomNav = findViewById(R.id.bottomNav);
 
         progressBar.setProgressWithAnimation(currentDistances);

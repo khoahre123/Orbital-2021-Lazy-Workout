@@ -1,5 +1,6 @@
 package com.example.lazyworkout.util;
 
+import android.content.Context;
 import android.os.Build;
 import android.telecom.Call;
 import android.util.Log;
@@ -10,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import com.example.lazyworkout.model.Record;
 import com.example.lazyworkout.model.TrackingRecord;
 import com.example.lazyworkout.model.User;
+import com.example.lazyworkout.service.StepCountingService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -34,12 +36,17 @@ public class Database {
     private static final String TAG = "Database";
     public static final String DB_NAME = "users";
 
-    public static FirebaseAuth fAuth= FirebaseAuth.getInstance();
+    public FirebaseAuth fAuth= FirebaseAuth.getInstance();
     public FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     public String getID() {
         String uid = fAuth.getCurrentUser().getUid();
         return uid;
+    }
+
+    public boolean signout() {
+        fAuth.signOut();
+        return true;
     }
 
     public void createNewUser(User newUser) {
