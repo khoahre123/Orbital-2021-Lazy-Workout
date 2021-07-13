@@ -11,6 +11,9 @@
 
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +30,9 @@
 
         <service
             android:name=".service.StepCountingService"
+            android:enabled="true"
+            android:exported="true" />
+        <service android:name=".service.LocationService"
             android:enabled="true"
             android:exported="true" />
 
