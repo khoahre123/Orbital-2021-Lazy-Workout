@@ -106,7 +106,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         goal = findViewById(R.id.overviewGoal);
         stats = findViewById(R.id.overviewStats);
         unit = findViewById(R.id.overviewUnit);
-        currStreak = findViewById(R.id.overviewStreak); //TODO: impl compute streak
+        currStreak = findViewById(R.id.overviewStreak);
         lockStatus = findViewById(R.id.overviewLockStatus); //TODO: impl lock app
         lockTime = findViewById(R.id.overviewLockTime); //TODO: impl initial setting
 
@@ -118,6 +118,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         progressBar.setProgressWithAnimation(currentDistances);
         progressBar.setProgressMax(distanceGoal);
 
+        String currStreakTxt = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+                .getString("current_streak", "calculating...");
+        currStreak.setText("current streak: " + currStreakTxt);
         distancesTaken.setText(String.valueOf((int) currentDistances));
         goal.setText("/" + formatter.format(distanceGoal));
 
@@ -181,7 +184,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                 return true;
 
         }
-        return false;
+        return true;
     }
 
     private void changedToDistance() {
@@ -262,26 +265,27 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void getCurrentStreak() {
+        Log.d(TAG, "get current streak start");
         DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
         userRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                Log.d(TAG, "get current streak ongoing");
                 DocumentSnapshot document = task.getResult();
                 if (document != null) {
                     User user = document.toObject(User.class);
                     Map<String, Object> map = document.getData();
                     int streak = 0;
                     float todayDistance = user.getDistances(Time.getToday());
-                    float goal = user.getGoal();
-                    Log.d(TAG, "goal = " + goal);
+                    Log.d(TAG, "goal = " + distanceGoal);
 
-                    if (todayDistance >= goal) {
+                    if (todayDistance >= distanceGoal) {
                         streak++;
                         Log.d(TAG, "today counted, distance = " + todayDistance + ", streak = 1");
                     }
 
                     long time = Time.getToday() - Time.ONE_DAY;
                     float distance = user.getDistances(time);
-                    while (distance >= goal) {
+                    while (distance >= distanceGoal) {
                         streak++;
                         time = time - Time.ONE_DAY;
                         distance = user.getDistances(time);
@@ -289,6 +293,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                     }
                     Log.d(TAG, "current streak = " + streak) ;
                     currStreak.setText(" current streak: " + streak + " days");
+                    getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                            .putString("current_streak", streak + " days").commit();
                 } else {
                     Log.d(TAG, "no such document");
                 }
@@ -301,7 +307,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart");
-        getCurrentStreak();
         super.onStart();
     }
 }

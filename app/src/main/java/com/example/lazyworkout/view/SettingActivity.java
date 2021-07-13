@@ -136,6 +136,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.navSetting:
                 return true;
         }
-        return false;
+        return true;
     }
 }

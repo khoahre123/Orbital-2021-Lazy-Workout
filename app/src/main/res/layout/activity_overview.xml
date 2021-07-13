@@ -10,10 +10,11 @@
         android:id="@+id/overviewTodayText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
-        android:text="Today"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"/>
+        android:fontFamily="sans-serif-condensed"
+        android:text="Today"
+        android:textSize="30dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,9 +29,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:drawableLeft="@drawable/ic_walking"
+            android:fontFamily="sans-serif-medium"
             android:text="Distance"
-            android:drawableLeft="@drawable/ic_walking" />
+            android:textSize="25dp" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -76,15 +78,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:textSize="18sp" />
+                            android:textSize="20sp"
+                            android:text="steps"
+                            android:fontFamily="sans-serif-black"/>
 
                         <TextView
                             android:id="@+id/overviewGoal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/overviewStepsTaken"
+                            android:text="/goal"
+                            android:fontFamily="sans-serif-black"
                             android:layout_centerInParent="true"
-                            android:textSize="18dp" />
+                            android:textSize="20dp" />
                     </LinearLayout>
 
                     <TextView
@@ -101,11 +107,12 @@
                     android:id="@+id/overviewStreak"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" current streak"
-                    android:textSize="20dp"
-                    android:drawableLeft="@drawable/ic_streak_red"
+                    android:layout_below="@id/overviewProgressCircular"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@id/overviewProgressCircular"/>
+                    android:drawableLeft="@drawable/ic_streak_red"
+                    android:fontFamily="sans-serif-light"
+                    android:text=" current streak"
+                    android:textSize="18sp" />
 
 
                 <com.google.android.material.card.MaterialCardView
@@ -114,7 +121,7 @@
                     android:clickable="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="40dp"
-                    app:cardBackgroundColor="@color/browser_actions_bg_grey"
+                    app:cardBackgroundColor="#E0E0E0"
                     android:layout_below="@+id/overviewStreak"
                     android:textAlignment="center"
                     android:id="@+id/editGoal" >
@@ -128,8 +135,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@drawable/ic_rightarrow_navigation"
+                            android:fontFamily="sans-serif-medium"
                             android:text="Edit Goal"
+                            android:layout_centerInParent="true"
+                            android:textColor="#E0FFA5AB"
                             android:textSize="20dp" />
 
                     </RelativeLayout>
@@ -142,16 +151,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
             android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ic_lock"
+            android:fontFamily="sans-serif-medium"
             android:text="Lock App"
-            android:drawableLeft="@drawable/ic_lock"/>
+            android:textSize="25sp" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="8dp"
-            android:clickable="true"
             android:id="@+id/overviewLockCard"
             android:layout_weight="1">
 
@@ -166,29 +175,30 @@
                     android:layout_marginHorizontal="8dp"
                     android:layout_marginTop="8dp"
                     android:drawableLeft="@drawable/ic_status"
+                    android:fontFamily="sans-serif-light"
                     android:text=" lock status"
-                    android:textSize="20dp"/>
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/overviewLockTime"
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_below="@id/overviewLockStatus"
                     android:layout_height="wrap_content"
-                    android:text=" activated at"
+                    android:layout_below="@id/overviewLockStatus"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="15dp"
                     android:drawableLeft="@drawable/ic_alarm"
-                    android:textSize="20dp"/>
+                    android:fontFamily="sans-serif-light"
+                    android:text=" activated at"
+                    android:textSize="18sp" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:clickable="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="45dp"
-                    app:cardBackgroundColor="@color/browser_actions_bg_grey"
                     android:layout_below="@id/overviewLockTime"
                     android:textAlignment="center"
+                    app:cardBackgroundColor="#E0E0E0"
                     android:id="@+id/editLock" >
 
                     <RelativeLayout
@@ -200,7 +210,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@drawable/ic_rightarrow_navigation"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="#E0FFA5AB"
                             android:text="Customize Lock App"
                             android:textSize="20dp" />
 
@@ -223,6 +235,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
         app:menu="@menu/bottom_navigation_menu" />
 
 
