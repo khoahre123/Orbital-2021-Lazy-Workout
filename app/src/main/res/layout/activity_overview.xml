@@ -10,6 +10,7 @@
         android:id="@+id/overviewTodayText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#90000000"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:fontFamily="sans-serif-condensed"
@@ -29,6 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#90000000"
             android:drawableLeft="@drawable/ic_walking"
             android:fontFamily="sans-serif-medium"
             android:text="Distance"
@@ -52,6 +54,7 @@
                     android:layout_height="180dp"
                     android:id="@+id/overviewProgressCircular"
                     android:layout_centerHorizontal="true"
+                    app:cpb_background_progressbar_color="#808080"
                     android:layout_marginVertical="20dp"
                     app:cpb_background_progressbar_width="20dp"
                     app:cpb_progressbar_width="15dp"
@@ -80,6 +83,7 @@
                             android:layout_centerInParent="true"
                             android:textSize="20sp"
                             android:text="steps"
+                            android:textColor="#8A000000"
                             android:fontFamily="sans-serif-black"/>
 
                         <TextView
@@ -89,6 +93,7 @@
                             android:layout_below="@id/overviewStepsTaken"
                             android:text="/goal"
                             android:fontFamily="sans-serif-black"
+                            android:textColor="#8A000000"
                             android:layout_centerInParent="true"
                             android:textSize="20dp" />
                     </LinearLayout>
@@ -100,6 +105,7 @@
                         android:layout_below="@id/overviewStats"
                         android:layout_centerInParent="true"
                         android:text="km"
+                        android:textColor="#8A000000"
                         android:textSize="18sp" />
                 </RelativeLayout>
 
@@ -112,6 +118,7 @@
                     android:drawableLeft="@drawable/ic_streak_red"
                     android:fontFamily="sans-serif-light"
                     android:text=" current streak"
+                    android:textColor="#BC000000"
                     android:textSize="18sp" />
 
 
@@ -153,6 +160,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:drawableLeft="@drawable/ic_lock"
+            android:textColor="#90000000"
             android:fontFamily="sans-serif-medium"
             android:text="Lock App"
             android:textSize="25sp" />
@@ -161,6 +169,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="#FFFFFF"
             android:id="@+id/overviewLockCard"
             android:layout_weight="1">
 
@@ -174,6 +183,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:layout_marginTop="8dp"
+                    android:textColor="#7C000000"
                     android:drawableLeft="@drawable/ic_status"
                     android:fontFamily="sans-serif-light"
                     android:text=" lock status"
@@ -188,6 +198,7 @@
                     android:layout_marginTop="15dp"
                     android:drawableLeft="@drawable/ic_alarm"
                     android:fontFamily="sans-serif-light"
+                    android:textColor="#7C000000"
                     android:text=" activated at"
                     android:textSize="18sp" />
 

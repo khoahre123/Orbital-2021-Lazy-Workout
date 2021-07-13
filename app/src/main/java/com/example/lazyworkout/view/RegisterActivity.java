@@ -187,7 +187,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 db.createNewUser(newUser);
                                 user.sendEmailVerification();
                                 Log.d(TAG, "username: " + name);
-                                MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(RegisterActivity.this)
+                                MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(RegisterActivity.this, R.style.AlertDialogStyle)
                                         .setTitle("Register Successful")
                                         .setMessage("Last step: Verify your email before logging in with your new account!")
                                         .setPositiveButton("Done", new DialogInterface.OnClickListener() {

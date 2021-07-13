@@ -15,4 +15,20 @@
         <item name="android:windowBackground">#F0F0F0</item>
     </style>
 
+    <style name="MyTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="colorPrimary">#C9000000</item>
+    </style>
+
+    <style name="AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">#C9272626</item>
+        <item name="android:textColor">#C9272626</item>
+        <item name="android:textColorPrimary">#C9272626</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#C9000000</item>
+        <item name="backgroundTint">#FFFFFF</item>
+    </style>
+
 </resources>
