@@ -26,12 +26,16 @@ import android.widget.Toast;
 
 
 import com.example.lazyworkout.R;
+import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.service.StepCountingService;
 import com.example.lazyworkout.util.Constant;
 import com.example.lazyworkout.util.Database;
+import com.example.lazyworkout.util.Time;
 import com.example.lazyworkout.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +45,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalTime;
 import java.util.Locale;
+import java.util.Map;
 
 public class OverviewActivity extends AppCompatActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener, SensorEventListener {
     private static final String TAG = "OverviewActivity";
@@ -53,18 +58,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     Database db = new Database();
 
     private CircularProgressBar progressBar;
-    private TextView distancesTaken, goal, unit, streak, lockStatus, lockTime;
+    private TextView distancesTaken, goal, unit, currStreak, lockStatus, lockTime;
     private LinearLayout stats;
     private MaterialCardView editGoal, editLockApp;
     private BottomNavigationView bottomNav;
 
     private Intent intent;
     private SensorManager sensorManager;
-    
+
     private boolean showSteps = true;
 
     private float currentDistances;
-
 
 
     @Override
@@ -78,10 +82,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         stepSize = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                 .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
 
+        getCurrentStreak();
         initViews();
 
-        if(ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED) {
             //ask for permission
             Log.d(TAG, "ask permission");
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, Constant.PHYSICAL_ACTIVITY);
@@ -101,7 +106,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         goal = findViewById(R.id.overviewGoal);
         stats = findViewById(R.id.overviewStats);
         unit = findViewById(R.id.overviewUnit);
-        streak = findViewById(R.id.overviewStreak); //TODO: impl compute streak
+        currStreak = findViewById(R.id.overviewStreak); //TODO: impl compute streak
         lockStatus = findViewById(R.id.overviewLockStatus); //TODO: impl lock app
         lockTime = findViewById(R.id.overviewLockTime); //TODO: impl initial setting
 
@@ -118,6 +123,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         stats.setOnClickListener(this);
         editGoal.setOnClickListener(this);
+        unit.setOnClickListener(this);
 
         bottomNav.setSelectedItemId(R.id.navOverview);
 
@@ -131,6 +137,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case (R.id.overviewStats):
             case (R.id.overviewLayout):
+                if (showSteps) {
+                    changedToStep();
+                } else {
+                    changedToDistance();
+                }
+                break;
+
+            case (R.id.overviewUnit):
                 if (showSteps) {
                     changedToStep();
                 } else {
@@ -153,17 +167,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.navAchievement:
                 startActivity(new Intent(OverviewActivity.this, AchievementActivity.class));
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 return true;
 
             case R.id.navCommunity:
                 startActivity(new Intent(OverviewActivity.this, CommunityActivity.class));
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 return true;
 
             case R.id.navSetting:
                 startActivity(new Intent(OverviewActivity.this, SettingActivity.class));
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
                 return true;
 
         }
@@ -209,12 +223,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        // call updateUI passing in our intent which is holding the data to display.
-        updateViews(intent);
-    }
-};
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // call updateUI passing in our intent which is holding the data to display.
+            updateViews(intent);
+        }
+    };
 
     private void updateViews(Intent intent) {
         currentDistances = intent.getExtras().getFloat("today_distance");
@@ -245,6 +259,50 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public void getCurrentStreak() {
+        DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null) {
+                    User user = document.toObject(User.class);
+                    Map<String, Object> map = document.getData();
+                    int streak = 0;
+                    float todayDistance = user.getDistances(Time.getToday());
+                    float goal = user.getGoal();
+                    Log.d(TAG, "goal = " + goal);
+
+                    if (todayDistance >= goal) {
+                        streak++;
+                        Log.d(TAG, "today counted, distance = " + todayDistance + ", streak = 1");
+                    }
+
+                    long time = Time.getToday() - Time.ONE_DAY;
+                    float distance = user.getDistances(time);
+                    while (distance >= goal) {
+                        streak++;
+                        time = time - Time.ONE_DAY;
+                        distance = user.getDistances(time);
+                        Log.d(TAG, "time = " + time + ",distance = " + distance + ", streak = " + streak);
+                    }
+                    Log.d(TAG, "current streak = " + streak) ;
+                    currStreak.setText(" current streak: " + streak + " days");
+                } else {
+                    Log.d(TAG, "no such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        getCurrentStreak();
+        super.onStart();
     }
 }
 

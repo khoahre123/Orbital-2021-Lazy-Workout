@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Time {
+
+    public static final int ONE_DAY = 86400000;
+
     public static long getToday() {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
