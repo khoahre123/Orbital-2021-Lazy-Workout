@@ -6,65 +6,214 @@
     android:layout_height="match_parent"
     tools:context=".view.OverviewActivity">
 
-    <com.mikhaellopez.circularprogressbar.CircularProgressBar
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:id="@+id/overviewProgressCircular"
-        android:layout_centerInParent="true"
-        app:cpb_background_progressbar_width="20dp"
-        app:cpb_progressbar_width="15dp"
-        app:cpb_round_border="true"/>
+    <TextView
+        android:id="@+id/overviewTodayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="Today"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
 
-    <RelativeLayout
-        android:id="@+id/overviewLayout"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/circle"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:id="@+id/overviewStats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal"
-            tools:ignore="NotSibling">
-
-            <TextView
-                android:id="@+id/overviewStepsTaken"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textSize="30sp" />
-
-            <TextView
-                android:id="@+id/overviewGoal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/overviewStepsTaken"
-                android:layout_centerInParent="true"
-                android:textSize="30dp" />
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/overviewTodayText"
+        android:layout_above="@id/bottomNav"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="20dp"
+        android:weightSum="3" >
 
         <TextView
-            android:id="@+id/overviewUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/overviewStats"
-            android:layout_centerInParent="true"
-            android:text="km"
-            android:textSize="20sp" />
-    </RelativeLayout>
+            android:textSize="20dp"
+            android:text="Distance"
+            android:drawableLeft="@drawable/ic_walking" />
 
-    <Button
-        android:layout_height="60dp"
-        android:layout_width="150dp"
-        android:layout_below="@+id/overviewProgressCircular"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/editGoal"
-        android:text="Edit Goal" />
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:id="@+id/overviewGoalCard"
+            android:layout_weight="2">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:id="@+id/overviewProgressCircular"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginVertical="20dp"
+                    app:cpb_background_progressbar_width="20dp"
+                    app:cpb_progressbar_width="15dp"
+                    app:cpb_round_border="true"/>
+
+                <RelativeLayout
+                    android:id="@+id/overviewLayout"
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/circle"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:id="@+id/overviewStats"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:orientation="horizontal"
+                        tools:ignore="NotSibling">
+
+                        <TextView
+                            android:id="@+id/overviewStepsTaken"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/overviewGoal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/overviewStepsTaken"
+                            android:layout_centerInParent="true"
+                            android:textSize="18dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/overviewUnit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/overviewStats"
+                        android:layout_centerInParent="true"
+                        android:text="km"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/overviewStreak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" current streak"
+                    android:textSize="20dp"
+                    android:drawableLeft="@drawable/ic_streak_red"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/overviewProgressCircular"/>
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:clickable="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="40dp"
+                    app:cardBackgroundColor="@color/browser_actions_bg_grey"
+                    android:layout_below="@+id/overviewStreak"
+                    android:textAlignment="center"
+                    android:id="@+id/editGoal" >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableRight="@drawable/ic_rightarrow_navigation"
+                            android:text="Edit Goal"
+                            android:textSize="20dp" />
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Lock App"
+            android:drawableLeft="@drawable/ic_lock"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:id="@+id/overviewLockCard"
+            android:layout_weight="1">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/overviewLockStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="8dp"
+                    android:drawableLeft="@drawable/ic_status"
+                    android:text=" lock status"
+                    android:textSize="20dp"/>
+
+                <TextView
+                    android:id="@+id/overviewLockTime"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_below="@id/overviewLockStatus"
+                    android:layout_height="wrap_content"
+                    android:text=" activated at"
+                    android:drawableLeft="@drawable/ic_alarm"
+                    android:textSize="20dp"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:clickable="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="45dp"
+                    app:cardBackgroundColor="@color/browser_actions_bg_grey"
+                    android:layout_below="@id/overviewLockTime"
+                    android:textAlignment="center"
+                    android:id="@+id/editLock" >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableRight="@drawable/ic_rightarrow_navigation"
+                            android:text="Customize Lock App"
+                            android:textSize="20dp" />
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

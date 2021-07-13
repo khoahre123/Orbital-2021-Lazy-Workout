@@ -50,8 +50,8 @@ public class StepCountingService extends Service implements SensorEventListener,
     private static final int MICROSECONDS_IN_ONE_MINUTE = 60000000;
 
     //JUST FOR EMULATOR: fake sensor for emulator
-    public static int DEFAULT_SENSOR = Sensor.TYPE_STEP_COUNTER;
-    public static boolean IS_STEP_COUNTER = true;
+    public static int DEFAULT_SENSOR = Sensor.TYPE_ACCELEROMETER;
+    public static boolean IS_STEP_COUNTER = false;
 
     SensorManager sensorManager;
     Sensor stepCounterSensor;
@@ -60,8 +60,11 @@ public class StepCountingService extends Service implements SensorEventListener,
 
     private static float lastSaveDistances;
     private static long lastSaveTime;
-    private float todayDistances;
-    private float sinceBoot;
+
+    //save statistics when signing out
+    public static float todayDistances;
+    public static float sinceBoot;
+
     private float steps;
     private float stepSize;
 
@@ -109,10 +112,15 @@ public class StepCountingService extends Service implements SensorEventListener,
             Log.d(TAG, "no sensor");
         } else {
             Log.d(TAG, "have sensor");
+
             // remove any existing callbacks to the handler
             handler.removeCallbacks(updateBroadcastData);
-            // call our handler with or without delay.
-            handler.post(updateBroadcastData); // 0 seconds
+
+            if (fAuth.getCurrentUser() != null) {
+                // call our handler with or without delay.
+                handler.post(updateBroadcastData); // 0 seconds
+            }
+
 
             startTimer();
 
@@ -125,19 +133,23 @@ public class StepCountingService extends Service implements SensorEventListener,
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
+        Log.d(TAG, "user after signing out = " + db.fAuth.getCurrentUser());
         super.onDestroy();
 
-        //JUST FOR EMULATOR
-        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                .putFloat("since_boot", sinceBoot).commit();
 
-        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                .putFloat("today_distance", todayDistances).commit();
-        Log.d(TAG, "onDestroy " + String.valueOf(todayDistances));
+        if (fAuth.getCurrentUser() != null) {
+            //JUST FOR EMULATOR
+            getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                    .putFloat("since_boot", sinceBoot).commit();
 
-        Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
-        sendBroadcast(broadcastIntent);
+            getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                    .putFloat("today_distance", todayDistances).commit();
+
+            Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
+            sendBroadcast(broadcastIntent);
+        }
         stopTimerTask();
+
     }
 
     long oldTime=0;
@@ -184,19 +196,20 @@ public class StepCountingService extends Service implements SensorEventListener,
         Log.d(TAG, "onRemoved");
         super.onTaskRemoved(rootIntent);
 
-        //JUST FOR EMULATOR
-        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                .putFloat("since_boot", sinceBoot).commit();
-
-        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                .putFloat("today_distance", todayDistances).commit();
-
         Log.d(TAG, "onTaskRemoved " + String.valueOf(todayDistances));
         Log.d(TAG, "onTaskRemoved saved " + String.valueOf(getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                 .getFloat("today_distance", 0)));
 
-        Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
-        sendBroadcast(broadcastIntent);
+        if (fAuth.getCurrentUser() != null) {
+            getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                    .putFloat("since_boot", sinceBoot).commit();
+
+            getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                    .putFloat("today_distance", todayDistances).commit();
+            Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
+            sendBroadcast(broadcastIntent);
+        }
+        stopTimerTask();
     }
 
 
@@ -210,18 +223,21 @@ public class StepCountingService extends Service implements SensorEventListener,
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        steps = computeSteps(event);
-        sinceBoot = (float) (steps * stepSize);
-        todayDistances = sinceBoot - getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
-                .getFloat("pauseCount", 0);
-        updateIfNecessary();
+        if (fAuth.getCurrentUser() == null) {
+            this.stopSelf();
+        } else {
+            steps = computeSteps(event);
+            sinceBoot = (float) (steps * stepSize);
+            todayDistances = sinceBoot - getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+                    .getFloat("pauseCount", 0);
+            updateIfNecessary();
+        }
     }
 
     public boolean updateIfNecessary() {
 
         if (sinceBoot > lastSaveDistances + Constant.SAVE_OFFSET_DISTANCES ||
                     (sinceBoot > 0 && System.currentTimeMillis() > lastSaveTime + Constant.SAVE_OFFSET_TIME)) {
-                Log.d(TAG, "updateIfNecessary");
 
             DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
             userRef.get().addOnCompleteListener(task -> {
@@ -255,33 +271,36 @@ public class StepCountingService extends Service implements SensorEventListener,
 
         Log.d(TAG, "distance database = " + String.valueOf(distanceDtb));
 
-        // start of new day
-        if (distanceDtb == 0.0) {
-            Log.d(TAG, "distance today = 0");
+        if (fAuth.getCurrentUser() != null) {
+            // start of new day
+            if (distanceDtb == 0.0) {
+                Log.d(TAG, "distance today = 0");
 
-            // how current total steps differ from last save steps (from yesterday)
-            Log.d(TAG, "compute pauseDiff = " + String.valueOf(todayDistances));
+                // how current total steps differ from last save steps (from yesterday)
+                Log.d(TAG, "compute pauseDiff = " + String.valueOf(todayDistances));
 
-            // add new day to the database
-            db.insertNewDay(user, Time.getToday(), todayDistances);
-            Log.d(TAG, "insert new day = ");
+                // add new day to the database
+                db.insertNewDay(user, Time.getToday(), todayDistances);
+                Log.d(TAG, "insert new day");
 
-            // update pauseCount for the new day
-            if (todayDistances > 0) {
-                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                        .putFloat("pauseCount", sinceBoot).commit();
+                // update pauseCount for the new day
+                if (todayDistances > 0) {
+                    getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                            .putFloat("pauseCount", sinceBoot).commit();
+                }
             }
+
+            // steps in today only
+            Log.d(TAG, "pause difference = " + String.valueOf(todayDistances));
+
+            // update today steps
+            db.saveCurrentSteps(user, todayDistances);
+            Log.d(TAG, "save current steps");
+            lastSaveDistances = sinceBoot;
+            lastSaveTime = System.currentTimeMillis();
+//                showNotification(); // update notification //TODO
         }
 
-        // steps in today only
-        Log.d(TAG, "pause difference = " + String.valueOf(todayDistances));
-
-        // update today steps
-        db.saveCurrentSteps(user, todayDistances);
-        Log.d(TAG, "save current steps");
-        lastSaveDistances = sinceBoot;
-        lastSaveTime = System.currentTimeMillis();
-//                showNotification(); // update notification //TODO
     }
 
 

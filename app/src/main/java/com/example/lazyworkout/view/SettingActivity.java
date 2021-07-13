@@ -14,7 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
+import com.example.lazyworkout.MainActivity;
 import com.example.lazyworkout.R;
+import com.example.lazyworkout.service.StepCountingService;
 import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -63,7 +65,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
 
-                float goal = Util.getGoal(item); //TODO: implement dtb
+                float goal = Util.getGoal(item);
                 db.updateGoal(goal);
                 getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
                         .putFloat("goal", (float) goal).commit();
@@ -75,7 +77,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
-                float stepSize = Util.getStepsize(item); //TODO: implement dtb
+                float stepSize = Util.getStepsize(item);
                 db.updateStepsize(stepSize);
                 getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
                         .putFloat("step_size", stepSize).commit();
@@ -95,20 +97,18 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     startActivity(new Intent(this, OverviewActivity.class));
                     break;
                 }
-                Bundle bundle = new Bundle();
-                if (goalSelected != null) {
-                    bundle.putString("goalSelected", goalSelected);
-                }
-                if (footSelected != null) {
-                    bundle.putInt("footSelected", footSelected);
-                }
-                Intent intent = new Intent(this, OverviewActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                break;
 
             case (R.id.signOutBtn):
-                Database.fAuth.signOut();
+                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                        .putFloat("since_boot", StepCountingService.sinceBoot).commit();
+
+                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                        .putFloat("today_distance", StepCountingService.todayDistances).commit();
+
+                boolean doneSignout = db.signout();
+                stopService(new Intent(this, StepCountingService.class));
+
+                startActivity(new Intent(this, LoginActivity.class));
 
             default:
                 break;
