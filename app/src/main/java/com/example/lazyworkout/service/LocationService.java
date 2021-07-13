@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.lazyworkout.util.Constant;
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoLocation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -91,9 +93,11 @@ public class LocationService extends Service implements LocationListener  {
 
     public boolean updateIfNecessary() {
         if (lastSaveTime == 0 || System.currentTimeMillis() > lastSaveTime + Constant.SAVE_OFFSET_TIME) {
-            Map<String, Double> object = new HashMap<>();
+            String hash = GeoFireUtils.getGeoHashForLocation(new GeoLocation(latitude, longitude));
+            Map<String, Object> object = new HashMap<>();
             object.put("longitude", longitude);
             object.put("latitude", latitude);
+            object.put("geohash", hash);
             FirebaseFirestore.getInstance().collection("users").document(uid).set(object, SetOptions.merge());
             lastSaveTime = System.currentTimeMillis();
         }

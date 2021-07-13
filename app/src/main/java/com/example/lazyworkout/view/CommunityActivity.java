@@ -12,15 +12,31 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.service.LocationService;
+import com.example.lazyworkout.util.Database;
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQueryBounds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -29,6 +45,10 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 
     private Button goToChat;
     private BottomNavigationView bottomNav;
+    private String uid = FirebaseAuth.getInstance().getUid();
+    private final double radius = 10*1000;
+    private GeoLocation[] geolocation = new GeoLocation[1];
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +108,58 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 return true;
         }
         return true;
+    }
+
+    public void getOwnLocation() {
+        FirebaseFirestore.getInstance().collection("users").document(uid).get().
+                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot != null) {
+                                geolocation[0] = documentSnapshot.get("geohash", GeoLocation.class);
+                            } else {
+                                geolocation[0] = null;
+                                Log.d("Community", "task is null");
+                            }
+                            getNearestUser();
+                        }
+                    }
+                });
+    }
+
+    public void getNearestUser() {
+        List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(geolocation[0], radius);
+        final List<Task<QuerySnapshot>> tasks = new ArrayList<>();
+        for (GeoQueryBounds b: bounds) {
+            Query q = db.collection("users").orderBy("geohash")
+                    .startAt(b.startHash)
+                    .endAt(b.endHash);
+            tasks.add(q.get());
+        }
+
+        Tasks.whenAllComplete(tasks)
+                .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<List<Task<?>>> t) {
+                        List<DocumentSnapshot> matchingDocs = new ArrayList<>();
+
+                        for (Task<QuerySnapshot> task: tasks) {
+                            QuerySnapshot snap = task.getResult();
+                            for (DocumentSnapshot doc : snap.getDocuments()) {
+                                double lat = doc.getDouble("latitude");
+                                double lng = doc.getDouble("longitude");
+
+                                GeoLocation docLocation = new GeoLocation(lat,lng);
+                                double distance = GeoFireUtils.getDistanceBetween(docLocation, geolocation[0]);
+                                if (distance <= radius) {
+                                    matchingDocs.add(doc);
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     @Override

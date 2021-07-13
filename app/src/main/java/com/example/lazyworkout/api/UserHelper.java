@@ -1,10 +1,15 @@
 package com.example.lazyworkout.api;
 
 import com.example.lazyworkout.model.UserMessage;
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoQueryBounds;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import java.util.List;
 
 public class UserHelper {
 
@@ -24,6 +29,7 @@ public class UserHelper {
     }
 
     // --- GET ---
+
 
     public static Task<DocumentSnapshot> getUser(String uid){
         return UserHelper.getUsersCollection().document(uid).get();
