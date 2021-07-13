@@ -60,7 +60,7 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
                 overridePendingTransition(0,0);
                 return true;
         }
-        return false;
+        return true;
     }
 
 }
