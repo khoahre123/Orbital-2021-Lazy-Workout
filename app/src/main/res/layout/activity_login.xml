@@ -33,11 +33,14 @@
             android:layout_below="@id/loginLogo"
             android:layout_marginTop="10dp"
             android:hint="Email"
+            android:textColorHint="#6E6D6D"
+            app:boxBackgroundColor="#C9DCDCDC"
             android:visibility="visible">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/loginInputEmail"
                 android:layout_width="match_parent"
+                android:textColor="#000000"
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -49,12 +52,15 @@
             android:layout_below="@id/loginTextFieldEmail"
             android:layout_marginTop="30dp"
             android:hint="Password"
+            android:textColorHint="#6E6D6D"
+            app:boxBackgroundColor="#C9DCDCDC"
             android:visibility="visible">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/loginInputPassword"
                 android:layout_width="match_parent"
                 android:password="true"
+                android:textColor="#000000"
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -82,6 +88,7 @@
             android:layout_marginEnd="35dp"
             android:background="@drawable/roundbutton"
             android:text="log in"
+            android:textColor="#FFFFFF"
             app:backgroundTint="#E1FFA5AB" />
 
         <Button
@@ -94,6 +101,7 @@
             android:layout_marginStart="35dp"
             android:layout_marginTop="21dp"
             android:layout_marginEnd="35dp"
+            android:textColor="#FFFFFF"
             android:background="@drawable/roundbutton"
             android:text="create an account"
             app:backgroundTint="#E0FFA5AB" />
