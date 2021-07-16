@@ -18,6 +18,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.lazyworkout.R;
+import com.example.lazyworkout.adapter.CommunityAdapter;
+import com.example.lazyworkout.model.LocationUser;
+import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.service.LocationService;
 import com.example.lazyworkout.util.Database;
 import com.firebase.geofire.GeoFireUtils;
@@ -49,6 +52,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     private final double radius = 10*1000;
     private GeoLocation[] geolocation = new GeoLocation[1];
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private List<LocationUser> matchingDocs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +147,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<List<Task<?>>> t) {
-                        List<DocumentSnapshot> matchingDocs = new ArrayList<>();
 
                         for (Task<QuerySnapshot> task: tasks) {
                             QuerySnapshot snap = task.getResult();
@@ -154,12 +157,22 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                                 GeoLocation docLocation = new GeoLocation(lat,lng);
                                 double distance = GeoFireUtils.getDistanceBetween(docLocation, geolocation[0]);
                                 if (distance <= radius) {
-                                    matchingDocs.add(doc);
+                                    String name = doc.getString("name");
+                                    String uid = doc.getString("uid");
+                                    String geohash = doc.getString("geohash");
+
+                                    matchingDocs.add(new LocationUser(name, uid, lat, lng, geohash, distance));
                                 }
                             }
                         }
+                        populateRecycler();
                     }
                 });
+    }
+
+    public void populateRecycler() {
+        CommunityAdapter communityAdapter = new CommunityAdapter(this, matchingDocs);
+
     }
 
     @Override

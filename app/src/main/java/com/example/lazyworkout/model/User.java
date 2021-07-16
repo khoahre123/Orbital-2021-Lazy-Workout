@@ -20,6 +20,9 @@ public class User {
     private float goal;
     private float stepSize;
     public TrackingRecord records;
+    private double latitude;
+    private double longitude;
+    private String geohash;
 
     public User(String uid, String name) {
         this.uid = uid;
@@ -64,6 +67,12 @@ public class User {
     public TrackingRecord getRecords() {
         return records;
     }
+
+    public String getGeohash() {return geohash; }
+
+    public double getLatitude() {return latitude; }
+
+    public double getLongitude() {return longitude; }
 
     public float getDistances(long time) {
         try {
