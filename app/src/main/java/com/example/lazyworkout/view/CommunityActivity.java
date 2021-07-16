@@ -3,6 +3,8 @@ package com.example.lazyworkout.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
@@ -50,9 +52,11 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     private BottomNavigationView bottomNav;
     private String uid = FirebaseAuth.getInstance().getUid();
     private final double radius = 10*1000;
-    private GeoLocation[] geolocation = new GeoLocation[1];
+    private String[] geolocation = new String[1];
+    private GeoLocation center;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private List<LocationUser> matchingDocs = new ArrayList<>();
+    private RecyclerView nearByUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 
         initViews();
         startLocationService();
+        getOwnLocation();
     }
 
     @Override
@@ -83,6 +88,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     private void initViews() {
         goToChat = findViewById(R.id.communityGoToChatBtn);
         bottomNav = findViewById(R.id.bottomNav);
+        nearByUser = findViewById(R.id.nearByUser);
 
         goToChat.setOnClickListener(this);
         bottomNav.setSelectedItemId(R.id.navOverview);
@@ -116,25 +122,26 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 
     public void getOwnLocation() {
         FirebaseFirestore.getInstance().collection("users").document(uid).get().
-                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot documentSnapshot = task.getResult();
-                            if (documentSnapshot != null) {
-                                geolocation[0] = documentSnapshot.get("geohash", GeoLocation.class);
-                            } else {
-                                geolocation[0] = null;
-                                Log.d("Community", "task is null");
-                            }
-                            getNearestUser();
+                addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if (documentSnapshot != null) {
+                            geolocation[0] = documentSnapshot.getString("geohash");
+                            double lat = documentSnapshot.getDouble("latitude");
+                            double lng = documentSnapshot.getDouble("longitude");
+                            center = new GeoLocation(lat, lng);
+                        } else {
+                            geolocation[0] = null;
+                            center = new GeoLocation(0,0);
+                            Log.d("Community", "task is null");
                         }
+                        getNearestUser();
                     }
                 });
     }
 
     public void getNearestUser() {
-        List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(geolocation[0], radius);
+        List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(center, radius);
         final List<Task<QuerySnapshot>> tasks = new ArrayList<>();
         for (GeoQueryBounds b: bounds) {
             Query q = db.collection("users").orderBy("geohash")
@@ -144,35 +151,33 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         }
 
         Tasks.whenAllComplete(tasks)
-                .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<List<Task<?>>> t) {
+                .addOnCompleteListener(t -> {
 
-                        for (Task<QuerySnapshot> task: tasks) {
-                            QuerySnapshot snap = task.getResult();
-                            for (DocumentSnapshot doc : snap.getDocuments()) {
-                                double lat = doc.getDouble("latitude");
-                                double lng = doc.getDouble("longitude");
+                    for (Task<QuerySnapshot> task: tasks) {
+                        QuerySnapshot snap = task.getResult();
+                        for (DocumentSnapshot doc : snap.getDocuments()) {
+                            double lat = doc.getDouble("latitude");
+                            double lng = doc.getDouble("longitude");
 
-                                GeoLocation docLocation = new GeoLocation(lat,lng);
-                                double distance = GeoFireUtils.getDistanceBetween(docLocation, geolocation[0]);
-                                if (distance <= radius) {
-                                    String name = doc.getString("name");
-                                    String uid = doc.getString("uid");
-                                    String geohash = doc.getString("geohash");
+                            GeoLocation docLocation = new GeoLocation(lat,lng);
+                            double distance = GeoFireUtils.getDistanceBetween(docLocation, center);
+                            if (distance <= radius) {
+                                String name = doc.getString("name");
+                                String uid = doc.getString("uid");
+                                String geohash = doc.getString("geohash");
 
-                                    matchingDocs.add(new LocationUser(name, uid, lat, lng, geohash, distance));
-                                }
+                                matchingDocs.add(new LocationUser(name, uid, lat, lng, geohash, distance));
                             }
                         }
-                        populateRecycler();
                     }
+                    populateRecycler();
                 });
     }
 
     public void populateRecycler() {
         CommunityAdapter communityAdapter = new CommunityAdapter(this, matchingDocs);
-
+        nearByUser.setLayoutManager(new LinearLayoutManager(this));
+        nearByUser.setAdapter(communityAdapter);
     }
 
     @Override

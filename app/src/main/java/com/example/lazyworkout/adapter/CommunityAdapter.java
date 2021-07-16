@@ -58,9 +58,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.MyHo
 
         public MyHolder(@NonNull @NotNull View itemView) {
             super(itemView);
-            locationImage.findViewById(R.id.locationImage);
-            locationNameView.findViewById(R.id.locationNameView);
-            locationDistance.findViewById(R.id.locationDistance);
+            locationImage = itemView.findViewById(R.id.locationImage);
+            locationNameView = itemView.findViewById(R.id.locationNameView);
+            locationDistance = itemView.findViewById(R.id.locationDistance);
         }
 
         public void bind(LocationUser locationUser) {
