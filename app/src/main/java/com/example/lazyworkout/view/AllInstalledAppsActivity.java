@@ -1,12 +1,10 @@
-package com.example.lazyworkout.view;
+    package com.example.lazyworkout.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.app.AppOpsManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -24,15 +22,19 @@ import android.widget.Button;
 
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.model.App;
-import com.example.lazyworkout.model.AppAdapter;
-import com.example.lazyworkout.util.Constant;
+import com.example.lazyworkout.adapter.AppAdapter;
+import com.example.lazyworkout.model.User;
+import com.example.lazyworkout.util.Database;
+import com.example.lazyworkout.util.Time;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class AllInstalledAppsActivity extends AppCompatActivity implements View.OnClickListener {
+    public class AllInstalledAppsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "AllInstalledAppsActivit";
 
@@ -46,24 +48,16 @@ public class AllInstalledAppsActivity extends AppCompatActivity implements View.
 
     AppAdapter adapter;
 
+    Database db = new Database();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_installed_apps);
 
-        initViews();
-        adapter = new AppAdapter(appModelList, this);
+        loadLockedApps();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        progressDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                getInstalledApps();
-            }
-        });
         if (!(isAccessGranted())) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle("User Permission")
@@ -83,12 +77,15 @@ public class AllInstalledAppsActivity extends AppCompatActivity implements View.
 
     @Override
     protected void onResume() {
-//        Log.d(TAG, "onResume");
+        Log.d(TAG, "onResume");
         super.onResume();
 
-        progressDialog.setTitle("Fetching Apps");
-        progressDialog.setMessage("Loading");
-        progressDialog.show();
+        if (progressDialog != null) {
+            Log.d(TAG, "progress not null");
+            progressDialog.setTitle("Fetching Apps");
+            progressDialog.setMessage("Loading");
+            progressDialog.show();
+        }
 
         if (!(isAccessGranted())) {
             Log.d(TAG, "onResume " + isAccessGranted());
@@ -108,7 +105,32 @@ public class AllInstalledAppsActivity extends AppCompatActivity implements View.
         }
     }
 
-    private void initViews() {
+    private void loadLockedApps() {
+        DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null) {
+                    User user = document.toObject(User.class);
+                    Map<String, Object> map = document.getData();
+                    Log.d(TAG, "user map: " + map.toString());
+
+                    List<String> lockedAppsList = user.getLockedApps();
+
+                    initViews(lockedAppsList);
+
+                } else {
+                    Log.d(TAG, "no such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+    }
+
+    private void initViews(List<String> lockedAppsList) {
+
+        Log.d(TAG, "initViews");
 
         appsView = findViewById(R.id.allInstalledApps);
 
@@ -117,14 +139,33 @@ public class AllInstalledAppsActivity extends AppCompatActivity implements View.
 
         progressDialog = new ProgressDialog(this);
 
+        progressDialog.setTitle("Fetching Apps");
+        progressDialog.setMessage("Loading");
+
+
         progressDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                getInstalledApps();
+                Log.d(TAG, "about to get installed apps");
+                getInstalledApps(lockedAppsList);
             }
         });
 
+        progressDialog.show();
+
         goToOverviewBtn.setOnClickListener(this);
+
+        adapter = new AppAdapter(appModelList, this);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+        progressDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                getInstalledApps(lockedAppsList);
+            }
+        });
     }
 
     @Override
@@ -143,7 +184,9 @@ public class AllInstalledAppsActivity extends AppCompatActivity implements View.
         }
     }
 
-    public void getInstalledApps() {
+    public void getInstalledApps(List<String> lockedAppsList) {
+        Log.d(TAG, "get installed apps");
+
         List<PackageInfo>packageInfos = getPackageManager().getInstalledPackages(0);
 
         for (int i = 0; i < packageInfos.size(); i++) {
@@ -155,11 +198,21 @@ public class AllInstalledAppsActivity extends AppCompatActivity implements View.
                 continue;
             }
 
-            appModelList.add(new App(packageName, name, icon, 0));
+            if (!(lockedAppsList.isEmpty())) {
+                if (lockedAppsList.contains(packageName)) {
+                    appModelList.add(new App(packageName, name, icon, 1));
+                } else {
+                    appModelList.add(new App(packageName, name, icon, 0));
+                }
+            } else {
+                appModelList.add(new App(packageName, name, icon, 0));
+            }
+
         }
 
         adapter.notifyDataSetChanged();
         progressDialog.dismiss();
+        Log.d(TAG, "done get installed apps");
     }
 
     private boolean isAccessGranted() {
@@ -184,4 +237,5 @@ public class AllInstalledAppsActivity extends AppCompatActivity implements View.
         Log.d(TAG, "onPause");
         super.onPause();
     }
+
 }

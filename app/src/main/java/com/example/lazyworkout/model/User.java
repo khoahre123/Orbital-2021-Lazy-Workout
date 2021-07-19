@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ public class User {
     private double latitude;
     private double longitude;
     private String geohash;
+    private List<String> lockedApps;
 
     public User(String uid, String name) {
         this.uid = uid;
@@ -73,6 +75,10 @@ public class User {
     public double getLatitude() {return latitude; }
 
     public double getLongitude() {return longitude; }
+
+    public List<String> getLockedApps() {
+        return lockedApps;
+    }
 
     public float getDistances(long time) {
         try {

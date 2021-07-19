@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -96,6 +97,13 @@ public class Database {
     public void updateStepsize(float stepsize) {
         Map<String, Object> data = new HashMap<>();
         data.put("stepSize", stepsize);
+
+        fStore.collection(DB_NAME).document(getID()).set(data, SetOptions.merge());
+    }
+
+    public void updateLockedApps(List<String> lockedApps) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("lockedApps", lockedApps);
 
         fStore.collection(DB_NAME).document(getID()).set(data, SetOptions.merge());
     }

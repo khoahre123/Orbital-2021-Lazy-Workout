@@ -1,17 +1,19 @@
-package com.example.lazyworkout.model;
+package com.example.lazyworkout.adapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lazyworkout.R;
+import com.example.lazyworkout.model.App;
+import com.example.lazyworkout.util.Database;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +24,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.adapter_design_b
 
     List<App> appModels = new ArrayList<>();
     Context context;
+    List<String> lockedApps = new ArrayList<>();
+    Database db = new Database();
 
     public AppAdapter(List<App> appModels, Context context) {
         this.appModels = appModels;
@@ -51,6 +55,28 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.adapter_design_b
         } else {
             holder.appStatus.setImageResource(R.drawable.ic_lock);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (app.getStatus() == 0)  {
+                    app.setStatus(1);
+                    holder.appStatus.setImageResource(R.drawable.ic_lock);
+                    Toast.makeText(context, app.getAppName() + " is locked",
+                            Toast.LENGTH_SHORT).show();
+                    lockedApps.add(app.getPackageName());
+                    db.updateLockedApps(lockedApps);
+                } else {
+                    app.setStatus(0);
+                    holder.appStatus.setImageResource(R.drawable.ic_unlock);
+                    Toast.makeText(context, app.getAppName() + " is unlocked",
+                            Toast.LENGTH_SHORT).show();
+                    lockedApps.remove(app.getPackageName());
+                    db.updateLockedApps(lockedApps);
+                }
+
+            }
+        });
 
     }
 

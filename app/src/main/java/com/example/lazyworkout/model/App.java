@@ -20,6 +20,22 @@ public class App {
         return packageName;
     }
 
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public void setAppIcon(Drawable appIcon) {
+        this.appIcon = appIcon;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public String getAppName() {
         return appName;
     }
