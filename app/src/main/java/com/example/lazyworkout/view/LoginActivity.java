@@ -138,9 +138,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         if (user.isEmailVerified()) {
                             if (isFirstTimeUser) {
-                                startActivity(new Intent(LoginActivity.this, LockSettingActivity.class));
+                                startActivity(new Intent(LoginActivity.this, AllInstalledAppsActivity.class));
                             } else {
-                                startActivity(new Intent(LoginActivity.this, OverviewActivity.class));
+                                // TODO: just setting locksetting first
+                                startActivity(new Intent(LoginActivity.this, AllInstalledAppsActivity.class));
                             }
 
                         } else {

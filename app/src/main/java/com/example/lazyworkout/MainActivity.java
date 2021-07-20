@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.lazyworkout.view.AllInstalledAppsActivity;
 import com.example.lazyworkout.view.OverviewActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             finish();
-            Intent intent = new Intent(this, OverviewActivity.class);
+//            Intent intent = new Intent(this, OverviewActivity.class);
+            Intent intent = new Intent(this, AllInstalledAppsActivity.class);
             startActivity(intent);
         } else {
             finish();
