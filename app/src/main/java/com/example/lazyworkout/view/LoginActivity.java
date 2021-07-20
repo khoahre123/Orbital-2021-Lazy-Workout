@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.lazyworkout.R;
+import com.example.lazyworkout.api.AuthenticationHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -190,11 +191,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public boolean validateEmail(String email) {
 
-        if (email.isEmpty()) {
-            txtInputFieldEmail.setError("Email is required");
-            return false;
-        }else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            txtInputFieldEmail.setError("The email is invalid");
+        String authenticate = AuthenticationHelper.validateEmail(email);
+        if (authenticate != null) {
+            txtInputFieldEmail.setError(authenticate);
             return false;
         } else {
             txtInputFieldEmail.setError(null);
@@ -210,7 +209,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public boolean validatePassword(String password) {
 
-        if (password.isEmpty()) {
+        String authenticate = AuthenticationHelper.validatePassword(password);
+        if (authenticate != null) {
             txtInputFieldPassword.setError("Password is required");
             return false;
         } else {
