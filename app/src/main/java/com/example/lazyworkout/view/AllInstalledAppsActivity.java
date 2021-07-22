@@ -1,5 +1,6 @@
     package com.example.lazyworkout.view;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +15,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -36,74 +39,109 @@ import java.util.Map;
 
     public class AllInstalledAppsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "AllInstalledAppsActivit";
+        private static final String TAG = "AllInstalledAppsActivit";
 
-    private Button goToOverviewBtn;
-    private RecyclerView recyclerView;
-    private ProgressDialog progressDialog;
+        private Button goToOverviewBtn;
+        private RecyclerView recyclerView;
+        private ProgressDialog progressDialog;
 
-    private ConstraintLayout appsView;
+        public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2323;
 
-    List<App> appModelList = new ArrayList<>();
+        private ConstraintLayout appsView;
 
-    AppAdapter adapter;
+        List<App> appModelList = new ArrayList<>();
 
-    Database db = new Database();
+        AppAdapter adapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_installed_apps);
+        Database db = new Database();
 
-        loadLockedApps();
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            Log.d(TAG, "onCreate");
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_all_installed_apps);
 
-        if (!(isAccessGranted())) {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle("User Permission")
-                    .setMessage("Sorry. Please allow " +
-                            "app usage permission first")
-                    .setNeutralButton("Settings", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-                            startActivity(intent);
-                        }
-                    })
-                    .setCancelable(false)
-                    .show();
-        }
-    }
+            loadLockedApps();
 
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume");
-        super.onResume();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+                    !Settings.canDrawOverlays(this)) {
+                RequestPermission();
+            }
 
-        if (progressDialog != null) {
-            Log.d(TAG, "progress not null");
-            progressDialog.setTitle("Fetching Apps");
-            progressDialog.setMessage("Loading");
-            progressDialog.show();
+            if (!(isAccessGranted())) {
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("User Permission")
+                        .setMessage("Sorry. Please allow " +
+                                "app usage permission first")
+                        .setNeutralButton("Settings", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                                startActivity(intent);
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+            }
         }
 
-        if (!(isAccessGranted())) {
-            Log.d(TAG, "onResume " + isAccessGranted());
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle("User Permission")
-                    .setMessage("Sorry. Please allow " +
-                            "app usage permission first")
-                    .setNeutralButton("Settings", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-                            startActivity(intent);
-                        }
-                    })
-                    .setCancelable(false)
-                    .show();
+        @Override
+        protected void onResume() {
+            Log.d(TAG, "onResume");
+            super.onResume();
+
+            if (progressDialog != null) {
+                Log.d(TAG, "progress not null");
+                progressDialog.setTitle("Fetching Apps");
+                progressDialog.setMessage("Loading");
+                progressDialog.show();
+            }
+
+            if (!(isAccessGranted())) {
+                Log.d(TAG, "onResume " + isAccessGranted());
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("User Permission")
+                        .setMessage("Sorry. Please allow " +
+                                "app usage permission first")
+                        .setNeutralButton("Settings", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                                startActivity(intent);
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+            }
         }
-    }
+
+        private void RequestPermission() {
+            // Check if Android M or higher
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // Show alert dialog to the user saying a separate permission is needed
+                // Launch the settings activity if the user prefers
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + this.getPackageName()));
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            }
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.canDrawOverlays(this)) {
+//                        PermissionDenied();
+                    } else {
+                        // Permission Granted-System will work
+                    }
+
+                }
+            }
+        }
+
 
     private void loadLockedApps() {
         DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
@@ -187,25 +225,35 @@ import java.util.Map;
     public void getInstalledApps(List<String> lockedAppsList) {
         Log.d(TAG, "get installed apps");
 
-        List<PackageInfo>packageInfos = getPackageManager().getInstalledPackages(0);
+        List<ApplicationInfo>packageInfos = getPackageManager().getInstalledApplications(0);
 
         for (int i = 0; i < packageInfos.size(); i++) {
-            String name = packageInfos.get(i).applicationInfo.loadLabel(getPackageManager()).toString();
-            Drawable icon = packageInfos.get(i).applicationInfo.loadIcon(getPackageManager());
+
+            String name = packageInfos.get(i).loadLabel(getPackageManager()).toString();
+            Drawable icon = packageInfos.get(i).loadIcon(getPackageManager());
             String packageName = packageInfos.get(i).packageName;
+
+
 
             if (packageName.equals("com.example.lazyworkout")) {
                 continue;
             }
 
-            if (!(lockedAppsList.isEmpty())) {
-                if (lockedAppsList.contains(packageName)) {
-                    appModelList.add(new App(packageName, name, icon, 1));
+//            if ((packageInfos.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+//                // System application
+//            }
+
+            if (getPackageManager().getLaunchIntentForPackage(packageInfos.get(i).packageName) != null){
+                //If you're here, then this is a launch-able app
+                if (!(lockedAppsList.isEmpty())) {
+                    if (lockedAppsList.contains(packageName)) {
+                        appModelList.add(new App(packageName, name, icon, 1));
+                    } else {
+                        appModelList.add(new App(packageName, name, icon, 0));
+                    }
                 } else {
                     appModelList.add(new App(packageName, name, icon, 0));
                 }
-            } else {
-                appModelList.add(new App(packageName, name, icon, 0));
             }
 
         }

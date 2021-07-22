@@ -9,6 +9,13 @@ public class SensorRestarterBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(SensorRestarterBroadcastReceiver.class.getSimpleName(), "Service Stops! Oooooooooooooppppssssss!!!!");
-        context.startService(new Intent(context, StepCountingService.class));
+
+        String service = intent.getStringExtra("service");
+
+        if (service.equals("stepcounter")) {
+            context.startService(new Intent(context, StepCountingService.class));
+        } else if (service.equals("locking")) {
+            context.startService(new Intent(context, LockService.class));
+        }
     }
 }
