@@ -10,7 +10,142 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/achivementText"
-        android:text="Achiviement Screen" />
+        android:text="Mission" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/achivementText">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/imageLinearLayout"
+            android:weightSum="3">
+
+            <ImageView
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:id="@+id/dayDistanceImage"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/day_distance"
+                android:scaleType="fitXY"
+                android:layout_weight="1"
+                android:adjustViewBounds="true" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/currentDistanceImage"
+                android:layout_toRightOf="@+id/dayDistanceImage"
+                android:layout_marginTop="15dp"
+
+                android:layout_weight="1"
+                android:src="@drawable/current_distance"/>
+
+            <ImageView
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:id="@+id/dayStreakImage"
+                android:layout_weight="1"
+                android:layout_toRightOf="@id/currentDistanceImage"
+                android:layout_marginTop="15dp"
+
+                android:src="@drawable/flame"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="3"
+            android:id="@+id/textLinearLayout" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Longest day distance:"
+                android:id="@+id/dayDistanceText"
+                android:gravity="center"
+                android:layout_weight="0.3"
+                android:layout_marginTop="15dp"/>
+
+
+            <TextView
+                android:id="@+id/currentDistanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/dayDistanceImage"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Total distance:" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Longest streak:"
+                android:id="@+id/dayStreakText"
+                android:gravity="center"
+                android:layout_alignLeft="@+id/currentDistanceText"
+                android:layout_weight="1"
+                android:layout_marginTop="15dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="3"
+            android:id="@+id/setTextLinearLayout" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 km"
+                android:id="@+id/longestDayDistance"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"/>
+
+
+            <TextView
+                android:id="@+id/currentDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/dayDistanceImage"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="0 km" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 days"
+                android:id="@+id/dayStreak"
+                android:gravity="center"
+                android:layout_alignLeft="@+id/currentDistanceText"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@id/bottomNav"

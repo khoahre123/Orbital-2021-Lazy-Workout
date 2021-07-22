@@ -8,6 +8,7 @@ import com.example.lazyworkout.util.Time;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +20,12 @@ public class User {
     private String uid;
     private String name;
     private float goal;
-    private float stepSize;
+    private float stepSize, longestDay, currentStreak, longestStreak;
     public TrackingRecord records;
     private double latitude;
     private double longitude;
     private String geohash;
-    private List<String> lockedApps;
+    private List<String> lockedApps = new ArrayList<>();
 
     public User(String uid, String name) {
         this.uid = uid;
@@ -86,6 +87,22 @@ public class User {
         } catch (NullPointerException e) {
             return 0;
         }
+    }
+
+    public float getTotalDistances() {
+        return getRecords().getTotalDistances();
+    }
+
+    public float getCurrentStreak() {
+        return currentStreak;
+    }
+
+    public float getLongestDay() {
+        return longestDay;
+    }
+
+    public float getLongestStreak() {
+        return longestStreak;
     }
 
     public User setGoal(float goal) {
