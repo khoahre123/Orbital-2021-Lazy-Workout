@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,11 +40,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.security.Permission;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.time.LocalTime;
-import java.util.Locale;
 import java.util.Map;
 
 public class OverviewActivity extends AppCompatActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener, SensorEventListener {
@@ -95,7 +90,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         intent = new Intent(this, StepCountingService.class);
         startService(new Intent(getBaseContext(), StepCountingService.class));
-        startService(new Intent(getBaseContext(), LockService.class));
+        startService(new Intent(getBaseContext(), LockService.class));//TODO
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));

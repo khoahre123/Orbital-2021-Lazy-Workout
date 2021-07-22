@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.lazyworkout.service.LockService;
 import com.example.lazyworkout.view.AllInstalledAppsActivity;
-import com.example.lazyworkout.view.OverviewActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

@@ -207,6 +207,7 @@ public class StepCountingService extends Service implements SensorEventListener,
             getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
                     .putFloat("today_distance", todayDistances).commit();
             Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
+            broadcastIntent.putExtra("service", "stepcounter");
             sendBroadcast(broadcastIntent);
         }
         stopTimerTask();
