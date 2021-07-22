@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.model.User;
+import com.example.lazyworkout.service.LockService;
 import com.example.lazyworkout.service.StepCountingService;
 import com.example.lazyworkout.util.Constant;
 import com.example.lazyworkout.util.Database;
@@ -94,6 +95,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         intent = new Intent(this, StepCountingService.class);
         startService(new Intent(getBaseContext(), StepCountingService.class));
+        startService(new Intent(getBaseContext(), LockService.class));
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));

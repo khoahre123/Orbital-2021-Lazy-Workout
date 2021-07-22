@@ -187,26 +187,52 @@ import java.util.Map;
     public void getInstalledApps(List<String> lockedAppsList) {
         Log.d(TAG, "get installed apps");
 
-        List<PackageInfo>packageInfos = getPackageManager().getInstalledPackages(0);
+        int flags = PackageManager.GET_META_DATA |
+                PackageManager.GET_SHARED_LIBRARY_FILES |
+                PackageManager.GET_UNINSTALLED_PACKAGES;
+
+        List<ApplicationInfo>packageInfos = getPackageManager().getInstalledApplications(0);
 
         for (int i = 0; i < packageInfos.size(); i++) {
-            String name = packageInfos.get(i).applicationInfo.loadLabel(getPackageManager()).toString();
-            Drawable icon = packageInfos.get(i).applicationInfo.loadIcon(getPackageManager());
+//            String name = packageInfos.get(i).applicationInfo.loadLabel(getPackageManager()).toString();
+//            Drawable icon = packageInfos.get(i).applicationInfo.loadIcon(getPackageManager());
+
+            String name = packageInfos.get(i).loadLabel(getPackageManager()).toString();
+            Drawable icon = packageInfos.get(i).loadIcon(getPackageManager());
             String packageName = packageInfos.get(i).packageName;
+
+
 
             if (packageName.equals("com.example.lazyworkout")) {
                 continue;
             }
 
-            if (!(lockedAppsList.isEmpty())) {
-                if (lockedAppsList.contains(packageName)) {
-                    appModelList.add(new App(packageName, name, icon, 1));
+//            if ((packageInfos.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+//                // System application
+//            }
+
+            if (getPackageManager().getLaunchIntentForPackage(packageInfos.get(i).packageName) != null){
+                //If you're here, then this is a launch-able app
+                if (!(lockedAppsList.isEmpty())) {
+                    if (lockedAppsList.contains(packageName)) {
+                        appModelList.add(new App(packageName, name, icon, 1));
+                    } else {
+                        appModelList.add(new App(packageName, name, icon, 0));
+                    }
                 } else {
                     appModelList.add(new App(packageName, name, icon, 0));
                 }
-            } else {
-                appModelList.add(new App(packageName, name, icon, 0));
             }
+
+//            if (!(lockedAppsList.isEmpty())) {
+//                if (lockedAppsList.contains(packageName)) {
+//                    appModelList.add(new App(packageName, name, icon, 1));
+//                } else {
+//                    appModelList.add(new App(packageName, name, icon, 0));
+//                }
+//            } else {
+//                appModelList.add(new App(packageName, name, icon, 0));
+//            }
 
         }
 
