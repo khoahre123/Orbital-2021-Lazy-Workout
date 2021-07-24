@@ -1,5 +1,7 @@
 package com.example.lazyworkout.model;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -25,6 +27,7 @@ public class User {
     private double longitude;
     private String geohash;
     private List<String> lockedApps;
+    private int lockTimeMinute;
 
     public User(String uid, String name) {
         this.uid = uid;
@@ -80,6 +83,10 @@ public class User {
         return lockedApps;
     }
 
+    public int getLockTimeMinute() {
+        return lockTimeMinute;
+    }
+
     public float getDistances(long time) {
         try {
             return getRecords().getDistances(time);
@@ -96,6 +103,13 @@ public class User {
     public User setStepsize(float length) {
         this.stepSize = length;
         return this;
+    }
+
+    public boolean finishDailyGoal(long time) {
+        float currentDistance = getDistances(time);
+        Log.d("LockService", "current distance = " + currentDistance);
+        Log.d("LockService", "daily goal = " + goal);
+        return (currentDistance >= goal);
     }
 
     @Override

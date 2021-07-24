@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.util.Database;
+import com.example.lazyworkout.util.Time;
 import com.example.lazyworkout.view.LockScreenActivity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -160,7 +161,7 @@ public class LockService extends Service {
         return currentApp;
     }
 
-    public boolean showHomeScreen(){
+    public boolean showLockScreen(){
         Log.d(TAG, "show home screen");
 
         Intent intent = new Intent(this, LockScreenActivity.class);
@@ -186,8 +187,12 @@ public class LockService extends Service {
 
                     if (lockedAppsList.contains(recentTasks)) {
                         Log.d(TAG, "in locked list " + recentTasks);
+                        Log.d(TAG, "start of today = " + Time.getToday() / Time.ONE_MINUTE_MILLIS);
 
-                        showHomeScreen();
+                        //TODO: time picker
+                        if (!user.finishDailyGoal(Time.getToday()) && Time.isLockTime(System.currentTimeMillis(), user.getLockTimeMinute())) {
+                            showLockScreen();
+                        }
                     }
 
                 } else {

@@ -280,11 +280,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                         Log.d(TAG, "today counted, distance = " + todayDistance + ", streak = 1");
                     }
 
-                    long time = Time.getToday() - Time.ONE_DAY;
+                    long time = Time.getToday() - Time.ONE_DAY_MILLIS;
                     float distance = user.getDistances(time);
                     while (distance >= distanceGoal) {
                         streak++;
-                        time = time - Time.ONE_DAY;
+                        time = time - Time.ONE_DAY_MILLIS;
                         distance = user.getDistances(time);
                         Log.d(TAG, "time = " + time + ",distance = " + distance + ", streak = " + streak);
                     }

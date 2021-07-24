@@ -107,6 +107,13 @@ public class Database {
 
         fStore.collection(DB_NAME).document(getID()).set(data, SetOptions.merge());
     }
+
+    public void updateLockTime(int minutes) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("lockTimeMinute", minutes);
+
+        fStore.collection(DB_NAME).document(getID()).set(data, SetOptions.merge());
+    }
 }
 
 
