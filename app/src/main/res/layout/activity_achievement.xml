@@ -144,6 +144,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginLeft="10dp"
         android:layout_below="@id/spotlightAchievement">
 
         <TextView
@@ -157,21 +158,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
+                android:minHeight="30dp"
+                android:id="@+id/dailyWalkingProgress"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0/0 km"
-                android:layout_weight="0.5"
+                android:text="0"
+                android:gravity="right"
+                android:id="@+id/dailyWalkingNow"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="0.3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/0 km"
+                android:id="@+id/dailyWalkingMission"
+                android:layout_weight="0.2"
                 android:layout_marginRight="20dp"
-                android:gravity="right"/>
+                android:gravity="left"/>
         </LinearLayout>
 
         <TextView
@@ -185,21 +199,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
+                android:minHeight="30dp"
+                android:id="@+id/totalWalkingProgress"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0/0 km"
-                android:layout_weight="0.5"
+                android:text="0"
+                android:id="@+id/totalWalkingNow"
+                android:gravity="right"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="0.3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/0 km"
+                android:layout_weight="0.2"
+                android:id="@+id/totalWalkingMission"
                 android:layout_marginRight="20dp"
-                android:gravity="right"/>
+                android:gravity="left"/>
         </LinearLayout>
 
         <TextView
@@ -213,21 +240,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
+                android:minHeight="30dp"
+                android:id="@+id/streakProgress"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0/0 km"
-                android:layout_weight="0.5"
-                android:layout_marginRight="20dp"
-                android:gravity="right"/>
+                android:text="0"
+                android:gravity="right"
+                android:id="@+id/streakNow"
+                android:layout_marginStart="20dp"
+                android:layout_weight="0.25" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/0 days"
+                android:layout_weight="0.15"
+                android:id="@+id/streakMission"
+                android:layout_marginRight="15dp"
+                android:gravity="left"/>
         </LinearLayout>
 
     </LinearLayout>

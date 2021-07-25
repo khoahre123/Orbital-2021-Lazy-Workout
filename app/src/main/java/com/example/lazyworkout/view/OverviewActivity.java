@@ -235,22 +235,37 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     };
 
     private void updateViews(Intent intent) {
-        currentDistances = intent.getExtras().getFloat("today_distance");
-        Log.d(TAG, formatter.format(currentDistances));
+        if (intent.getStringExtra("command").equals("not_update")) {
+            currentDistances = intent.getExtras().getFloat("today_distance");
+            Log.d(TAG, formatter.format(currentDistances));
 
-        progressBar.setProgressWithAnimation(currentDistances);
+            progressBar.setProgressWithAnimation(currentDistances);
 
-        if (showSteps) {
-            changedToStep();
+            if (showSteps) {
+                changedToStep();
+            } else {
+                changedToDistance();
+            }
         } else {
-            changedToDistance();
+            getCurrentStreak();
         }
     }
+
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float currentSteps = event.values[0];
+        Float todayDistance = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("todayDistance", 0);
+        Float totalDistances = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("totalDistances", 0);
+        Float longestDay = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestDay", 0);
         currentDistances = (float) (currentSteps * stepSize);
+        todayDistance += currentDistances;
+        totalDistances += currentDistances;
+        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("totalDistances", totalDistances).apply();
+        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
+        if (todayDistance > longestDay) {
+            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
+        }
         Log.d(TAG, formatter.format(currentDistances));
         if (showSteps) {
             distancesTaken.setText(formatter.format((int) currentSteps));
@@ -277,12 +292,19 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                     Map<String, Object> map = document.getData();
                     int streak = 0;
                     float todayDistance = user.getDistances(Time.getToday());
+                    getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
+                    // Check if the field has been created on firebase or not, if not then created. Also update value in local database
                     if (document.getLong("longestDay") == null) {
                         Map<String, Object> longestDay = new HashMap<>();
                         longestDay.put("longestDay", todayDistance);
+                        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
                         FirebaseFirestore.getInstance().collection("users").document(db.getID()).set(longestDay, SetOptions.merge());
+                    } else { // Compare value of current distance vs longest distance and update if needed
+                        Integer longestDay = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestDay", 0));
+                        if (todayDistance > longestDay) {
+                            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
+                        }
                     }
-                    getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
                     Log.d(TAG, "goal = " + distanceGoal);
 
                     if (todayDistance >= distanceGoal) {
@@ -299,23 +321,32 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                         Log.d(TAG, "time = " + time + ",distance = " + distance + ", streak = " + streak);
                     }
                     Log.d(TAG, "current streak = " + streak);
-                    Map<String, Object> update = new HashMap<>();
-                    update.put("currentStreak", streak);
-                    FirebaseFirestore.getInstance().collection("users").document(db.getID()).set(update, SetOptions.merge());
+                    getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("currentStreak", streak).apply();
+                    // Check if the field has been created on firebase or not, if not then created. Also update value in local database
                     if (document.getLong("longestStreak") == null) {
                         Map<String, Object> longestStreak = new HashMap<>();
                         longestStreak.put("longestStreak", streak);
+                        longestStreak.put("currentStreak", streak);
+                        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestStreak", streak).apply();
                         FirebaseFirestore.getInstance().collection("users").document(db.getID()).set(longestStreak, SetOptions.merge());
+                    } else { // Compare value of current distance vs longest distance and update if needed
+                        Integer longestStreak = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestStreak", 0));
+                        if (streak > longestStreak) {
+                            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestStreak", streak).apply();
+                        }
                     }
                     currStreak.setText(" current streak: " + streak + " days");
                         getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
                             .putString("current_streak", streak + " days").commit();
+                    Integer totalDistances = Math.round(user.getTotalDistances());
+                    getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("totalDistances", totalDistances).apply();
                 } else {
                     Log.d(TAG, "no such document");
                 }
             } else {
                 Log.d(TAG, "get failed with ", task.getException());
             }
+            sendBroadcast(new Intent("com.example.lazyworkout.achievement"));
         });
     }
 
