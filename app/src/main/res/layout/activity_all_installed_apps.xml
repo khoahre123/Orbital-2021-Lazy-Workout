@@ -7,31 +7,71 @@
     android:id="@+id/allInstalledApps"
     tools:context=".view.AllInstalledAppsActivity">
 
+
+    <TextView
+        android:id="@+id/initialLockTitle"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="87dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Which apps to lock?"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/initialLockDescribe1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/initial_lock_describe1"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/initialLockTitle"
+        app:layout_constraintTop_toBottomOf="@+id/initialLockTitle" />
+
+    <TextView
+        android:id="@+id/initialLockDescribe2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/initial_lock_describe_2"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/initialLockDescribe1"
+        app:layout_constraintStart_toStartOf="@+id/initialLockDescribe1"
+        app:layout_constraintTop_toBottomOf="@+id/initialLockDescribe1" />
+
     <Button
         android:id="@+id/allApssBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="248dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="200dp"
-        android:text="Go to overview"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Finish"
+        app:layout_constraintBottom_toTopOf="@+id/allAppsRecycleView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.038" />
+        app:layout_constraintTop_toBottomOf="@+id/initialLockDescribe2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allAppsRecycleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/allApssBtn" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

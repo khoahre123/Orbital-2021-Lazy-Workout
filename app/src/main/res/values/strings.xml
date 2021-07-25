@@ -57,5 +57,12 @@
     <string name="no_sensor_explain">This app requires a dedicated hardware step sensor - which your device does not have. This app won\'t run on your device.</string>
     <string name="permission_external_storage">No permission to access external storage</string>
     <string name="notification_settings">Notification settings</string>
+    <string name="initial_goal_describe">Tell us a little more about yourself
+            so that we can more accurately calculate your exercise data.</string>
+    <string name="initial_goal_letgo">Let\'s start with setting daily walking goal.</string>
+    <string name="initial_lock_describe1">The chosen apps will be locked until midnight
+        if you do not finish daily walking goal. </string>
+    <string name="initial_lock_describe_2">Tips: Choose apps that make you procastinate to take exercises!</string>
+    <string name="time_picker_describe">Apps will be locked from lock time to midnight if you do not finish daily walking goal. </string>
 
 </resources>

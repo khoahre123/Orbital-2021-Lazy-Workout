@@ -1,5 +1,7 @@
 package com.example.lazyworkout.model;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -8,7 +10,6 @@ import com.example.lazyworkout.util.Time;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,8 @@ public class User {
     private double latitude;
     private double longitude;
     private String geohash;
-    private List<String> lockedApps = new ArrayList<>();
+    private List<String> lockedApps;
+    private int lockTimeMinute;
 
     public User(String uid, String name) {
         this.uid = uid;
@@ -71,24 +73,6 @@ public class User {
         return records;
     }
 
-    public String getGeohash() {return geohash; }
-
-    public double getLatitude() {return latitude; }
-
-    public double getLongitude() {return longitude; }
-
-    public List<String> getLockedApps() {
-        return lockedApps;
-    }
-
-    public float getDistances(long time) {
-        try {
-            return getRecords().getDistances(time);
-        } catch (NullPointerException e) {
-            return 0;
-        }
-    }
-
     public float getTotalDistances() {
         return getRecords().getTotalDistances();
     }
@@ -105,6 +89,28 @@ public class User {
         return longestStreak;
     }
 
+    public String getGeohash() {return geohash; }
+
+    public double getLatitude() {return latitude; }
+
+    public double getLongitude() {return longitude; }
+
+    public List<String> getLockedApps() {
+        return lockedApps;
+    }
+
+    public int getLockTimeMinute() {
+        return lockTimeMinute;
+    }
+
+    public float getDistances(long time) {
+        try {
+            return getRecords().getDistances(time);
+        } catch (NullPointerException e) {
+            return 0;
+        }
+    }
+
     public User setGoal(float goal) {
         this.goal = goal;
         return this;
@@ -113,6 +119,13 @@ public class User {
     public User setStepsize(float length) {
         this.stepSize = length;
         return this;
+    }
+
+    public boolean finishDailyGoal(long time) {
+        float currentDistance = getDistances(time);
+        Log.d("LockService", "current distance = " + currentDistance);
+        Log.d("LockService", "daily goal = " + goal);
+        return (currentDistance >= goal);
     }
 
     @Override

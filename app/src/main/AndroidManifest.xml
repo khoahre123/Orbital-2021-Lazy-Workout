@@ -21,7 +21,7 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +30,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LazyWorkout">
-        <activity android:name=".view.LockScreenActivity"></activity>
+        <activity android:name=".view.TimePickerActivity"></activity>
+        <activity android:name=".view.InitialSettingStepActivity" />
+        <activity android:name=".view.InitialSettingGoalActivity" />
+        <activity android:name=".view.TutorialActivity" />
+        <activity android:name=".view.LockScreenActivity" />
 
         <service
             android:name=".service.LockService"

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.InitialSettingStepActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/initialstepNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/initialStepBackArrow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_arrowback"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/initialStepSkip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Skip"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/initialStepView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_below="@id/initialstepNavigation">
+
+        <TextView
+            android:id="@+id/initialStepTitle"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="30dp"
+            android:text="What is your estimated step size?"
+            android:textStyle="bold"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/initialStepInputField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/initialStepTitle"
+            android:layout_marginVertical="40dp"
+            android:layout_centerHorizontal="true"
+            android:textColorHint="#6E6D6D"
+            app:boxBackgroundColor="#C9DCDCDC"
+            android:layout_marginTop="10dp"
+            android:hint="Step size">
+
+            <AutoCompleteTextView
+                android:id="@+id/initialStepInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:textSize="20dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/initialStepBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="500dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp"
+        android:text="next >"
+        android:layout_marginBottom="10dp"/>
+
+
+</RelativeLayout>
