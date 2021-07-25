@@ -21,7 +21,7 @@ public class User {
     private String uid;
     private String name;
     private float goal;
-    private float stepSize;
+    private float stepSize, longestDay, currentStreak, longestStreak;
     public TrackingRecord records;
     private double latitude;
     private double longitude;
@@ -71,6 +71,22 @@ public class User {
 
     public TrackingRecord getRecords() {
         return records;
+    }
+
+    public float getTotalDistances() {
+        return getRecords().getTotalDistances();
+    }
+
+    public float getCurrentStreak() {
+        return currentStreak;
+    }
+
+    public float getLongestDay() {
+        return longestDay;
+    }
+
+    public float getLongestStreak() {
+        return longestStreak;
     }
 
     public String getGeohash() {return geohash; }

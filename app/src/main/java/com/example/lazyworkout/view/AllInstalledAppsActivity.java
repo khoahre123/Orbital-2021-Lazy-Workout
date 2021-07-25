@@ -68,7 +68,6 @@ import java.util.Map;
             setContentView(R.layout.activity_all_installed_apps);
 
             if (isAllPermissionGranted()) {
-                Log.d(TAG, "all permission granted");
                 loadLockedApps();
             }
 
@@ -79,9 +78,8 @@ import java.util.Map;
             Log.d(TAG, "onResume");
             super.onResume();
 
-
-            if (!(prevPermissionGranted) && isAllPermissionGranted()) {
-                Log.d(TAG, "all permission granted");
+            if (isAllPermissionGranted() && !(prevPermissionGranted)) {
+                prevPermissionGranted = true;
                 if (progressDialog != null) {
                     Log.d(TAG, "progress not null");
                     progressDialog.setTitle("Fetching Apps");
@@ -89,28 +87,28 @@ import java.util.Map;
                     progressDialog.show();
                 }
                 loadLockedApps();
-
-        }
-
+            }
         }
 
         private boolean isAllPermissionGranted() {
-            if (!(permissionUsageStatsGranted())) {
+            if (!(permissionOverlayWindowGranted())) {
                 Log.d(TAG, "usage stats not granted");
                 prevPermissionGranted = false;
-                requestPermissionUsageStats();
+                requestPermissionOverlayWindow();
+                return false;
             } else {
                 Log.d(TAG, "usage stats granted");
-                if (!(permissionOverlayWindowGranted())) {
+                if (!(permissionUsageStatsGranted())) {
                     Log.d(TAG, "overlay window not granted");
                     prevPermissionGranted = false;
-                    requestPermissionOverlayWindow();
+                    requestPermissionUsageStats();
+                    return false;
                 } else {
-                    Log.d(TAG, "overlay window granted");
+                    Log.d(TAG, "all permission granted");
                     return true;
                 }
             }
-            return false;
+
         }
 
         private boolean permissionOverlayWindowGranted() {
@@ -202,8 +200,6 @@ import java.util.Map;
                     if (document != null) {
                         User user = document.toObject(User.class);
                         Map<String, Object> map = document.getData();
-                        Log.d(TAG, "user map: " + map.toString());
-
                         List<String> lockedAppsList = user.getLockedApps();
 
                         initViews(lockedAppsList);
@@ -268,31 +264,10 @@ import java.util.Map;
             switch (v.getId()) {
 
                 case (R.id.allApssBtn):
+                    startActivity(new Intent(AllInstalledAppsActivity.this, OverviewActivity.class));;
+                    break;
 
-                    MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
-                            .setTimeFormat(TimeFormat.CLOCK_12H)
-                            .setHour(18)
-                            .setMinute(00)
-                            .build();
-
-                    timePicker.show(getSupportFragmentManager(), "TIME_PICKER");
-
-                    timePicker.addOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-
-                        }
-                    });
-                    timePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            int hour = timePicker.getHour();
-                            int minute = timePicker.getMinute();
-                            int lockTimeMinute = Time.convertMinute(hour, minute);
-                            db.updateLockTime(lockTimeMinute);
-                            startActivity(new Intent(AllInstalledAppsActivity.this, OverviewActivity.class));
-                        }
-                    });
+                default:
                     break;
             }
         }
