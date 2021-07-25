@@ -91,7 +91,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         nearByUser = findViewById(R.id.nearByUser);
 
         goToChat.setOnClickListener(this);
-        bottomNav.setSelectedItemId(R.id.navOverview);
+        bottomNav.setSelectedItemId(R.id.navCommunity);
 
         bottomNav.setOnNavigationItemSelectedListener(this);
     }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -45,13 +46,10 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_achievement);
-
-        initViews();
-        getData();
-        FirebaseDatabase.getInstance().getReference("users").child(db.getID()).addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                Log.d("Achievement", "1");
                 getData();
             }
 
@@ -60,6 +58,10 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
 
             }
         });
+        setContentView(R.layout.activity_achievement);
+
+        initViews();
+        getData();
 
     }
 
@@ -69,7 +71,7 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
         currentDistance = findViewById(R.id.currentDistance);
         dayStreak = findViewById(R.id.dayStreak);
 
-        bottomNav.setSelectedItemId(R.id.navOverview);
+        bottomNav.setSelectedItemId(R.id.navAchievement);
 
         bottomNav.setOnNavigationItemSelectedListener(this);
 

@@ -84,7 +84,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        bottomNav.setSelectedItemId(R.id.navOverview);
+        bottomNav.setSelectedItemId(R.id.navSetting);
         bottomNav.setOnNavigationItemSelectedListener(this);
     }
 
