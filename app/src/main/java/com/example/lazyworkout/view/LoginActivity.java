@@ -196,7 +196,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 User newUser = new User(user.getUid(), user.getDisplayName());
                                 db.createNewUser(newUser);
                                 Map<String, Object> map = new HashMap<>();
-                                map.put(newUser.getName(), db.getID());
+                                map.put(newUser.getName(), user.getUid());
                                 Log.d(TAG, newUser.toString());
                                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                                 firestore.collection("userLookup").document("findUserByEmail").set(map, SetOptions.merge());
@@ -274,7 +274,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             User newUser = new User(firebaseUser.getUid(), name);
                             db.createNewUser(newUser);
                             Map<String, Object> map = new HashMap<>();
-                            map.put(name, db.getID());
+                            map.put(name, firebaseUser.getUid());
                             Log.d(TAG, newUser.toString());
                             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                             firestore.collection("userLookup").document("findUserByEmail").set(map, SetOptions.merge());

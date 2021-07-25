@@ -120,7 +120,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         int minute = timePicker.getMinute();
                         int lockTimeMinute = Time.convertMinute(hour, minute);
                         db.updateLockTime(lockTimeMinute);
-                        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                        getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                                 .putInt("lock_minute", lockTimeMinute).commit();
                     }
                 });
@@ -128,10 +128,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
             case (R.id.signOutBtn):
                 if (uid != null) {
-                    getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                    getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                             .putFloat("since_boot", StepCountingService.sinceBoot).commit();
 
-                    getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                    getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                             .putFloat("today_distance", StepCountingService.todayDistances).commit();
                 }
 

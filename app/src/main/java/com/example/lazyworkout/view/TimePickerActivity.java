@@ -16,6 +16,7 @@ import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Time;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
@@ -24,6 +25,7 @@ public class TimePickerActivity extends AppCompatActivity implements View.OnClic
     private Button btn;
 
     Database db = new Database();
+    private String uid = FirebaseAuth.getInstance().getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,7 @@ public class TimePickerActivity extends AppCompatActivity implements View.OnClic
                         int minute = timePicker.getMinute();
                         int lockTimeMinute = Time.convertMinute(hour, minute);
                         db.updateLockTime(lockTimeMinute);
-                        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                        getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                                 .putInt("lock_minute", lockTimeMinute).commit();
                         startActivity(new Intent(TimePickerActivity.this, AllInstalledAppsActivity.class));
                     }

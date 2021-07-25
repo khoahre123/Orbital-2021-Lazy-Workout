@@ -59,7 +59,7 @@
     <string name="notification_settings">Notification settings</string>
     <string name="initial_goal_describe">Tell us a little more about yourself
             so that we can more accurately calculate your exercise data.</string>
-    <string name="initial_goal_letgo">Let\'s start with setting daily walking goal.</string>
+    <string name="initial_goal_letgo">Let\'s start with setting daily walking goal. Default value is 4km.</string>
     <string name="initial_lock_describe1">The chosen apps will be locked until midnight
         if you do not finish daily walking goal. </string>
     <string name="initial_lock_describe_2">Tips: Choose entertaining apps that tend to make you procastinate to take exercises!</string>

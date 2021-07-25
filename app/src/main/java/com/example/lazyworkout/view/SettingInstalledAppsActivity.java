@@ -63,7 +63,7 @@ public class SettingInstalledAppsActivity extends AppCompatActivity {
 
     private void loadLockedApps() {
         if (uid != null) {
-            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(uid);
             userRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();

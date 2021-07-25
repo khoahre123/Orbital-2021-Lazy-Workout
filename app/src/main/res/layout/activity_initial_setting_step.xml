@@ -23,13 +23,22 @@
             android:text="What is your estimated step size?"
             android:textStyle="bold"/>
 
+        <TextView
+            android:id="@+id/initialStepGuide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/initialStepTitle"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/black"
+            android:text="Default value is 75cm."
+            android:textSize="15sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/initialStepInputField"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="200dp"
             android:layout_height="75dp"
-            android:layout_below="@+id/initialStepTitle"
+            android:layout_below="@+id/initialStepGuide"
             android:layout_marginVertical="40dp"
             android:layout_centerHorizontal="true"
             android:textColorHint="#6E6D6D"
