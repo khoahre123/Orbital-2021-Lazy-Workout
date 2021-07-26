@@ -2,6 +2,7 @@ package com.example.lazyworkout.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -77,6 +78,8 @@ public class TimePickerActivity extends AppCompatActivity implements View.OnClic
                         int minute = timePicker.getMinute();
                         int lockTimeMinute = Time.convertMinute(hour, minute);
                         db.updateLockTime(lockTimeMinute);
+                        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                                .putInt("lock_minute", lockTimeMinute).commit();
                         startActivity(new Intent(TimePickerActivity.this, AllInstalledAppsActivity.class));
                     }
                 });

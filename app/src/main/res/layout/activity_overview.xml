@@ -19,7 +19,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@id/overviewTodayText"
         android:layout_above="@id/bottomNav"
@@ -28,6 +28,7 @@
         android:weightSum="3" >
 
         <TextView
+            android:id="@+id/overviewDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#90000000"
@@ -46,19 +47,21 @@
 
 
             <RelativeLayout
+                android:id="@+id/overviewDistanceLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <com.mikhaellopez.circularprogressbar.CircularProgressBar
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
                     android:id="@+id/overviewProgressCircular"
+                    android:layout_width="180dp"
+                    app:cpb_progressbar_color="#E0FFA5AB"
+                    android:layout_height="180dp"
                     android:layout_centerHorizontal="true"
-                    app:cpb_background_progressbar_color="#808080"
                     android:layout_marginVertical="20dp"
+                    app:cpb_background_progressbar_color="#808080"
                     app:cpb_background_progressbar_width="20dp"
                     app:cpb_progressbar_width="15dp"
-                    app:cpb_round_border="true"/>
+                    app:cpb_round_border="true" />
 
                 <RelativeLayout
                     android:id="@+id/overviewLayout"
@@ -81,20 +84,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-black"
                             android:text="steps"
                             android:textColor="#8A000000"
-                            android:fontFamily="sans-serif-black"/>
+                            android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/overviewGoal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/overviewStepsTaken"
-                            android:text="/goal"
-                            android:fontFamily="sans-serif-black"
-                            android:textColor="#8A000000"
                             android:layout_centerInParent="true"
+                            android:fontFamily="sans-serif-black"
+                            android:text="/goal"
+                            android:textColor="#8A000000"
                             android:textSize="20dp" />
                     </LinearLayout>
 
@@ -121,48 +124,81 @@
                     android:textColor="#BC000000"
                     android:textSize="18sp" />
 
+<!--                <com.google.android.material.card.MaterialCardView-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:clickable="true"-->
+<!--                    app:cardBackgroundColor="#E0E0E0"-->
+<!--                    android:layout_below="@id/overviewStreak"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:id="@+id/editGoal" >-->
 
+<!--                    <RelativeLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:layout_marginHorizontal="8dp">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_centerInParent="true"-->
+<!--                            android:fontFamily="sans-serif-medium"-->
+<!--                            android:text="Customize Lock App"-->
+<!--                            android:textColor="#E0FFA5AB"-->
+<!--                            android:textSize="20dp" />-->
+
+
+<!--                    </RelativeLayout>-->
+
+<!--                </com.google.android.material.card.MaterialCardView>-->
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_height="wrap_content"
+                    android:id="@+id/editGoal"
                     android:layout_width="match_parent"
-                    android:clickable="true"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginTop="40dp"
-                    app:cardBackgroundColor="#E0E0E0"
-                    android:layout_below="@+id/overviewStreak"
+                    android:layout_below="@id/overviewStreak"
                     android:textAlignment="center"
-                    android:id="@+id/editGoal" >
+                    android:backgroundTint="@color/white"
+                    >
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="8dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Edit Goal"
-                            android:layout_centerInParent="true"
+                            android:text="Edit goal "
+                            android:drawableRight="@drawable/ic_baseline_arrow_forward_24"
                             android:textColor="#E0FFA5AB"
                             android:textSize="20dp" />
 
                     </RelativeLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
+
             </RelativeLayout>
+
+
 
         </com.google.android.material.card.MaterialCardView>
 
+
         <TextView
+            android:id="@+id/overviewLockTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:drawableLeft="@drawable/ic_lock"
             android:textColor="#90000000"
             android:fontFamily="sans-serif-medium"
-            android:text="Lock App"
+            android:text=" Lock App"
             android:textSize="25sp" />
 
         <com.google.android.material.card.MaterialCardView
@@ -203,34 +239,33 @@
                     android:textSize="18sp" />
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_height="wrap_content"
+                    android:id="@+id/editLock"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginTop="45dp"
                     android:layout_below="@id/overviewLockTime"
                     android:textAlignment="center"
-                    app:cardBackgroundColor="#E0E0E0"
-                    android:id="@+id/editLock" >
+                    >
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="8dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
+                            android:layout_centerHorizontal="true"
+                            android:drawableRight="@drawable/ic_baseline_arrow_forward_24"
                             android:fontFamily="sans-serif-medium"
+                            android:text="Customize Lock App "
                             android:textColor="#E0FFA5AB"
-                            android:text="Customize Lock App"
                             android:textSize="20dp" />
 
                     </RelativeLayout>
 
                 </com.google.android.material.card.MaterialCardView>
-
 
 
             </RelativeLayout>
@@ -248,7 +283,9 @@
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/bottom_nav_color"
-        app:menu="@menu/bottom_navigation_menu" />
+        app:menu="@menu/bottom_navigation_menu"
+        android:backgroundTint="@color/white"
+        />
 
 
 </RelativeLayout>

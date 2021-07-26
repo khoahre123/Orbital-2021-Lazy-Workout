@@ -10,6 +10,8 @@ public class Constant {
     public static final int DEFAULT_SENSOR = Sensor.TYPE_STEP_COUNTER;
     public static final int PHYSICAL_ACTIVITY = 1;
     public static final int USAGE_STATS_SERVICE = 2;
+    public static final boolean LOCK_ACTIVATED = false;
+    public static final int LOCK_TIME = 1080; //18h
 
     //intervals between database updates
     public final static long SAVE_OFFSET_TIME = AlarmManager.INTERVAL_FIFTEEN_MINUTES;

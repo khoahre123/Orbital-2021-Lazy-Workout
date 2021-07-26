@@ -18,6 +18,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_arrowback"
+            app:tint="#808080"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,8 +29,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="Skip"
+            android:textColor="@color/black"
             android:textSize="24sp"
-            android:textStyle="bold"
+            android:fontFamily="sans-serif-thin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -49,15 +51,17 @@
             android:layout_width="200dp"
             android:layout_height="100dp"
             android:fontFamily="sans-serif-black"
-            android:textSize="35dp"
             android:text="Personalize your bio"
-            android:textStyle="bold"/>
+            android:textSize="35dp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/initialGoalDescribe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/black"
             android:text="@string/initial_goal_describe"
             android:layout_below="@id/initialgoalTitle"
             android:textSize="15sp" />
@@ -66,10 +70,11 @@
             android:id="@+id/initialGoalLetgo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-light"
             android:layout_below="@id/initialGoalDescribe"
             android:text="@string/initial_goal_letgo"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:textSize="15sp"/>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -101,12 +106,13 @@
 
     <Button
         android:id="@+id/initialGoalBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="500dp"
-        android:layout_alignParentEnd="true"
+        android:background="@drawable/roundbutton"
+        android:layout_centerHorizontal="true"
         android:layout_marginRight="16dp"
-        android:text="next >"
+        android:text="next"
         android:layout_marginBottom="10dp"/>
 
 

@@ -46,10 +46,23 @@ public class Time {
     public static boolean isLockTime(long currentTime, int lockTimeMinute) {
         long startLockTime = Time.getToday() + lockTimeMinute * ONE_MINUTE_MILLIS;
         long endLockTime = Time.getToday() + ONE_DAY_MILLIS;
-        Log.d("LockService", "start lock time = " + startLockTime / ONE_MINUTE_MILLIS);
-        Log.d("LockService", "current time = " + System.currentTimeMillis() / ONE_MINUTE_MILLIS);
-        Log.d("LockService", "end lock time = " + endLockTime / ONE_MINUTE_MILLIS);
 
         return (currentTime >= startLockTime) && (currentTime <= endLockTime);
+    }
+
+    public static int getMinute(int totalMinute) {
+        return totalMinute % 60;
+    }
+
+    public static int getHour(int totalMinute) {
+        int hour = (totalMinute / 60) <= 12 ? (totalMinute / 60) : (totalMinute / 60 - 12);
+        return hour;
+    }
+
+    public static String getTime(int totalMinute) {
+        String str = String.format("%02d", Time.getHour(totalMinute)) + ":" +
+                String.format("%02d", Time.getMinute(totalMinute));
+        String time = Time.getHour(totalMinute) < 12 ? str + " AM" : str + " PM";
+        return time;
     }
 }

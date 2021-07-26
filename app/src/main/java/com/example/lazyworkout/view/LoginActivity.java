@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 startActivity(new Intent(LoginActivity.this, TutorialActivity.class));
                             } else {
                                 // TODO: just setting locksetting first
-                                startActivity(new Intent(LoginActivity.this, TutorialActivity.class));
+                                startActivity(new Intent(LoginActivity.this, OverviewActivity.class));
                             }
 
                         } else {

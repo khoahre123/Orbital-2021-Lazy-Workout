@@ -1,5 +1,9 @@
 package com.example.lazyworkout.util;
 
+import android.content.Context;
+import android.os.Build;
+import android.provider.Settings;
+
 public class Util {
 
     public static float getGoal(String str) {
