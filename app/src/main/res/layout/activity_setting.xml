@@ -12,92 +12,264 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/setGoalLogo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:scaleType="fitXY"
-            android:scaleX="1.4"
-            android:scaleY="1.4 "
-            android:src="@drawable/logo" />
-
-        <TextView
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/setGoalLogo"
-            android:id="@+id/setGoalTextView"
-            android:layout_centerHorizontal="true"
-            android:textColorHint="#6E6D6D"
-            app:boxBackgroundColor="#C9DCDCDC"
-            android:layout_marginTop="10dp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/setGoalTextField"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-            android:layout_width="200dp"
-            android:layout_height="70dp"
-            android:layout_below="@+id/setGoalLogo"
-            android:layout_centerHorizontal="true"
-            android:textColorHint="#6E6D6D"
-            app:boxBackgroundColor="#C9DCDCDC"
-            android:layout_marginTop="10dp"
-            android:hint="Goal">
-
-            <AutoCompleteTextView
-                android:id="@+id/setGoalInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
-                android:inputType="none"
-                android:textSize="27dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/setStepTextField"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-            android:layout_width="200dp"
-            android:layout_height="70dp"
-            android:layout_below="@+id/setGoalTextField"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="35dp"
-            android:textColorHint="#6E6D6D"
-            app:boxBackgroundColor="#C9DCDCDC"
-            android:hint="Step size">
-
-            <AutoCompleteTextView
-                android:id="@+id/setStepInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
-                android:inputType="none"
-                android:textSize="27dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/confirmButton"
-            android:layout_width="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/setStepTextField"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="35dp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/roundbutton"
-            android:text="Confirm" />
+            android:id="@+id/setGoalCardView"
+            app:contentPadding="5dp"
+            app:cardCornerRadius="30dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_goal_black"
+                    android:id="@+id/setGoalImage"
+                    android:layout_margin="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toRightOf="@+id/setGoalImage"
+                    android:layout_marginLeft="30dp"
+                    android:text="Set Goal"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="@+id/setGoalImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/setGoalImage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_rightarrow_navigation"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintTop_toTopOf="@+id/setGoalImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/setGoalImage" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/setSizeCardView"
+            app:contentPadding="3dp"
+            android:layout_below="@+id/setGoalCardView"
+            app:cardCornerRadius="30dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_step"
+                    android:id="@+id/setSizeImage"
+                    android:layout_margin="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toRightOf="@+id/setSizeImage"
+                    android:layout_marginLeft="30dp"
+                    android:text="Set Step Size"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="@+id/setSizeImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/setSizeImage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_rightarrow_navigation"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintTop_toTopOf="@+id/setSizeImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/setSizeImage" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listAppCardView"
+            app:contentPadding="3dp"
+            android:layout_below="@+id/setSizeCardView"
+            app:cardCornerRadius="30dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            android:layout_marginTop="30dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list_app"
+                    android:id="@+id/listAppImage"
+                    android:layout_margin="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toRightOf="@+id/listAppImage"
+                    android:layout_marginLeft="30dp"
+                    android:text="View Installed App"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="@+id/listAppImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/listAppImage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_rightarrow_navigation"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintTop_toTopOf="@+id/listAppImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/listAppImage" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lockedAppCardView"
+            app:contentPadding="3dp"
+            android:layout_below="@+id/listAppCardView"
+            app:cardCornerRadius="30dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_lock_48"
+                    android:id="@+id/lockedAppImage"
+                    android:layout_margin="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toRightOf="@+id/lockedAppImage"
+                    android:layout_marginLeft="30dp"
+                    android:text="Set Lock App"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="@+id/lockedAppImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/lockedAppImage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_rightarrow_navigation"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintTop_toTopOf="@+id/lockedAppImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/lockedAppImage" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lockTimeCardView"
+            app:contentPadding="3dp"
+            android:layout_below="@+id/lockedAppCardView"
+            app:cardCornerRadius="30dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_clock_48"
+                    android:id="@+id/lockTimeImage"
+                    android:layout_margin="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toRightOf="@+id/lockTimeImage"
+                    android:layout_marginLeft="30dp"
+                    android:text="Set Lock Time"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="@+id/lockTimeImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/lockTimeImage" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_rightarrow_navigation"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintTop_toTopOf="@+id/lockTimeImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/lockTimeImage" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
 
         <Button
             android:id="@+id/signOutBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/confirmButton"
+            android:layout_below="@id/lockTimeCardView"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="35dp"
