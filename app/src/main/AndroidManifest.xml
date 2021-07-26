@@ -22,6 +22,7 @@
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -62,6 +63,12 @@
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped" />
+
+        <receiver
+            android:name=".service.LockingBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartLockingObserveWhenStopped" />
 
         <activity android:name=".view.OverviewActivity" />
         <activity android:name=".view.ForgotPasswordActivity" />

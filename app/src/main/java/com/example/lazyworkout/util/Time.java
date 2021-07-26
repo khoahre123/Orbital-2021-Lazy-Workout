@@ -62,7 +62,7 @@ public class Time {
     public static String getTime(int totalMinute) {
         String str = String.format("%02d", Time.getHour(totalMinute)) + ":" +
                 String.format("%02d", Time.getMinute(totalMinute));
-        String time = Time.getHour(totalMinute) < 12 ? str + " AM" : str + " PM";
+        String time = (totalMinute / 60) <= 12 ? str + " AM" : str + " PM";
         return time;
     }
 }

@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.Manifest;
 import android.app.AppOpsManager;
@@ -43,7 +46,9 @@ import com.example.lazyworkout.R;
 import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.service.LocationService;
 import com.example.lazyworkout.service.LockService;
+import com.example.lazyworkout.service.LockWorker;
 import com.example.lazyworkout.service.StepCountingService;
+import com.example.lazyworkout.service.TrackingWorker;
 import com.example.lazyworkout.util.Constant;
 import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Time;
@@ -66,6 +71,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -120,16 +126,57 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         getCurrentStreak();
         initViews();
         startTrackingService();
+        startLockingServiceViaWorker();
 
+//        intent = new Intent(this, StepCountingService.class);
 
-        intent = new Intent(this, StepCountingService.class);
+//        startService(new Intent(getBaseContext(), LockService.class));//TODO
 
-        startService(new Intent(getBaseContext(), LockService.class));//TODO
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));
 
     }
+
+    public void startTrackingServiceViaWorker() {
+        Log.d(TAG, "startTrackingServiceViaWorker called");
+        String UNIQUE_WORK_NAME = "StartTrackingServiceViaWorker";
+        WorkManager workManager = WorkManager.getInstance(this);
+
+        // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
+        // (same as the JobScheduler API), but in practice 15 doesn't work. Using 16 here
+        PeriodicWorkRequest request =
+                new PeriodicWorkRequest.Builder(
+                        TrackingWorker.class,
+                        16,
+                        TimeUnit.MINUTES)
+                        .build();
+
+        // to schedule a unique work, no matter how many times app is opened i.e. startTrackingServiceViaWorker gets called
+        // do check for AutoStart permission
+        workManager.enqueueUniquePeriodicWork(UNIQUE_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request);
+
+    }
+
+    public void startLockingServiceViaWorker() {
+        Log.d(TAG, "startLockingServiceViaWorker called");
+        String UNIQUE_WORK_NAME = "StartLockingServiceViaWorker";
+        WorkManager workManager = WorkManager.getInstance(this);
+
+        // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
+        // (same as the JobScheduler API), but in practice 15 doesn't work. Using 16 here
+        PeriodicWorkRequest request =
+                new PeriodicWorkRequest.Builder(
+                        LockWorker.class,
+                        16,
+                        TimeUnit.MINUTES)
+                        .build();
+
+        // to schedule a unique work, no matter how many times app is opened i.e. startServiceViaWorker gets called
+        // do check for AutoStart permission
+        workManager.enqueueUniquePeriodicWork(UNIQUE_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request);
+    }
+
 
     @AfterPermissionGranted(98)
     private void startTrackingService() {
@@ -137,6 +184,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         if (EasyPermissions.hasPermissions(this, perm)) {
             Log.d(TAG, "have permission");
             startService(new Intent(this, StepCountingService.class));
+
+            //TODO: foreground
+//            Log.d(TAG, "startService called");
+//            if (!StepCountingService.isServiceRunning) {
+//                Intent serviceIntent = new Intent(this, StepCountingService.class);
+//                ContextCompat.startForegroundService(this, serviceIntent);
+
+            startTrackingServiceViaWorker();
+
         } else {
             Log.d(TAG, "NOT done permission");
             EasyPermissions.requestPermissions(this, "Your location is needed for better community engagement", 98, perm);
@@ -168,6 +224,18 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
             }
         }
 
+    }
+
+    public void startService() {
+        Log.d(TAG, "startService called");
+        if (!StepCountingService.isServiceRunning) {
+            Intent serviceIntent = new Intent(this, StepCountingService.class);
+            ContextCompat.startForegroundService(this, serviceIntent);
+        }
+    }
+
+    public void onStartServiceClick(View v) {
+        startService();
     }
 
     public boolean permissionOverlayWindowGranted() {
@@ -449,7 +517,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     private void updateViews(Intent intent) {
         if (intent.getStringExtra("command").equals("not_update")) {
             currentDistances = intent.getExtras().getFloat("today_distance");
-            Log.d(TAG, formatter.format(currentDistances));
+//            Log.d(TAG, formatter.format(currentDistances));
 
             progressBar.setProgressWithAnimation(currentDistances);
 

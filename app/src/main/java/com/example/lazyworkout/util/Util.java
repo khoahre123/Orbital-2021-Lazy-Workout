@@ -4,7 +4,11 @@ import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 
+import java.text.DecimalFormat;
+
 public class Util {
+
+    public static final DecimalFormat formatter = new DecimalFormat("#.##");
 
     public static float getGoal(String str) {
         String goal = str.substring(0, str.length() - 2);
