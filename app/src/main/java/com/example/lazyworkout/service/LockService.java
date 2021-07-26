@@ -1,20 +1,29 @@
 package com.example.lazyworkout.service;
 
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
+
+import com.example.lazyworkout.R;
 import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Time;
 import com.example.lazyworkout.view.LockScreenActivity;
+import com.example.lazyworkout.view.OverviewActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,6 +38,9 @@ import java.util.TreeMap;
 public class LockService extends Service {
 
     private static final String TAG = "LockService";
+
+    public static boolean isServiceRunning;
+    private String CHANNEL_ID = "NOTIFICATION_CHANNEL_LOCKING";
 
     private final Handler handler = new Handler(Looper.myLooper());
     Context context;
@@ -52,6 +64,11 @@ public class LockService extends Service {
         return getApplicationContext();
     }
 
+    public LockService() {
+        Log.d(TAG, "constructor called");
+        isServiceRunning = false;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -64,6 +81,9 @@ public class LockService extends Service {
         } else {
             activityManager = (ActivityManager) this.context.getSystemService(Context.ACTIVITY_SERVICE);
         }
+
+        createNotificationChannel();
+        isServiceRunning = true;
 
     }
 
@@ -78,10 +98,34 @@ public class LockService extends Service {
             startTimer();
         }
 
+        Intent notificationIntent = new Intent(this, OverviewActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Service is Running")
+                .setContentText("Listening for Screen Off/On events")
+                .setSmallIcon(R.drawable.logo)
+                .setContentIntent(pendingIntent)
+                .setColor(getResources().getColor(R.color.pink))
+                .build();
 
+        startForeground(1, notification);
 
 
         return START_STICKY;
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String appName = getString(R.string.app_name);
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    appName,
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
     }
 
     @Override
@@ -90,6 +134,9 @@ public class LockService extends Service {
         super.onDestroy();
 
         if (fAuth.getCurrentUser() != null) {
+            isServiceRunning = false;
+            stopForeground(true);
+
             Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
             sendBroadcast(broadcastIntent);
         }

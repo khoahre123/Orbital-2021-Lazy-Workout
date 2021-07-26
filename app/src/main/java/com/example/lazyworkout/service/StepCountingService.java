@@ -83,7 +83,7 @@ public class StepCountingService extends Service implements SensorEventListener,
 
     NotificationManager notificationManager;
     public static boolean isServiceRunning;
-    private String CHANNEL_ID = "NOTIFICATION_CHANNEL";
+    private String CHANNEL_ID = "NOTIFICATION_CHANNEL_TRACKING";
 
     Intent intent;
 

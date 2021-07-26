@@ -9,11 +9,13 @@ import androidx.core.content.ContextCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-public class TrackingWorker extends Worker {
-    private final Context context;
-    private String TAG = "TrackingWorker";
+import java.util.concurrent.locks.Lock;
 
-    public TrackingWorker(
+public class LockWorker extends Worker {
+    private final Context context;
+    private String TAG = "LockWorker";
+
+    public LockWorker(
             @NonNull Context context,
             @NonNull WorkerParameters params) {
         super(context, params);
@@ -24,10 +26,10 @@ public class TrackingWorker extends Worker {
     @Override
     public Result doWork() {
         Log.d(TAG, "doWork called for: " + this.getId());
-        Log.d(TAG, "Service Running: " + StepCountingService.isServiceRunning);
-        if (!StepCountingService.isServiceRunning) {
+        Log.d(TAG, "Service Running: " + LockService.isServiceRunning);
+        if (!LockService.isServiceRunning) {
             Log.d(TAG, "starting service from doWork");
-            Intent intent = new Intent(this.context, StepCountingService.class);
+            Intent intent = new Intent(this.context, LockService.class);
             ContextCompat.startForegroundService(context, intent);
         }
         return Result.success();

@@ -46,6 +46,7 @@ import com.example.lazyworkout.R;
 import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.service.LocationService;
 import com.example.lazyworkout.service.LockService;
+import com.example.lazyworkout.service.LockWorker;
 import com.example.lazyworkout.service.StepCountingService;
 import com.example.lazyworkout.service.TrackingWorker;
 import com.example.lazyworkout.util.Constant;
@@ -125,20 +126,21 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         getCurrentStreak();
         initViews();
         startTrackingService();
+        startLockingServiceViaWorker();
 
+//        intent = new Intent(this, StepCountingService.class);
 
-        intent = new Intent(this, StepCountingService.class);
+//        startService(new Intent(getBaseContext(), LockService.class));//TODO
 
-        startService(new Intent(getBaseContext(), LockService.class));//TODO
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));
 
     }
 
-    public void startServiceViaWorker() {
-        Log.d(TAG, "startServiceViaWorker called");
-        String UNIQUE_WORK_NAME = "StartMyServiceViaWorker";
+    public void startTrackingServiceViaWorker() {
+        Log.d(TAG, "startTrackingServiceViaWorker called");
+        String UNIQUE_WORK_NAME = "StartTrackingServiceViaWorker";
         WorkManager workManager = WorkManager.getInstance(this);
 
         // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
@@ -150,10 +152,29 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                         TimeUnit.MINUTES)
                         .build();
 
-        // to schedule a unique work, no matter how many times app is opened i.e. startServiceViaWorker gets called
+        // to schedule a unique work, no matter how many times app is opened i.e. startTrackingServiceViaWorker gets called
         // do check for AutoStart permission
         workManager.enqueueUniquePeriodicWork(UNIQUE_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request);
 
+    }
+
+    public void startLockingServiceViaWorker() {
+        Log.d(TAG, "startLockingServiceViaWorker called");
+        String UNIQUE_WORK_NAME = "StartLockingServiceViaWorker";
+        WorkManager workManager = WorkManager.getInstance(this);
+
+        // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
+        // (same as the JobScheduler API), but in practice 15 doesn't work. Using 16 here
+        PeriodicWorkRequest request =
+                new PeriodicWorkRequest.Builder(
+                        LockWorker.class,
+                        16,
+                        TimeUnit.MINUTES)
+                        .build();
+
+        // to schedule a unique work, no matter how many times app is opened i.e. startServiceViaWorker gets called
+        // do check for AutoStart permission
+        workManager.enqueueUniquePeriodicWork(UNIQUE_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request);
     }
 
 
@@ -170,7 +191,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 //                Intent serviceIntent = new Intent(this, StepCountingService.class);
 //                ContextCompat.startForegroundService(this, serviceIntent);
 
-            startServiceViaWorker();
+            startTrackingServiceViaWorker();
 
         } else {
             Log.d(TAG, "NOT done permission");

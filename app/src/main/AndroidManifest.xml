@@ -64,6 +64,12 @@
             android:exported="true"
             android:label="RestartServiceWhenStopped" />
 
+        <receiver
+            android:name=".service.LockingBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartLockingObserveWhenStopped" />
+
         <activity android:name=".view.OverviewActivity" />
         <activity android:name=".view.ForgotPasswordActivity" />
         <activity android:name=".view.LockSettingActivity" />
