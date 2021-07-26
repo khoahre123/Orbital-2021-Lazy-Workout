@@ -20,6 +20,7 @@ import com.example.lazyworkout.service.StepCountingService;
 import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.internal.bind.DateTypeAdapter;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             "70 cm", "75 cm", "80 cm", "85 cm", "90 cm"};
     private String goalSelected;
     private Integer footSelected;
+    private String uid = FirebaseAuth.getInstance().getUid();
 
     Database db = new Database();
 
@@ -99,11 +101,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
             case (R.id.signOutBtn):
-                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                        .putFloat("since_boot", StepCountingService.sinceBoot).commit();
+                if (uid != null) {
+                    getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                            .putFloat("since_boot", StepCountingService.sinceBoot).commit();
 
-                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                        .putFloat("today_distance", StepCountingService.todayDistances).commit();
+                    getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                            .putFloat("today_distance", StepCountingService.todayDistances).commit();
+                }
 
                 boolean doneSignout = db.signout();
                 stopService(new Intent(this, StepCountingService.class));

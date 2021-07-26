@@ -1,8 +1,14 @@
 package com.example.lazyworkout.view;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,15 +23,26 @@ import android.widget.TextView;
 
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.api.AuthenticationHelper;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,8 +51,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextInputLayout txtInputFieldEmail, txtInputFieldPassword;
     private TextInputEditText inputEmail, inputPassword;
     private TextView forgotPassword;
-    private Button loginBtn, createAccountBtn;
+    private Button loginBtn, createAccountBtn, googleSignInButton;
     private RelativeLayout loginView;
+    private GoogleSignInClient mGoogleSignInClient;
+    private ActivityResultLauncher<Intent> googleLoginActivity;
+    private static final int RC_SIGN_IN = 1;
 
     private FirebaseAuth mAuth;
 
@@ -54,12 +74,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgotPassword.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
         createAccountBtn.setOnClickListener(this);
+        googleSignInButton.setOnClickListener(this);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).
+                requestEmail().build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         if (Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(this.getResources().getColor(R.color.blue));
         }
+        googleLoginActivity = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Integer i = result.getResultCode();
+                        Log.d(TAG, i.toString());
+                        if (result.getResultCode() == 0) {
+                            Intent data = result.getData();
+                            Task<GoogleSignInAccount> accountTask= GoogleSignIn.getSignedInAccountFromIntent(data);
+                            try {
+                                GoogleSignInAccount account = accountTask.getResult(ApiException.class);
+                                firebaseAuthWithGoogleAccount(account);
+                            } catch (ApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
 
     }
 
@@ -67,6 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
     @Override
@@ -93,6 +136,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         loginBtn = findViewById(R.id.loginLoginBtn);
         createAccountBtn = findViewById(R.id.loginCreatAccountBtn);
+        googleSignInButton = findViewById(R.id.googleSignInButton);
 
         loginView = findViewById(R.id.loginView);
     }
@@ -109,6 +153,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case (R.id.loginCreatAccountBtn):
                 startActivity(new Intent(this, RegisterActivity.class));
+                break;
+            case (R.id.googleSignInButton):
+                signIn();
                 break;
             default:
                 break;
@@ -189,6 +236,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String email = inputEmail.getText().toString().trim();
         return email;
     }
+
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        googleLoginActivity.launch(signInIntent);
+    }
+
+    private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        String uid = firebaseUser.getUid();
+                        String email = firebaseUser.getEmail();
+
+                        if (authResult.getAdditionalUserInfo().isNewUser()) {
+                            Log.d(TAG, "onSuccess: Account created");
+                        } else {
+                            Log.d(TAG, "Existing user");
+                        }
+
+                        startActivity(new Intent(LoginActivity.this, TutorialActivity.class));
+                        finish();
+                    }
+                });
+    }
+
 
     public boolean validateEmail(String email) {
 

@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class LocationService extends Service implements LocationListener  {
+public class LocationService extends Service implements LocationListener {
     private Timer timer;
     private TimerTask timerTask;
     private int counter = 0;
@@ -53,7 +53,7 @@ public class LocationService extends Service implements LocationListener  {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0 ,0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         startTimer();
         String lastTime = ((Long) lastSaveTime).toString();
         Log.d(TAG, lastTime);
@@ -79,7 +79,7 @@ public class LocationService extends Service implements LocationListener  {
     public void initializeTimerTask() {
         timerTask = new TimerTask() {
             public void run() {
-                Log.i("in timer", "in timer ++++  "+ (counter++));
+                Log.i("in timer", "in timer ++++  " + (counter++));
             }
         };
     }
@@ -92,14 +92,17 @@ public class LocationService extends Service implements LocationListener  {
     }
 
     public boolean updateIfNecessary() {
-        if (lastSaveTime == 0 || System.currentTimeMillis() > lastSaveTime + Constant.SAVE_OFFSET_TIME) {
-            String hash = GeoFireUtils.getGeoHashForLocation(new GeoLocation(latitude, longitude));
-            Map<String, Object> object = new HashMap<>();
-            object.put("longitude", longitude);
-            object.put("latitude", latitude);
-            object.put("geohash", hash);
-            FirebaseFirestore.getInstance().collection("users").document(uid).set(object, SetOptions.merge());
-            lastSaveTime = System.currentTimeMillis();
+        if (uid != null) {
+            if (lastSaveTime == 0 || System.currentTimeMillis() > lastSaveTime + Constant.SAVE_OFFSET_TIME) {
+                String hash = GeoFireUtils.getGeoHashForLocation(new GeoLocation(latitude, longitude));
+                Map<String, Object> object = new HashMap<>();
+                object.put("longitude", longitude);
+                object.put("latitude", latitude);
+                object.put("geohash", hash);
+                FirebaseFirestore.getInstance().collection("users").document(uid).set(object, SetOptions.merge());
+                lastSaveTime = System.currentTimeMillis();
+            }
+            return true;
         }
         return true;
     }
