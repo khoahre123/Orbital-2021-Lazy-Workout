@@ -4,6 +4,7 @@
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -16,6 +17,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -31,6 +33,8 @@ import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.util.Constant;
 import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Time;
+import com.example.lazyworkout.util.Util;
+import com.example.lazyworkout.view.OverviewActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -78,8 +82,15 @@ public class StepCountingService extends Service implements SensorEventListener,
     private FirebaseAuth fAuth = db.fAuth;
 
     NotificationManager notificationManager;
+    public static boolean isServiceRunning;
+    private String CHANNEL_ID = "NOTIFICATION_CHANNEL";
 
     Intent intent;
+
+    public StepCountingService() {
+        Log.d(TAG, "constructor called");
+        isServiceRunning = false;
+    }
 
 
     @Override
@@ -96,6 +107,9 @@ public class StepCountingService extends Service implements SensorEventListener,
 
         stepSize = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                 .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
+
+        createNotificationChannel();
+        isServiceRunning = true;
 
         Log.d(TAG, "onCreate today distance = " + String.valueOf(todayDistances));
         Log.d(TAG, "onCreate previous save = " + String.valueOf(sinceBoot));
@@ -127,9 +141,32 @@ public class StepCountingService extends Service implements SensorEventListener,
             startTimer();
 
         }
+        Intent notificationIntent = new Intent(this, OverviewActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(Util.formatter.format(todayDistances) + " km completed today")
+                .setContentText("Keep up the good work!")
+                .setSmallIcon(R.drawable.logo)
+                .setContentIntent(pendingIntent)
+                .setColor(getResources().getColor(R.color.pink))
+                .build();
+
+        startForeground(1, notification);
         return START_STICKY;
+    }
 
-
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String appName = getString(R.string.app_name);
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    appName,
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
     }
 
     @Override
@@ -147,8 +184,10 @@ public class StepCountingService extends Service implements SensorEventListener,
             getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
                     .putFloat("today_distance", todayDistances).commit();
 
+            isServiceRunning = false;
+            stopForeground(true); //CAN MOVE ON DESTROY TO LATER
+
             Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
-            broadcastIntent.putExtra("service", "stepcounter");
             sendBroadcast(broadcastIntent);
         }
         stopTimerTask();
@@ -210,7 +249,6 @@ public class StepCountingService extends Service implements SensorEventListener,
             getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
                     .putFloat("today_distance", todayDistances).commit();
             Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
-            broadcastIntent.putExtra("service", "stepcounter");
             sendBroadcast(broadcastIntent);
         }
         stopTimerTask();
@@ -239,12 +277,10 @@ public class StepCountingService extends Service implements SensorEventListener,
                 getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
                         .putFloat("pauseCount", sinceBoot).commit();
             }
-            Log.d(TAG, "sharedpref pause = " + getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
-                    .getFloat("pauseCount", -100));
+
             todayDistances = sinceBoot - getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                     .getFloat("pauseCount", 0);
-            Log.d(TAG, "pause = " + getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
-                    .getFloat("pauseCount", -50));
+
             Log.d(TAG, "since boot " + sinceBoot);
             Log.d(TAG, "today distance = " + todayDistances);
             updateIfNecessary();
