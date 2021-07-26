@@ -50,8 +50,8 @@ public class StepCountingService extends Service implements SensorEventListener,
     private static final int MICROSECONDS_IN_ONE_MINUTE = 60000000;
 
     //JUST FOR EMULATOR: fake sensor for emulator
-    public static int DEFAULT_SENSOR = Sensor.TYPE_STEP_COUNTER;
-    public static boolean IS_STEP_COUNTER = true;
+    public static int DEFAULT_SENSOR = Sensor.TYPE_ACCELEROMETER;
+    public static boolean IS_STEP_COUNTER = false;
 
     SensorManager sensorManager;
     Sensor stepCounterSensor;
