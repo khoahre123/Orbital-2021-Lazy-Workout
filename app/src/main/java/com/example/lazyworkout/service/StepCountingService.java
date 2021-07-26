@@ -38,6 +38,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,6 +47,7 @@ public class StepCountingService extends Service implements SensorEventListener,
 
     private static final String TAG = "StepCountingService";
     public static final String BROADCAST_ACTION = "com.example.lazyworkout.mybroadcast";
+    public static final String ACHIEVEMENT_ACTION = "com.example.lazyworkout.achievement";
     private static final int PHYSICAL_ACTIVITY = 1;
     private static final int MICROSECONDS_IN_ONE_MINUTE = 60000000;
 
@@ -244,6 +246,14 @@ public class StepCountingService extends Service implements SensorEventListener,
                     (sinceBoot > 0 && System.currentTimeMillis() > lastSaveTime + Constant.SAVE_OFFSET_TIME)) {
 
             DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+            Map<String, Object> update = new HashMap<>();
+            update.put("longestDay", getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestDay", 0));
+            update.put("currentStreak", getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("currentStreak", 0));
+            update.put("longestStreak", getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestStreak", 0));
+            userRef.update(update);
+            Intent otherIntent = new Intent(BROADCAST_ACTION);
+            otherIntent.putExtra("command", "update");
+            sendBroadcast(otherIntent);
             userRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
@@ -333,6 +343,7 @@ public class StepCountingService extends Service implements SensorEventListener,
               // Only allow the repeating timer while service is running (once service is stopped the flag state will change and the code inside the conditional statement here will not execute).
                 // Call the method that broadcasts the data to the Activity..
                 broadcastSensorValue();
+                broadcastAchievement();
                 // Call "handler.postDelayed" again, after a specified delay.
                 handler.postDelayed(this, 1000);
 
@@ -343,7 +354,14 @@ public class StepCountingService extends Service implements SensorEventListener,
         Log.d(TAG, "Data to Activity distance sent = " + String.valueOf(todayDistances));
 
         intent.putExtra("today_distance", todayDistances);
+        intent.putExtra("command", "not_update");
         sendBroadcast(intent);
+    }
+
+    private void broadcastAchievement() {
+        Intent achievement_intent = new Intent(ACHIEVEMENT_ACTION);
+        achievement_intent.putExtra("command", "update");
+        sendBroadcast(achievement_intent);
     }
 
     @Override

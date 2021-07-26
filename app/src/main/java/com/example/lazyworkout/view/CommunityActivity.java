@@ -91,7 +91,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         nearByUser = findViewById(R.id.nearByUser);
 
         goToChat.setOnClickListener(this);
-        bottomNav.setSelectedItemId(R.id.navOverview);
+        bottomNav.setSelectedItemId(R.id.navCommunity);
 
         bottomNav.setOnNavigationItemSelectedListener(this);
     }
@@ -121,23 +121,25 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void getOwnLocation() {
-        FirebaseFirestore.getInstance().collection("users").document(uid).get().
-                addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        if (documentSnapshot != null) {
-                            geolocation[0] = documentSnapshot.getString("geohash");
-                            double lat = documentSnapshot.getDouble("latitude");
-                            double lng = documentSnapshot.getDouble("longitude");
-                            center = new GeoLocation(lat, lng);
-                        } else {
-                            geolocation[0] = null;
-                            center = new GeoLocation(0,0);
-                            Log.d("Community", "task is null");
+        if (uid != null) {
+            FirebaseFirestore.getInstance().collection("users").document(uid).get().
+                    addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot != null) {
+                                geolocation[0] = documentSnapshot.getString("geohash");
+                                double lat = documentSnapshot.getDouble("latitude");
+                                double lng = documentSnapshot.getDouble("longitude");
+                                center = new GeoLocation(lat, lng);
+                            } else {
+                                geolocation[0] = null;
+                                center = new GeoLocation(0,0);
+                                Log.d("Community", "task is null");
+                            }
+                            getNearestUser();
                         }
-                        getNearestUser();
-                    }
-                });
+                    });
+        }
     }
 
     public void getNearestUser() {

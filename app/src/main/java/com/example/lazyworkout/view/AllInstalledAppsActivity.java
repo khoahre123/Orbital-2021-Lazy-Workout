@@ -296,6 +296,10 @@ import java.util.Map;
 
                 if (getPackageManager().getLaunchIntentForPackage(packageInfos.get(i).packageName) != null){
                     //If you're here, then this is a launch-able app
+                    if (lockedAppsList == null) {
+                        appModelList.add(new App(packageName, name, icon, 0));
+                        continue;
+                    }
                     if (!(lockedAppsList.isEmpty())) {
                         if (lockedAppsList.contains(packageName)) {
                             appModelList.add(new App(packageName, name, icon, 1)); // status 1: LOCKED
