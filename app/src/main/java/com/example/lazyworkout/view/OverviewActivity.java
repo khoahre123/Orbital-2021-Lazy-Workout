@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.model.User;
+import com.example.lazyworkout.service.LocationService;
 import com.example.lazyworkout.service.LockService;
 import com.example.lazyworkout.service.StepCountingService;
 import com.example.lazyworkout.util.Constant;
@@ -64,6 +65,9 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class OverviewActivity extends AppCompatActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener, SensorEventListener {
     private static final String TAG = "OverviewActivity";
@@ -102,6 +106,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         distanceGoal = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                 .getFloat("goal", Constant.DEFAULT_GOAL);
+//        distanceGoal = (float) 0.2; //JUST TESTING
         stepSize = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                 .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
         lockMinute = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
@@ -111,23 +116,34 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         getCurrentStreak();
         initViews();
+        startTrackingService();
 
-
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED) {
-            //ask for permission
-            Log.d(TAG, "ask permission");
-            requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, Constant.PHYSICAL_ACTIVITY);
-        }
 
         intent = new Intent(this, StepCountingService.class);
-        startService(new Intent(getBaseContext(), StepCountingService.class));
+
         startService(new Intent(getBaseContext(), LockService.class));//TODO
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));
 
+    }
+
+    @AfterPermissionGranted(98)
+    private void startTrackingService() {
+        String[] perm = {Manifest.permission.ACTIVITY_RECOGNITION};
+        if (EasyPermissions.hasPermissions(this, perm)) {
+            Log.d(TAG, "have permission");
+            startService(new Intent(this, StepCountingService.class));
+        } else {
+            Log.d(TAG, "NOT done permission");
+            EasyPermissions.requestPermissions(this, "Your location is needed for better community engagement", 98, perm);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     public boolean isAllPermissionGranted() {
