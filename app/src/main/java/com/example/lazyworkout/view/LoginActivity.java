@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.api.AuthenticationHelper;
+import com.example.lazyworkout.model.User;
+import com.example.lazyworkout.util.Database;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,6 +45,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final int RC_SIGN_IN = 1;
 
     private FirebaseAuth mAuth;
+    private Database db = new Database();
 
     public LoginActivity() {};
 
@@ -90,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onActivityResult(ActivityResult result) {
                         Integer i = result.getResultCode();
                         Log.d(TAG, i.toString());
-                        if (result.getResultCode() == 0) {
+                        if (result.getResultCode() == -1) {
                             Intent data = result.getData();
                             Task<GoogleSignInAccount> accountTask= GoogleSignIn.getSignedInAccountFromIntent(data);
                             try {
@@ -185,6 +193,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         if (user.isEmailVerified()) {
                             if (isFirstTimeUser) {
+                                User newUser = new User(user.getUid(), user.getDisplayName());
+                                db.createNewUser(newUser);
+                                Map<String, Object> map = new HashMap<>();
+                                map.put(newUser.getName(), db.getID());
+                                Log.d(TAG, newUser.toString());
+                                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                                firestore.collection("userLookup").document("findUserByEmail").update(map);
                                 startActivity(new Intent(LoginActivity.this, TutorialActivity.class));
                             } else {
                                 // TODO: just setting locksetting first
@@ -250,10 +265,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onSuccess(AuthResult authResult) {
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                         String uid = firebaseUser.getUid();
+                        String name = firebaseUser.getDisplayName();
                         String email = firebaseUser.getEmail();
-
+                        Log.d(TAG, uid);
+                        Log.d(TAG, name);
+                        Log.d(TAG, email);
                         if (authResult.getAdditionalUserInfo().isNewUser()) {
                             Log.d(TAG, "onSuccess: Account created");
+                            User newUser = new User(firebaseUser.getUid(), name);
+                            db.createNewUser(newUser);
+                            Map<String, Object> map = new HashMap<>();
+                            map.put(name, db.getID());
+                            Log.d(TAG, newUser.toString());
+                            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                            firestore.collection("userLookup").document("findUserByEmail").set(map, SetOptions.merge());
                         } else {
                             Log.d(TAG, "Existing user");
                         }

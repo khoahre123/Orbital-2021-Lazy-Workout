@@ -76,6 +76,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
     private boolean prevPermissionGranted = true;
     public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2323;
+    private String uid = FirebaseAuth.getInstance().getUid();
 
     DecimalFormat formatter = new DecimalFormat("#.##");
 
@@ -509,10 +510,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                                 getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
                             }
                         }
-                    }
-                    getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
-                    Log.d(TAG, "goal = " + distanceGoal);
-
+                        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
+                        Log.d(TAG, "goal = " + distanceGoal);
                         if (todayDistance >= distanceGoal) {
                             streak++;
                             Log.d(TAG, "today counted, distance = " + todayDistance + ", streak = 1");
@@ -557,6 +556,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         }
 
     }
+
 
     @Override
     protected void onStart() {

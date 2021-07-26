@@ -143,13 +143,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
 
             case (R.id.registerLogo):
+            case (R.id.registerSignup):
                 startActivity(new Intent(this, LoginActivity.class));
                 break;
             case (R.id.registerCreateAccountBtn):
                 registerUser();
-                break;
-            case (R.id.registerSignup):
-                startActivity(new Intent(this, LoginActivity.class));
                 break;
             case (R.id.registerPaT):
                 Log.d("To be implemented", "privacy and term");
@@ -178,13 +176,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             if (task.isSuccessful()) {
                                 FirebaseUser user = task.getResult().getUser();
                                 updateDispName(user, name);
-                                User newUser = new User(user.getUid(), name);
-                                Map<String, Object> map = new HashMap<>();
-                                map.put(name, db.getID());
-                                Log.d(TAG, newUser.toString());
-                                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                                firestore.collection("userLookup").document("findUserByEmail").update(map);
-                                db.createNewUser(newUser);
                                 user.sendEmailVerification();
                                 Log.d(TAG, "username: " + name);
                                 MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(RegisterActivity.this, R.style.AlertDialogStyle)

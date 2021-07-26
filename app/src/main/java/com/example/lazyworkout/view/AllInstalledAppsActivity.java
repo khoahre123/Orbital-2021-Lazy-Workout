@@ -34,6 +34,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -48,6 +49,7 @@ import java.util.Map;
         private Button goToOverviewBtn;
         private RecyclerView recyclerView;
         private ProgressDialog progressDialog;
+        private String uid = FirebaseAuth.getInstance().getUid();
 
         private boolean prevPermissionGranted = true;
 
@@ -194,24 +196,26 @@ import java.util.Map;
         }
 
         private void loadLockedApps() {
-            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
-            userRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        User user = document.toObject(User.class);
-                        Map<String, Object> map = document.getData();
-                        List<String> lockedAppsList = user.getLockedApps();
+            if (uid != null) {
+                DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+                userRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            User user = document.toObject(User.class);
+                            Map<String, Object> map = document.getData();
+                            List<String> lockedAppsList = user.getLockedApps();
 
-                        initViews(lockedAppsList);
+                            initViews(lockedAppsList);
 
+                        } else {
+                            Log.d(TAG, "no such document");
+                        }
                     } else {
-                        Log.d(TAG, "no such document");
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            });
+                });
+            }
         }
 
         private void initViews(List<String> lockedAppsList) {
