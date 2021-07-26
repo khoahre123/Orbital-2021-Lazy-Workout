@@ -2,6 +2,7 @@ package com.example.lazyworkout.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     private AutoCompleteTextView setGoalInput, setStepInput;
     private Button confirmButton, signOutButton;
+    private CardView setGoalCardView, setSizeCardView, listAppCardView, lockedAppCardView, lockTimeCardView;
     private String[] goal = {"4.0 km", "4.5 km", "5.0 km", "5.5 km", "6.0 km", "6.5 km", "7.0 km", "7.5 km",
             "8.0 km", "8.5 km", "9.0 km", "9.5 km", "10.0 km"};
     private String[] foot = {"40 cm", "45 cm", "50 cm", "55 cm", "60 cm", "65 cm",
@@ -53,12 +55,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void initView() {
-        setGoalInput = findViewById(R.id.setGoalInput);
-        setStepInput = findViewById(R.id.setStepInput);
-        confirmButton = findViewById(R.id.confirmButton);
+        setGoalCardView = findViewById(R.id.setGoalCardView);
+        setSizeCardView = findViewById(R.id.setSizeCardView);
+        listAppCardView = findViewById(R.id.listAppCardView);
+        lockedAppCardView = findViewById(R.id.lockedAppCardView);
+        lockTimeCardView = findViewById(R.id.lockTimeCardView);
         signOutButton = findViewById(R.id.signOutBtn);
         bottomNav = findViewById(R.id.bottomNav);
-        confirmButton.setOnClickListener(this);
         signOutButton.setOnClickListener(this);
         ArrayAdapter<String> goalArray = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goal);
         setGoalInput.setAdapter(goalArray);
@@ -88,17 +91,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         bottomNav.setSelectedItemId(R.id.navSetting);
         bottomNav.setOnNavigationItemSelectedListener(this);
+        setSizeCardView.setOnClickListener(this);
+        setGoalCardView.setOnClickListener(this);
+        listAppCardView.setOnClickListener(this);
+        lockTimeCardView.setOnClickListener(this);
+        lockedAppCardView.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-            case (R.id.confirmButton):
-                if (goalSelected == null & footSelected == null) {
-                    startActivity(new Intent(this, OverviewActivity.class));
-                    break;
-                }
 
             case (R.id.signOutBtn):
                 if (uid != null) {

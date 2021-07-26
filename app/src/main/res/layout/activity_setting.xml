@@ -19,7 +19,8 @@
             app:contentPadding="5dp"
             app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -69,7 +70,8 @@
             android:layout_below="@+id/setGoalCardView"
             app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -120,7 +122,8 @@
             app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="30dp"
+            android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -171,7 +174,8 @@
             android:layout_below="@+id/listAppCardView"
             app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -221,7 +225,8 @@
             android:layout_below="@+id/lockedAppCardView"
             app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
