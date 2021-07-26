@@ -52,8 +52,8 @@ public class StepCountingService extends Service implements SensorEventListener,
     private static final int MICROSECONDS_IN_ONE_MINUTE = 60000000;
 
     //JUST FOR EMULATOR: fake sensor for emulator
-    public static int DEFAULT_SENSOR = Sensor.TYPE_STEP_COUNTER;
-    public static boolean IS_STEP_COUNTER = true;
+    public static int DEFAULT_SENSOR = Sensor.TYPE_ACCELEROMETER;
+    public static boolean IS_STEP_COUNTER = false;
 
     SensorManager sensorManager;
     Sensor stepCounterSensor;
@@ -340,6 +340,7 @@ public class StepCountingService extends Service implements SensorEventListener,
               // Only allow the repeating timer while service is running (once service is stopped the flag state will change and the code inside the conditional statement here will not execute).
                 // Call the method that broadcasts the data to the Activity..
                 broadcastSensorValue();
+                broadcastAchievement();
                 // Call "handler.postDelayed" again, after a specified delay.
                 handler.postDelayed(this, 1000);
 
@@ -352,6 +353,9 @@ public class StepCountingService extends Service implements SensorEventListener,
         intent.putExtra("today_distance", todayDistances);
         intent.putExtra("command", "not_update");
         sendBroadcast(intent);
+    }
+
+    private void broadcastAchievement() {
         Intent achievement_intent = new Intent(ACHIEVEMENT_ACTION);
         achievement_intent.putExtra("command", "update");
         sendBroadcast(achievement_intent);

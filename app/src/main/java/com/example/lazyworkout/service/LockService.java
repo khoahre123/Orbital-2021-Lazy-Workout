@@ -15,8 +15,10 @@ import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Time;
 import com.example.lazyworkout.view.LockScreenActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,7 @@ public class LockService extends Service {
     private final Handler handler = new Handler(Looper.myLooper());
     Context context;
     Intent intent;
+    private String uid = FirebaseAuth.getInstance().getUid();
 
     Database db = new Database();
 
@@ -172,36 +175,37 @@ public class LockService extends Service {
     }
 
     public void checkLockedApps(String recentTasks) {
+        if (uid != null) {
+            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(uid);
+            userRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        User user = document.toObject(User.class);
+                        Map<String, Object> map = document.getData();
 
-        DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
-        userRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null) {
-                    User user = document.toObject(User.class);
-                    Map<String, Object> map = document.getData();
+                        List<String> lockedAppsList = user.getLockedApps();
 
-                    List<String> lockedAppsList = user.getLockedApps();
+                        Log.d(TAG, "lockedApplist = " + lockedAppsList.toString());
 
-                    Log.d(TAG, "lockedApplist = " + lockedAppsList.toString());
+                        if (lockedAppsList.contains(recentTasks)) {
+                            Log.d(TAG, "in locked list " + recentTasks);
+                            Log.d(TAG, "start of today = " + Time.getToday() / Time.ONE_MINUTE_MILLIS);
 
-                    if (lockedAppsList.contains(recentTasks)) {
-                        Log.d(TAG, "in locked list " + recentTasks);
-                        Log.d(TAG, "start of today = " + Time.getToday() / Time.ONE_MINUTE_MILLIS);
-
-                        //TODO: time picker
-                        if (!user.finishDailyGoal(Time.getToday()) && Time.isLockTime(System.currentTimeMillis(), user.getLockTimeMinute())) {
-                            showLockScreen();
+                            //TODO: time picker
+                            if (!user.finishDailyGoal(Time.getToday()) && Time.isLockTime(System.currentTimeMillis(), user.getLockTimeMinute())) {
+                                showLockScreen();
+                            }
                         }
-                    }
 
+                    } else {
+                        Log.d(TAG, "no such document");
+                    }
                 } else {
-                    Log.d(TAG, "no such document");
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
-            } else {
-                Log.d(TAG, "get failed with ", task.getException());
-            }
-        });
+            });
+        }
     }
 
     private Runnable updateBroadcastData = new Runnable() {

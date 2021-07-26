@@ -80,12 +80,10 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getStringExtra("command") == "update") {
-                getDataFromLocal();
-                updateMission();
-            } else {
+            Log.d("AchievementReciever", "1");
+            getDataFromLocal();
+            updateMission();
 
-            }
         }
     };
 
@@ -172,22 +170,24 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
             dailyWalkingMission.setText(String.format(" / %d km", Math.round(dailyWalking)));
             dailyWalkingProgress.setProgress(0);
             dailyWalkingProgress.setMax(Math.round(dailyWalking));
-            sendBroadcast(intent);
+            dailyWalkingNow.setText("0");
+            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("dailyWalkingMission", dailyWalking).apply();
         } else {
             dailyWalkingNow.setText(String.format("%.2f", todayDistance));
             dailyWalkingProgress.setProgress(Math.round(todayDistance));
         }
 
         if (totalDistances > totalWalking) {
-            if (totalWalking > 15) {
-                totalWalking += 7;
+            if (totalWalking > 25) {
+                totalWalking += 10;
             } else {
-                totalWalking += 5;
+                totalWalking += 8;
             }
             totalWalkingMission.setText(String.format(" / %d km", Math.round(totalWalking)));
             totalWalkingProgress.setProgress(0);
             totalWalkingProgress.setMax(Math.round(totalWalking));
-            sendBroadcast(intent);
+            totalWalkingNow.setText("0");
+            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("totalWalkingMission", totalWalking).apply();
         } else {
             totalWalkingNow.setText(String.format("%.2f", totalDistances));
             totalWalkingProgress.setProgress(Math.round(totalDistances));
@@ -202,7 +202,8 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
             streakMission.setText(String.format(" / %d km", streak));
             streakProgress.setProgress(0);
             streakProgress.setMax(streak);
-            sendBroadcast(intent);
+            streakNow.setText("0");
+            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("streakMission", streak).apply();
         } else {
             streakNow.setText(String.format("%d", currentStreak));
             streakProgress.setProgress(currentStreak);

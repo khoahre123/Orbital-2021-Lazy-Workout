@@ -111,6 +111,17 @@
             android:text="create an account"
             app:backgroundTint="#E0FFA5AB" />
 
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:id="@+id/googleSignInButton"
+            android:layout_below="@id/loginCreatAccountBtn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="21dp"
+            android:textAlignment="center"
+            android:background="@drawable/roundbutton"/>
+
     </RelativeLayout>
 
 </ScrollView>
