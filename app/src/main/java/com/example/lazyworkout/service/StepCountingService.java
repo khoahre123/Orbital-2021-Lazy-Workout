@@ -52,8 +52,8 @@ public class StepCountingService extends Service implements SensorEventListener,
     private static final int MICROSECONDS_IN_ONE_MINUTE = 60000000;
 
     //JUST FOR EMULATOR: fake sensor for emulator
-    public static int DEFAULT_SENSOR = Sensor.TYPE_ACCELEROMETER;
-    public static boolean IS_STEP_COUNTER = false;
+    public static int DEFAULT_SENSOR = Sensor.TYPE_STEP_COUNTER;
+    public static boolean IS_STEP_COUNTER = true;
 
     SensorManager sensorManager;
     Sensor stepCounterSensor;
@@ -232,8 +232,19 @@ public class StepCountingService extends Service implements SensorEventListener,
         } else {
             steps = computeSteps(event);
             sinceBoot = (float) (steps * stepSize);
+            float prevPause = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+                    .getFloat("pauseCount", -1);
+            Log.d(TAG, "prev pause = " + prevPause);
+            if (prevPause == -1) {
+                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                        .putFloat("pauseCount", sinceBoot).commit();
+            }
+            Log.d(TAG, "sharedpref pause = " + getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+                    .getFloat("pauseCount", -100));
             todayDistances = sinceBoot - getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                     .getFloat("pauseCount", 0);
+            Log.d(TAG, "pause = " + getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+                    .getFloat("pauseCount", -50));
             Log.d(TAG, "since boot " + sinceBoot);
             Log.d(TAG, "today distance = " + todayDistances);
             updateIfNecessary();

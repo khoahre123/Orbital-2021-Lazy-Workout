@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "1089431455073",
-    "project_id": "lazyworkout-6a366",
-    "storage_bucket": "lazyworkout-6a366.appspot.com"
+    "project_number": "1067522957481",
+    "project_id": "lazy-workout-43c38",
+    "storage_bucket": "lazy-workout-43c38.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1089431455073:android:7774704790c83685fa7120",
+        "mobilesdk_app_id": "1:1067522957481:android:3635ee8265dd8342ff89b8",
         "android_client_info": {
           "package_name": "com.example.lazyworkout"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1089431455073-1n1rtdbjea7g1rsi0952vm2ucltfjse3.apps.googleusercontent.com",
+          "client_id": "1067522957481-3gch5mfvoehtaghc59bobk3oj7g1jbv1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDNRYGOhhawpd0NHjN1D2UWUsm_MwGL44Q"
+          "current_key": "AIzaSyDF-Qmam1SpcvIFOp_W5pfczkfphKjf01Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1089431455073-1n1rtdbjea7g1rsi0952vm2ucltfjse3.apps.googleusercontent.com",
+              "client_id": "1067522957481-3gch5mfvoehtaghc59bobk3oj7g1jbv1.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
