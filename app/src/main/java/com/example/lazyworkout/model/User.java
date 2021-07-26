@@ -4,12 +4,14 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.lazyworkout.util.Constant;
 import com.example.lazyworkout.util.Time;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -20,21 +22,29 @@ public class User {
 
     private String uid;
     private String name;
-    private float goal;
-    private float stepSize, longestDay, currentStreak, longestStreak;
-    public TrackingRecord records;
-    private double latitude;
-    private double longitude;
-    private String geohash;
-    private List<String> lockedApps;
-    private int lockTimeMinute;
+    private float goal = Constant.DEFAULT_GOAL;
+    private float stepSize = Constant.DEFAULT_STEP_SIZE;
+    private float longestDay, currentStreak, longestStreak = 0;
+    public TrackingRecord records = new TrackingRecord();
+    private double latitude, longitude = 0;
+    private String geohash = "";
+    private List<String> lockedApps = new ArrayList<>();
+    private int lockTimeMinute = Constant.LOCK_TIME;
 
     public User(String uid, String name) {
         this.uid = uid;
         this.name = name;
-        this.goal = Constant.DEFAULT_GOAL;
-        this.stepSize = Constant.DEFAULT_STEP_SIZE;
-        this.records = new TrackingRecord();
+//        this.goal = Constant.DEFAULT_GOAL;
+//        this.stepSize = Constant.DEFAULT_STEP_SIZE;
+//        this.longestDay = 0;
+//        this.currentStreak = 0;
+//        this.longestStreak = 0;
+//        this.latitude = 0;
+//        this.longitude = 0;
+//        this.geohash = "";
+//        this.lockedApps = new ArrayList<>();
+//        this.lockTimeMinute = Constant.LOCK_TIME;
+//        this.records = new TrackingRecord();
     }
 
     public User() {

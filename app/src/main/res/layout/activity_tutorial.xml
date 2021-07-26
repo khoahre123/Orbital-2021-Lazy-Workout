@@ -10,7 +10,9 @@
         android:id="@+id/registerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="30dp">
+        android:layout_marginHorizontal="30dp"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <ImageView
             android:id="@+id/tutorialLogo"
@@ -35,13 +37,14 @@
             android:fontFamily="sans-serif-black"
             android:text="From lazy to workout A-Z"
             android:textAllCaps="true"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold|italic" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tutorialLazyImg"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:id="@+id/tutorialLazyImg"
             android:layout_below="@id/tutorialWelcome"
             android:layout_marginTop="40dp">
 
@@ -49,31 +52,31 @@
                 android:id="@+id/tutorialLazy"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/lazy"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginEnd="5dp"
-                android:src="@drawable/lazy" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/guideline"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5"/>
+                app:layout_constraintGuide_percent="0.5" />
 
 
             <ImageView
                 android:id="@+id/tutorialNotLazy"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/notlazy"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="5dp"
                 app:layout_constraintStart_toStartOf="@id/guideline"
-                android:src="@drawable/notlazy" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,10 +87,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tutorialLazyImg"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="50dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="48dp"
             android:layout_marginBottom="5dp"
+            android:drawableLeft="@drawable/ic_goal"
             android:fontFamily="sans-serif-light"
-            android:text="Set daily walking goal"
+            android:text=" Set daily walking goal"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="normal" />
 
@@ -98,8 +104,10 @@
             android:layout_below="@id/tutorialTxt1"
             android:layout_alignParentStart="true"
             android:layout_marginVertical="5dp"
+            android:drawableLeft="@drawable/ic_padlock"
             android:fontFamily="sans-serif-light"
-            android:text="Lock apps when goal not achieved"
+            android:text=" Lock apps when goal not achieved"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="normal" />
 
@@ -109,43 +117,26 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tutorialTxt2"
             android:layout_alignParentStart="true"
-            android:layout_marginVertical="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="40dp"
+            android:drawableLeft="@drawable/ic_friends"
             android:fontFamily="sans-serif-light"
-            android:text="Connect with buddies nearby"
+            android:text=" Connect with buddies nearby"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="normal" />
 
-        <TextView
-            android:id="@+id/tutorialReadyTxt1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tutorialTxt3"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:text="track progress. stay disciplined. keep motivated."
-            android:textStyle="bold"
-            android:textSize="15sp" />
-
-<!--        <TextView-->
-<!--            android:id="@+id/tutorialReadyTxt2"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/tutorialReadyTxt1"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginVertical="5dp"-->
-<!--            android:text="are you ready?"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textSize="18sp" />-->
 
         <Button
             android:id="@+id/tutorialBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tutorialReadyTxt1"
+            android:layout_below="@id/tutorialTxt3"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/roundbutton"
             android:layout_marginTop="20dp"
-            android:layout_alignParentEnd="true"
-            android:text="let's begin >"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:text="let's begin" />
 
     </RelativeLayout>
 

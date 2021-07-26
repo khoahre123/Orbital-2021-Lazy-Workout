@@ -56,6 +56,7 @@ import java.util.Map;
         private ConstraintLayout appsView;
 
         List<App> appModelList = new ArrayList<>();
+        List<App> currentLockedApps = new ArrayList<>();
 
         AppAdapter adapter;
 
@@ -90,7 +91,7 @@ import java.util.Map;
             }
         }
 
-        private boolean isAllPermissionGranted() {
+        public boolean isAllPermissionGranted() {
             if (!(permissionOverlayWindowGranted())) {
                 Log.d(TAG, "usage stats not granted");
                 prevPermissionGranted = false;
@@ -111,12 +112,12 @@ import java.util.Map;
 
         }
 
-        private boolean permissionOverlayWindowGranted() {
+        public boolean permissionOverlayWindowGranted() {
             return ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) &&
                     Settings.canDrawOverlays(this));
         }
 
-        private boolean permissionUsageStatsGranted() {
+        public boolean permissionUsageStatsGranted() {
             try {
                 PackageManager packageManager = getPackageManager();
                 ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(), 0);
@@ -133,7 +134,7 @@ import java.util.Map;
             }
         }
 
-        private void requestPermissionOverlayWindow() {
+        public void requestPermissionOverlayWindow() {
             // Check if Android M or higher
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Show alert dialog to the user saying a separate permission is needed
@@ -158,7 +159,7 @@ import java.util.Map;
             }
         }
 
-        private void requestPermissionUsageStats() {
+        public void requestPermissionUsageStats() {
 
             new MaterialAlertDialogBuilder(this)
                     .setTitle("User Permission")
@@ -232,6 +233,8 @@ import java.util.Map;
                 @Override
                 public void onShow(DialogInterface dialog) {
                     Log.d(TAG, "about to get installed apps");
+
+                    Log.d("AppAdapter", "dtb lock app = " + lockedAppsList.toString());
                     getInstalledApps(lockedAppsList);
                 }
             });
@@ -240,17 +243,19 @@ import java.util.Map;
 
             goToOverviewBtn.setOnClickListener(this);
 
-            adapter = new AppAdapter(appModelList, this);
-
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapter);
-
             progressDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
                     getInstalledApps(lockedAppsList);
                 }
             });
+
+            adapter = new AppAdapter(appModelList, this);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+
+
         }
 
         @Override
@@ -277,13 +282,13 @@ import java.util.Map;
 
             List<ApplicationInfo>packageInfos = getPackageManager().getInstalledApplications(0);
 
+            Log.d("AppAdapter", "before adding locked apps =" + appModelList.toString());
+
             for (int i = 0; i < packageInfos.size(); i++) {
 
                 String name = packageInfos.get(i).loadLabel(getPackageManager()).toString();
                 Drawable icon = packageInfos.get(i).loadIcon(getPackageManager());
                 String packageName = packageInfos.get(i).packageName;
-
-
 
                 if (packageName.equals("com.example.lazyworkout")) {
                     continue;
@@ -297,16 +302,19 @@ import java.util.Map;
                     }
                     if (!(lockedAppsList.isEmpty())) {
                         if (lockedAppsList.contains(packageName)) {
-                            appModelList.add(new App(packageName, name, icon, 1));
+                            appModelList.add(new App(packageName, name, icon, 1)); // status 1: LOCKED
                         } else {
-                            appModelList.add(new App(packageName, name, icon, 0));
+                            appModelList.add(new App(packageName, name, icon, 0)); // status 1: NOT LOCKED
                         }
                     } else {
                         appModelList.add(new App(packageName, name, icon, 0));
                     }
                 }
 
+
             }
+
+            Log.d("AppAdapter", "get installed locked app = " + lockedAppsList.toString());
 
             adapter.notifyDataSetChanged();
             progressDialog.dismiss();

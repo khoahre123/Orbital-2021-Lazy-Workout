@@ -18,7 +18,6 @@ import com.example.lazyworkout.view.LockScreenActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 import java.util.Map;
@@ -34,9 +33,9 @@ public class LockService extends Service {
     private final Handler handler = new Handler(Looper.myLooper());
     Context context;
     Intent intent;
-    private String uid = FirebaseAuth.getInstance().getUid();
 
     Database db = new Database();
+    private FirebaseAuth fAuth = db.fAuth;
 
     UsageStatsManager usageStatsManager;
     ActivityManager activityManager;
@@ -66,11 +65,6 @@ public class LockService extends Service {
             activityManager = (ActivityManager) this.context.getSystemService(Context.ACTIVITY_SERVICE);
         }
 
-//        intent = new Intent(BROADCAST_LOCK);
-
-        Log.d(TAG, "current context = " + context);
-//        currentThread.setContext(context);
-
     }
 
     @Override
@@ -78,9 +72,14 @@ public class LockService extends Service {
         Log.d(TAG, "onStartCommand");
 
         handler.removeCallbacks(updateBroadcastData);
-        handler.post(updateBroadcastData);
 
-        startTimer();
+        if (fAuth.getCurrentUser() != null) {
+            handler.post(updateBroadcastData);
+            startTimer();
+        }
+
+
+
 
         return START_STICKY;
     }
@@ -90,8 +89,10 @@ public class LockService extends Service {
         Log.d(TAG, "onDestroy");
         super.onDestroy();
 
-        Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
-        sendBroadcast(broadcastIntent);
+        if (fAuth.getCurrentUser() != null) {
+            Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
+            sendBroadcast(broadcastIntent);
+        }
 
         stopTimerTask();
 
@@ -102,9 +103,12 @@ public class LockService extends Service {
         Log.d(TAG, "onRemoved");
         super.onTaskRemoved(rootIntent);
 
-        Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
-        broadcastIntent.putExtra("service", "lockapp");
-        sendBroadcast(broadcastIntent);
+        if (fAuth.getCurrentUser() != null) {
+            Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
+            broadcastIntent.putExtra("service", "lockapp");
+            sendBroadcast(broadcastIntent);
+        }
+
 
         stopTimerTask();
     }
@@ -175,37 +179,37 @@ public class LockService extends Service {
     }
 
     public void checkLockedApps(String recentTasks) {
-        if (uid != null) {
-            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(uid);
-            userRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        User user = document.toObject(User.class);
-                        Map<String, Object> map = document.getData();
 
-                        List<String> lockedAppsList = user.getLockedApps();
+        Log.d(TAG, "is running");
+        DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null) {
+                    User user = document.toObject(User.class);
+                    Map<String, Object> map = document.getData();
 
-                        Log.d(TAG, "lockedApplist = " + lockedAppsList.toString());
+                    List<String> lockedAppsList = user.getLockedApps();
 
-                        if (lockedAppsList.contains(recentTasks)) {
-                            Log.d(TAG, "in locked list " + recentTasks);
-                            Log.d(TAG, "start of today = " + Time.getToday() / Time.ONE_MINUTE_MILLIS);
+                    Log.d(TAG, "lockedApplist = " + lockedAppsList.toString());
 
-                            //TODO: time picker
-                            if (!user.finishDailyGoal(Time.getToday()) && Time.isLockTime(System.currentTimeMillis(), user.getLockTimeMinute())) {
-                                showLockScreen();
-                            }
+                    if (lockedAppsList.contains(recentTasks)) {
+                        Log.d(TAG, "in locked list " + recentTasks);
+
+                        //TODO: time picker
+                        if (!user.finishDailyGoal(Time.getToday()) && Time.isLockTime(System.currentTimeMillis(), user.getLockTimeMinute())) {
+                            Log.d(TAG, "lock screen!!");
+                            showLockScreen();
                         }
-
-                    } else {
-                        Log.d(TAG, "no such document");
                     }
+
                 } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Log.d(TAG, "no such document");
                 }
-            });
-        }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
     }
 
     private Runnable updateBroadcastData = new Runnable() {
@@ -213,10 +217,15 @@ public class LockService extends Service {
             // Only allow the repeating timer while service is running (once service is stopped the flag state will change and the code inside the conditional statement here will not execute).
             // Call the method that broadcasts the data to the Activity..
             prevTasks = recentTasks;
-            recentTasks = getForegroundApp();
-            checkLockedApps(recentTasks);
-            // Call "handler.postDelayed" again, after a specified delay.
-            handler.postDelayed(this, 1000);
+            if (fAuth.getCurrentUser() == null) {
+                stopSelf();
+            } else {
+                recentTasks = getForegroundApp();
+                checkLockedApps(recentTasks);
+                // Call "handler.postDelayed" again, after a specified delay.
+                handler.postDelayed(this, 1000);
+            }
+
 
         }
     };

@@ -135,7 +135,7 @@ public class StepCountingService extends Service implements SensorEventListener,
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-        Log.d(TAG, "user after signing out = " + db.fAuth.getCurrentUser());
+        Log.d(TAG, "user after destroying = " + db.fAuth.getCurrentUser());
         super.onDestroy();
 
 
@@ -148,6 +148,7 @@ public class StepCountingService extends Service implements SensorEventListener,
                     .putFloat("today_distance", todayDistances).commit();
 
             Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
+            broadcastIntent.putExtra("service", "stepcounter");
             sendBroadcast(broadcastIntent);
         }
         stopTimerTask();
@@ -233,6 +234,8 @@ public class StepCountingService extends Service implements SensorEventListener,
             sinceBoot = (float) (steps * stepSize);
             todayDistances = sinceBoot - getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                     .getFloat("pauseCount", 0);
+            Log.d(TAG, "since boot " + sinceBoot);
+            Log.d(TAG, "today distance = " + todayDistances);
             updateIfNecessary();
         }
     }
