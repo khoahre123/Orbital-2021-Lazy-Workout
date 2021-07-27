@@ -35,7 +35,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.adapter_design_b
 
     }
 
-
     @NonNull
     @NotNull
     @Override

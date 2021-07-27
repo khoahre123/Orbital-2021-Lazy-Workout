@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +20,11 @@ import com.example.lazyworkout.MainActivity;
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.service.StepCountingService;
 import com.example.lazyworkout.util.Database;
+import com.example.lazyworkout.util.Time;
 import com.example.lazyworkout.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.internal.bind.DateTypeAdapter;
 
@@ -63,32 +67,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         signOutButton = findViewById(R.id.signOutBtn);
         bottomNav = findViewById(R.id.bottomNav);
         signOutButton.setOnClickListener(this);
-        ArrayAdapter<String> goalArray = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goal);
-        setGoalInput.setAdapter(goalArray);
-        setGoalInput.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-
-                float goal = Util.getGoal(item);
-                db.updateGoal(goal);
-                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                        .putFloat("goal", (float) goal).commit();
-            }
-        });
         ArrayAdapter<String> stepArray = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, foot);
-        setStepInput.setAdapter(stepArray);
-        setStepInput.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-                float stepSize = Util.getStepsize(item);
-                db.updateStepsize(stepSize);
-                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
-                        .putFloat("step_size", stepSize).commit();
-            }
-        });
-
         bottomNav.setSelectedItemId(R.id.navSetting);
         bottomNav.setOnNavigationItemSelectedListener(this);
         setSizeCardView.setOnClickListener(this);
@@ -101,6 +80,43 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            case (R.id.setGoalCardView):
+                startActivity(new Intent(this, SettingGoalActivity.class));
+                break;
+
+            case (R.id.setSizeCardView):
+                startActivity(new Intent(this, SettingStepActivity.class));
+                break;
+
+            case (R.id.lockTimeCardView):
+                MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                        .setTimeFormat(TimeFormat.CLOCK_12H)
+                        .setHour(18)
+                        .setMinute(00)
+                        .setTitleText("Daily starting locktime")
+                        .build();
+
+                timePicker.show(getSupportFragmentManager(), "TIME_PICKER");
+
+                timePicker.addOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+                timePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int hour = timePicker.getHour();
+                        int minute = timePicker.getMinute();
+                        int lockTimeMinute = Time.convertMinute(hour, minute);
+                        db.updateLockTime(lockTimeMinute);
+                        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                                .putInt("lock_minute", lockTimeMinute).commit();
+                    }
+                });
+                break;
 
             case (R.id.signOutBtn):
                 if (uid != null) {
@@ -115,6 +131,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 stopService(new Intent(this, StepCountingService.class));
 
                 startActivity(new Intent(this, LoginActivity.class));
+                break;
 
             default:
                 break;
@@ -144,4 +161,5 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         }
         return true;
     }
+
 }

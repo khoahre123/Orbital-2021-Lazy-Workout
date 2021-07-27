@@ -10,8 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.lazyworkout.R;
 import com.example.lazyworkout.util.Constant;
@@ -19,7 +17,7 @@ import com.example.lazyworkout.util.Database;
 import com.example.lazyworkout.util.Util;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class InitialSettingStepActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingStepActivity extends AppCompatActivity {
 
     private AutoCompleteTextView setStepInput;
     private Button btn;
@@ -30,16 +28,18 @@ public class InitialSettingStepActivity extends AppCompatActivity implements Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_initial_setting_step);
+        setContentView(R.layout.activity_setting_step);
 
         initViews();
     }
 
     private void initViews() {
-        setStepInput = findViewById(R.id.initialStepInput);  //TODO: revamp set step input
-        btn = findViewById(R.id.initialStepBtn);
+        setStepInput = findViewById(R.id.settingStepInput);  //TODO: revamp set step input
+        btn = findViewById(R.id.settingStepBtn);
 
-        setStepInput.setText((int) (Constant.DEFAULT_STEP_SIZE * 100000) + " cm");
+        float currentStep = getSharedPreferences(uid, Context.MODE_PRIVATE)
+                .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
+        setStepInput.setText((int) (currentStep * 100000) + " cm");
 
         ArrayAdapter<String> stepArray = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Constant.STEP_SETTING);
         setStepInput.setAdapter(stepArray);
@@ -54,19 +54,13 @@ public class InitialSettingStepActivity extends AppCompatActivity implements Vie
             }
         });
 
-        btn.setOnClickListener(this);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingStepActivity.this, SettingActivity.class));
+            }
+        });
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
 
-            case (R.id.initialStepBtn):
-                startActivity(new Intent(this, TimePickerActivity.class));
-                break;
-
-            default:
-                break;
-        }
-    }
 }

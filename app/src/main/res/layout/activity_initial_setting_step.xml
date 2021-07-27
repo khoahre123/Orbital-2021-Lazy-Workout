@@ -6,44 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".view.InitialSettingStepActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/initialstepNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/initialStepBackArrow"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_arrowback"
-            app:tint="#808080"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/initialStepSkip"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Skip"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:fontFamily="sans-serif-thin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <RelativeLayout
         android:id="@+id/initialStepView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:layout_below="@id/initialstepNavigation">
+        android:layout_marginTop="40dp">
 
         <TextView
             android:id="@+id/initialStepTitle"
@@ -60,7 +28,7 @@
             android:id="@+id/initialStepInputField"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="200dp"
-            android:layout_height="50dp"
+            android:layout_height="75dp"
             android:layout_below="@+id/initialStepTitle"
             android:layout_marginVertical="40dp"
             android:layout_centerHorizontal="true"
@@ -91,7 +59,7 @@
         android:background="@drawable/roundbutton"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="16dp"
-        android:text="next"
+        android:text="next >"
         android:layout_marginBottom="10dp"/>
 
 

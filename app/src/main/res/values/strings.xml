@@ -68,4 +68,6 @@
         We send you this cute Snoppy Dog for motivation. Come on brooo"</string>
     <string name="lock_status">lock status:</string>
     <string name="lock_time">lock time:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
