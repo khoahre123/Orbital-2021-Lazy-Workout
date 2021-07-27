@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lazyworkout.R;
+import com.example.lazyworkout.api.AuthenticationHelper;
 import com.example.lazyworkout.model.User;
 import com.example.lazyworkout.util.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -233,8 +234,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
     private boolean validateUsername() {
         String username = inputName.getText().toString().trim();
-
-        if (username.isEmpty()) {
+        boolean checkUsername = AuthenticationHelper.validateUsername(username);
+        if (checkUsername) {
             txtInputFieldName.setError("Username is required");
             return false;
         } else {

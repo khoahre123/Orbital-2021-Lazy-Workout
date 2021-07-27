@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.lazyworkout.R;
+import com.example.lazyworkout.api.AuthenticationHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -102,11 +103,9 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
         String email = inputEmail.getText().toString().trim();
 
-        if (email.isEmpty()) {
-            txtInputFieldEmail.setError("Email is required");
-            return false;
-        }else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            txtInputFieldEmail.setError("The email is invalid");
+        String authenticate = AuthenticationHelper.validateEmail(email);
+        if (authenticate != null) {
+            txtInputFieldEmail.setError(authenticate);
             return false;
         } else {
             txtInputFieldEmail.setError(null);

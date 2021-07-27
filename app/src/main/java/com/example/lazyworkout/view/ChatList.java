@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.bumptech.glide.Glide;
 import com.example.lazyworkout.adapter.ChatListAdapter;
+import com.example.lazyworkout.api.ChatHelper;
 import com.example.lazyworkout.api.MessageHelper;
 import com.example.lazyworkout.model.Message;
 import com.example.lazyworkout.model.User;
@@ -144,7 +145,8 @@ public class ChatList extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void checkString(String[] value) {
-        if (value[0] == null) {
+        boolean checkstring = ChatHelper.checkString(value);
+        if (checkstring) {
             Log.d(TAG, "User not found");
         } else {
             Intent intent = new Intent(this, ChatMessage.class);
