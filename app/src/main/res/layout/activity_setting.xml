@@ -12,12 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="Setting"
+            android:textStyle="bold"
+            android:id="@+id/settingTextView"
+            android:layout_margin="15dp"/>
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/setGoalCardView"
             app:contentPadding="5dp"
             app:cardCornerRadius="30dp"
+            android:layout_below="@id/settingTextView"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
             android:clickable="true">
@@ -42,9 +53,10 @@
                     android:layout_marginLeft="30dp"
                     android:text="Set Goal"
                     android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/setGoalImage"
-                    app:layout_constraintLeft_toRightOf="@+id/setGoalImage"
-                    app:layout_constraintTop_toTopOf="@+id/setGoalImage" />
+                    app:layout_constraintLeft_toRightOf="@id/setGoalImage"
+                    android:textColor="#94000000"
+                    app:layout_constraintTop_toTopOf="@+id/setGoalImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/setGoalImage" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -71,6 +83,7 @@
             app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="#FFFFFF"
             android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -91,9 +104,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toRightOf="@+id/setSizeImage"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="25dp"
                     android:text="Set Step Size"
                     android:textSize="20sp"
+                    android:textColor="#94000000"
                     app:layout_constraintTop_toTopOf="@+id/setSizeImage"
                     app:layout_constraintBottom_toBottomOf="@+id/setSizeImage" />
 
@@ -123,6 +137,7 @@
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
             android:layout_marginTop="30dp"
+            app:cardBackgroundColor="#FFFFFF"
             android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,8 +160,9 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toRightOf="@+id/listAppImage"
                     android:layout_marginLeft="30dp"
-                    android:text="View Installed App"
+                    android:text="Set Locked App"
                     android:textSize="20sp"
+                    android:textColor="#94000000"
                     app:layout_constraintTop_toTopOf="@+id/listAppImage"
                     app:layout_constraintBottom_toBottomOf="@+id/listAppImage" />
 
@@ -175,6 +191,7 @@
             app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="#FFFFFF"
             android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -196,7 +213,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toRightOf="@+id/lockedAppImage"
                     android:layout_marginLeft="30dp"
-                    android:text="Set Lock App"
+                    android:text="View Locked App"
+                    android:textColor="#94000000"
                     android:textSize="20sp"
                     app:layout_constraintTop_toTopOf="@+id/lockedAppImage"
                     app:layout_constraintBottom_toBottomOf="@+id/lockedAppImage" />
@@ -226,6 +244,7 @@
             app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="#FFFFFF"
             android:clickable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -249,6 +268,7 @@
                     android:layout_marginLeft="30dp"
                     android:text="Set Lock Time"
                     android:textSize="20sp"
+                    android:textColor="#94000000"
                     app:layout_constraintTop_toTopOf="@+id/lockTimeImage"
                     app:layout_constraintBottom_toBottomOf="@+id/lockTimeImage" />
 

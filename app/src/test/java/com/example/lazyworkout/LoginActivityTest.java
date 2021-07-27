@@ -52,11 +52,12 @@ public class LoginActivityTest {
 
     @Test
     public void validateEmail() {
-        Pattern pattern = Mockito.mock(Pattern.class);
-        when(pattern.matcher("abbyy#@z~~").matches()).thenReturn(false);
-        when(pattern.matcher("lmao@gmail.com").matches()).thenReturn(true);
         assertEquals("Email is empty!","Email is required", AuthenticationHelper.validateEmail(""));
-        assertEquals("Email is invalid!", "The email is invalid", AuthenticationHelper.validateEmail("abbyy#@z~~"));
-        assertEquals("Email is valid!", null, AuthenticationHelper.validateEmail("lmao@gmail.com"));
+    }
+
+    @Test
+    public void validatePassword() {
+        assertEquals("Password is required", AuthenticationHelper.validatePassword(""));
+        assertEquals(null, AuthenticationHelper.validatePassword("abcxyz"));
     }
 }

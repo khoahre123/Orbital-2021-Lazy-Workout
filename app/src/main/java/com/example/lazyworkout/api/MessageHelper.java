@@ -76,7 +76,7 @@ public class MessageHelper {
     public static Query getAllListMessage() {
         String ownUid = FirebaseAuth.getInstance().getUid();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        return ChatHelper.getChatCollection().whereArrayContains("listUser", ownUid);
+        return ChatHelper.getChatCollection().whereArrayContains("listUser", ownUid).orderBy("modifiedDate", Query.Direction.DESCENDING);
     }
 
     public static Task<DocumentReference> createMessageForChat(String textMessage, String chat,  UserMessage userMessageSender,

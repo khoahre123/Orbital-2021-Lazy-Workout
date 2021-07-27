@@ -199,7 +199,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 map.put(newUser.getName(), db.getID());
                                 Log.d(TAG, newUser.toString());
                                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                                firestore.collection("userLookup").document("findUserByEmail").update(map);
+                                firestore.collection("userLookup").document("findUserByEmail").set(map, SetOptions.merge());
                                 startActivity(new Intent(LoginActivity.this, TutorialActivity.class));
                             } else {
                                 // TODO: just setting locksetting first
@@ -279,11 +279,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, newUser.toString());
                             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                             firestore.collection("userLookup").document("findUserByEmail").set(map, SetOptions.merge());
+                            startActivity(new Intent(LoginActivity.this, TutorialActivity.class));
                         } else {
                             Log.d(TAG, "Existing user");
+                            startActivity(new Intent(LoginActivity.this, OverviewActivity.class));
                         }
-
-                        startActivity(new Intent(LoginActivity.this, TutorialActivity.class));
                         finish();
                     }
                 });

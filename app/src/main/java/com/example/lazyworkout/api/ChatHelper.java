@@ -13,4 +13,12 @@ public class ChatHelper {
     public static CollectionReference getChatCollection(){
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
+
+    public static boolean checkString(String[] value) {
+        if (value[0] == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
