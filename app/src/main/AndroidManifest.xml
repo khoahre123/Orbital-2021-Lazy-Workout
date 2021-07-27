@@ -31,7 +31,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LazyWorkout">
-        <activity android:name=".view.TimePickerActivity"></activity>
+        <activity android:name=".view.SettingLockActivity"></activity>
+        <activity android:name=".view.SettingStepActivity" />
+        <activity android:name=".view.SettingGoalActivity" />
+        <activity android:name=".view.TimePickerActivity" />
         <activity android:name=".view.InitialSettingStepActivity" />
         <activity android:name=".view.InitialSettingGoalActivity" />
         <activity android:name=".view.TutorialActivity" />
@@ -63,7 +66,6 @@
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped" />
-
         <receiver
             android:name=".service.LockingBroadcastReceiver"
             android:enabled="true"

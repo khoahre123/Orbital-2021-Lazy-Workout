@@ -4,54 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.TutorialActivity">
-
+    tools:context=".view.SettingGoalActivity">
 
 
     <RelativeLayout
-        android:id="@+id/initialGoalView"
+        android:id="@+id/settingGoalView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="40dp">
+        android:layout_marginHorizontal="30dp">
 
         <TextView
-            android:id="@+id/initialgoalTitle"
+            android:id="@+id/settingGoalTitle"
             android:layout_width="200dp"
             android:layout_height="100dp"
             android:fontFamily="sans-serif-black"
-            android:text="Personalize your bio"
+            android:text="Edit Goal"
             android:textSize="35dp"
+            android:layout_marginTop="40dp"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/initialGoalDescribe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:textColor="@color/black"
-            android:text="@string/initial_goal_describe"
-            android:layout_below="@id/initialgoalTitle"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/initialGoalLetgo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:layout_below="@id/initialGoalDescribe"
-            android:text="@string/initial_goal_letgo"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/black"
-            android:textSize="15sp"/>
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/initialGoalInputField"
+            android:id="@+id/settingGoalInputField"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="200dp"
             android:layout_height="75dp"
-            android:layout_below="@+id/initialGoalLetgo"
+            android:layout_below="@+id/settingGoalTitle"
             android:layout_marginVertical="40dp"
             android:layout_centerHorizontal="true"
             android:textColorHint="#6E6D6D"
@@ -60,7 +38,7 @@
             android:hint="Goal">
 
             <AutoCompleteTextView
-                android:id="@+id/initialGoalInput"
+                android:id="@+id/settingGoalInput"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="true"
@@ -69,19 +47,17 @@
                 android:textSize="20dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
     </RelativeLayout>
 
     <Button
-        android:id="@+id/initialGoalBtn"
+        android:id="@+id/settingGoalBtn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="500dp"
         android:background="@drawable/roundbutton"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginRight="16dp"
-        android:text="next >"
+        android:text="confirm"
         android:layout_marginBottom="10dp"/>
 
 

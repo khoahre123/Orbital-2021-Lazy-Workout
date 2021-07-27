@@ -124,34 +124,6 @@
                     android:textColor="#BC000000"
                     android:textSize="18sp" />
 
-<!--                <com.google.android.material.card.MaterialCardView-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:clickable="true"-->
-<!--                    app:cardBackgroundColor="#E0E0E0"-->
-<!--                    android:layout_below="@id/overviewStreak"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:id="@+id/editGoal" >-->
-
-<!--                    <RelativeLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        android:layout_marginHorizontal="8dp">-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_centerInParent="true"-->
-<!--                            android:fontFamily="sans-serif-medium"-->
-<!--                            android:text="Customize Lock App"-->
-<!--                            android:textColor="#E0FFA5AB"-->
-<!--                            android:textSize="20dp" />-->
-
-
-<!--                    </RelativeLayout>-->
-
-<!--                </com.google.android.material.card.MaterialCardView>-->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/editGoal"
                     android:layout_width="match_parent"
@@ -160,6 +132,7 @@
                     android:layout_below="@id/overviewStreak"
                     android:textAlignment="center"
                     android:backgroundTint="@color/white"
+                    app:rippleColor="#808080"
                     >
 
                     <RelativeLayout
@@ -246,6 +219,8 @@
                     android:layout_below="@id/overviewLockTime"
                     android:backgroundTint="@color/white"
                     android:textAlignment="center"
+                    android:clickable="true"
+                    app:rippleColor="#808080"
                     >
 
                     <RelativeLayout
@@ -285,7 +260,7 @@
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/bottom_nav_color"
         app:menu="@menu/bottom_navigation_menu"
-        android:backgroundTint="@color/white"
+        app:backgroundTint="@color/white"
         />
 
 

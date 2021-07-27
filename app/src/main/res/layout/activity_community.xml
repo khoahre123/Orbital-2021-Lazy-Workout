@@ -32,6 +32,7 @@
         android:layout_alignParentBottom="true"
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/bottom_nav_color"
+        app:backgroundTint="@color/white"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu" />
 

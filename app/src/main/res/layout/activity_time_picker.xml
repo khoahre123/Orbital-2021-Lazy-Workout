@@ -6,45 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".view.TimePickerActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/timePickerNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/timePickerBackArrow"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:tint="#808080"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_arrowback"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/timePickerSkip"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Skip"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:fontFamily="sans-serif-thin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <RelativeLayout
         android:id="@+id/timePickerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:layout_below="@id/timePickerNavigation">
+        android:layout_marginTop="40dp">
 
         <TextView
             android:id="@+id/timePickerTitle"

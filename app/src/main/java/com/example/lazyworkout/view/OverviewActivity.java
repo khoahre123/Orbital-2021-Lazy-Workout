@@ -115,7 +115,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         distanceGoal = getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getFloat("goal", Constant.DEFAULT_GOAL);
-//        distanceGoal = (float) 0.2; //JUST TESTING
+
         stepSize = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
                 .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
         lockMinute = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
@@ -344,6 +344,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
         stats.setOnClickListener(this);
         editGoal.setOnClickListener(this);
+        editLockApp.setOnClickListener(this);
         unit.setOnClickListener(this);
 
         bottomNav.setSelectedItemId(R.id.navOverview);
@@ -377,7 +378,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
             case (R.id.editGoal):
                 onPause();
-                startActivity(new Intent(this, SettingActivity.class));
+                Intent intent = new Intent(this, SettingGoalActivity.class);;
+                startActivity(intent);
+                break;
+
+            case (R.id.editLock):
+                startActivity(new Intent(this, SettingLockActivity.class));
                 break;
         }
     }

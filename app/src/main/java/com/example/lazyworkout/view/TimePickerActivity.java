@@ -21,8 +21,6 @@ import org.w3c.dom.Text;
 
 public class TimePickerActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageView backArrow;
-    private TextView skip;
     private Button btn;
 
     Database db = new Database();
@@ -36,25 +34,14 @@ public class TimePickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initViews() {
-        backArrow = findViewById(R.id.timePickerBackArrow);
-        skip = findViewById(R.id.timePickerSkip);
         btn = findViewById(R.id.timePickerBtn);
 
-        backArrow.setOnClickListener(this);
-        skip.setOnClickListener(this);
         btn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-            case (R.id.timePickerBackArrow):
-                startActivity(new Intent(this, InitialSettingStepActivity.class));
-                break;
-
-            case (R.id.timePickerSkip):
-                startActivity(new Intent(this, AllInstalledAppsActivity.class));
 
             case (R.id.timePickerBtn):
                 MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
