@@ -1,5 +1,6 @@
 package com.example.lazyworkout.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,9 +41,10 @@ public class ChatMessage extends AppCompatActivity implements BoxChatAdapter.Lis
     private EditText chatInput;
     private View chatBox;
     @Nullable private UserMessage modelCurrentUserMessage;
-    private String currentChatName;
+    private String currentChatName, textingName;
     private Button sendButton;
     private String combineString;
+    private Toolbar nameToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,16 @@ public class ChatMessage extends AppCompatActivity implements BoxChatAdapter.Lis
         sendButton = findViewById(R.id.sendButton);
         sendButton.setOnClickListener(this);
         chatBox = findViewById(R.id.chatBoxView);
+        nameToolBar = findViewById(R.id.nameToolBar);
         String chatUID = getIntent().getStringExtra("chatUID");
+        textingName = getIntent().getStringExtra("name");
+        nameToolBar.setTitle(textingName);
+        nameToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChatMessage.this, ChatList.class));
+            }
+        });
         this.configureRecyclerView(chatUID);
         this.getCurrentUserFromFirestore();
     }

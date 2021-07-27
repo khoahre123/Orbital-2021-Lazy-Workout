@@ -102,6 +102,7 @@ public class ChatListAdapter extends FirestoreRecyclerAdapter<UserList, ChatList
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, ChatMessage.class);
                 intent.putExtra("chatUID", uid);
+                intent.putExtra("name", nameView.getText().toString());
                 context.startActivity(intent);
             });
         }

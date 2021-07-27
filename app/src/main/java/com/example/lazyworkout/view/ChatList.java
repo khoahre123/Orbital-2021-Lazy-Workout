@@ -26,6 +26,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
@@ -74,6 +76,9 @@ public class ChatList extends AppCompatActivity implements View.OnClickListener 
                 }
                 String ownName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
                 if (textInputEditText.getText().toString().equals(ownName)) {
+                    Snackbar snackbar = Snackbar.make(userList, "You can not text yourself right?", BaseTransientBottomBar.LENGTH_LONG);
+                    textInputEditText.setText("");
+                    snackbar.show();
                     break;
                 }
                 FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
@@ -91,7 +96,7 @@ public class ChatList extends AppCompatActivity implements View.OnClickListener 
                                         value[0] = null;
                                         Log.d(TAG, "document is null");
                                     }
-                                    checkString(value);
+                                    checkString(value, textInputEditText.getText().toString());
                                 }
                             }
                         });
@@ -148,13 +153,14 @@ public class ChatList extends AppCompatActivity implements View.OnClickListener 
         }).setLifecycleOwner(this).build();
     }
 
-    private void checkString(String[] value) {
+    private void checkString(String[] value, String name) {
         boolean checkstring = ChatHelper.checkString(value);
         if (checkstring) {
             Log.d(TAG, "User not found");
         } else {
             Intent intent = new Intent(this, ChatMessage.class);
             intent.putExtra("chatUID", value[0]);
+            intent.putExtra("name", name);
             startActivity(intent);
         }
     }
