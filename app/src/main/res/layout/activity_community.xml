@@ -9,11 +9,33 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Near by user:"
+        android:text="Community"
+        android:layout_centerHorizontal="true"
+        android:textSize="25dp"
+        android:fontFamily="sans-serif-condensed"
         android:layout_marginTop="10dp"
+        android:id="@+id/communityTextView" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nearby user list:"
+        android:layout_margin="15dp"
         android:textStyle="bold"
-        android:textSize="25sp"
+        android:layout_below="@id/communityTextView"
+        android:textSize="20sp"
         android:id="@+id/nearByUserTextView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/nearByUserTextView"
+        android:layout_alignBottom="@+id/nearByUserTextView"
+        android:layout_above="@+id/nearByUserTextView"
+        android:layout_marginBottom="3dp"
+        android:textSize="15sp"
+        android:text="Click on user to start chatting" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -21,7 +43,6 @@
         android:id="@+id/nearByUser"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_below="@+id/nearByUserTextView"
-        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/communityGoToChatBtn" />
 
@@ -36,10 +57,11 @@
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu" />
 
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to chat"
+        android:text="Chat with your friends"
         android:layout_below="@+id/nearByUser"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="300dp"

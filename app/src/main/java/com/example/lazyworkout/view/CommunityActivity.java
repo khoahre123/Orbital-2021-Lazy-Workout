@@ -158,6 +158,10 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                     for (Task<QuerySnapshot> task: tasks) {
                         QuerySnapshot snap = task.getResult();
                         for (DocumentSnapshot doc : snap.getDocuments()) {
+                            String ownName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                            if (doc.getString("name").equals(ownName)) {
+                                continue;
+                            }
                             double lat = doc.getDouble("latitude");
                             double lng = doc.getDouble("longitude");
 

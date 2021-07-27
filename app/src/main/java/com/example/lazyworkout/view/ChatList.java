@@ -72,6 +72,10 @@ public class ChatList extends AppCompatActivity implements View.OnClickListener 
                 if (TextUtils.isEmpty(textInputEditText.getText().toString())) {
                     break;
                 }
+                String ownName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                if (textInputEditText.getText().toString().equals(ownName)) {
+                    break;
+                }
                 FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
                 final String[] value = new String[1];
                 mDatabase.collection("userLookup").document("findUserByEmail").get()

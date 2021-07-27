@@ -53,6 +53,7 @@
                     android:layout_marginLeft="30dp"
                     android:text="Set Goal"
                     android:textSize="20sp"
+                    app:layout_constraintLeft_toRightOf="@id/setGoalImage"
                     android:textColor="#94000000"
                     app:layout_constraintTop_toTopOf="@+id/setGoalImage"
                     app:layout_constraintBottom_toBottomOf="@+id/setGoalImage" />
