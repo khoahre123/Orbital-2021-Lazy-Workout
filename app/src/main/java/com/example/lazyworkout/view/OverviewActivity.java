@@ -163,6 +163,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         String UNIQUE_WORK_NAME = "StartLockingServiceViaWorker";
         WorkManager workManager = WorkManager.getInstance(this);
 
+        startService(new Intent(this, LockService.class));
+
         // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
         // (same as the JobScheduler API), but in practice 15 doesn't work. Using 16 here
         PeriodicWorkRequest request =
@@ -383,7 +385,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case (R.id.editLock):
-                startActivity(new Intent(this, SettingLockActivity.class));
+                startActivity(new Intent(this, SettingInstalledAppsActivity.class));
                 break;
         }
     }
@@ -415,7 +417,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
     private void formatStringLockStatus() {
         String activated = isLockActivated() ? " ON" : " OFF";
-        String statusText = getString(R.string.lock_status);
+        String statusText = " " + getString(R.string.lock_status);
 
         Spannable spannable = new SpannableString(statusText + activated);
 
@@ -433,7 +435,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
     private void formatStringLockTime() {
 
-        String timeText = getString(R.string.lock_time);
+        String timeText = " " + getString(R.string.lock_time);
         String timePeriod = " " + Time.getTime(lockMinute) + " - 12:00 AM";
         String time = " " + Time.getTime(lockMinute);
 

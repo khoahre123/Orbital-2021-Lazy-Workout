@@ -26,12 +26,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/logo"
+        android:label="LazyWorkout"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.LazyWorkout">
-        <activity android:name=".view.SettingLockActivity"></activity>
+        <activity android:name=".view.SettingLockedAppsActivity"></activity>
+        <activity android:name=".view.SettingInstalledAppsActivity" />
         <activity android:name=".view.SettingStepActivity" />
         <activity android:name=".view.SettingGoalActivity" />
         <activity android:name=".view.TimePickerActivity" />
