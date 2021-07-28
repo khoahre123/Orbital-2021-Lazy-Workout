@@ -236,7 +236,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String username = inputName.getText().toString().trim();
         boolean checkUsername = AuthenticationHelper.validateUsername(username);
         if (checkUsername) {
-            txtInputFieldName.setError("Username is required");
+            txtInputFieldName.setError("Name is required");
             return false;
         } else {
             txtInputFieldName.setError(null);

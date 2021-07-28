@@ -105,6 +105,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
 
     private float currentDistances;
 
+    public OverviewActivity() {}
 
 
     @Override
@@ -162,6 +163,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         Log.d(TAG, "startLockingServiceViaWorker called");
         String UNIQUE_WORK_NAME = "StartLockingServiceViaWorker";
         WorkManager workManager = WorkManager.getInstance(this);
+        startService(new Intent(this, LockService.class));
 
         // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
         // (same as the JobScheduler API), but in practice 15 doesn't work. Using 16 here
@@ -175,6 +177,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         // to schedule a unique work, no matter how many times app is opened i.e. startServiceViaWorker gets called
         // do check for AutoStart permission
         workManager.enqueueUniquePeriodicWork(UNIQUE_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request);
+
     }
 
 
@@ -210,14 +213,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
             Log.d(TAG, "overlay window not granted");
             prevPermissionGranted = false;
             requestPermissionOverlayWindow();
-            return false;
+            return true;
         } else {
             Log.d(TAG, "usage stats granted");
             if (!(permissionUsageStatsGranted())) {
                 Log.d(TAG, "usage stat not granted");
                 prevPermissionGranted = false;
                 requestPermissionUsageStats();
-                return false;
+                return true;
             } else {
                 Log.d(TAG, "all permission granted");
                 return true;

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1067522957481-4q1o4gmrgddsa02t7v1nq1gf5keh2prn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lazyworkout",
+            "certificate_hash": "a2846657d2b101c6b29985f7315e673e871994b3"
+          }
+        },
+        {
           "client_id": "1067522957481-3gch5mfvoehtaghc59bobk3oj7g1jbv1.apps.googleusercontent.com",
           "client_type": 3
         }

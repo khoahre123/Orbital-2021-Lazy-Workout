@@ -129,7 +129,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
                 boolean doneSignout = db.signout();
                 stopService(new Intent(this, StepCountingService.class));
-
                 startActivity(new Intent(this, LoginActivity.class));
                 break;
 

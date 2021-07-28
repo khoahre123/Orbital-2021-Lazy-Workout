@@ -22,6 +22,8 @@ public class AuthenticationHelper {
     public static String validatePassword(String password) {
         if (password.isEmpty()) {
             return "Password is required";
+        } else if (password.length() < 6) {
+            return "Password cannot shorter than six characters";
         } else {
             return null;
         }

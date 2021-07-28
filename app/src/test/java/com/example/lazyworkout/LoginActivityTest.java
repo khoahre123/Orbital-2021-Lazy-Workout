@@ -1,6 +1,8 @@
 package com.example.lazyworkout;
 
 import android.os.Looper;
+import android.service.autofill.FieldClassification;
+import android.util.Patterns;
 
 import androidx.test.core.app.ActivityScenario;
 
@@ -30,11 +32,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @PowerMockRunnerDelegate(JUnit4.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({FirebaseDatabase.class})
+@PrepareForTest({Patterns.class})
 public class LoginActivityTest {
 
     private DatabaseReference mockedDatabaseReference;
@@ -43,6 +46,7 @@ public class LoginActivityTest {
     @Before
     public void before() {
         mockedDatabaseReference = Mockito.mock(DatabaseReference.class);
+        PowerMockito.mockStatic(Patterns.class);
 
         FirebaseDatabase mockedFirebaseDatabase = Mockito.mock(FirebaseDatabase.class);
         when(mockedFirebaseDatabase.getReference()).thenReturn(mockedDatabaseReference);
@@ -52,6 +56,11 @@ public class LoginActivityTest {
 
     @Test
     public void validateEmail() {
+        Pattern pattern = Mockito.mock(Pattern.class);
+        Matcher matcher = Mockito.mock(Matcher.class);
+        PowerMockito.when(Patterns.EMAIL_ADDRESS).thenReturn(pattern);
+        when(pattern.matcher("zys=,q&")).thenReturn(matcher);
+        when(matcher.matches()).thenReturn(false);
         assertEquals("Email is empty!","Email is required", AuthenticationHelper.validateEmail(""));
     }
 

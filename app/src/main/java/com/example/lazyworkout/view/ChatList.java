@@ -157,6 +157,9 @@ public class ChatList extends AppCompatActivity implements View.OnClickListener 
         boolean checkstring = ChatHelper.checkString(value);
         if (checkstring) {
             Log.d(TAG, "User not found");
+            Snackbar snackbar = Snackbar.make(userList, "User not exist, please try again", BaseTransientBottomBar.LENGTH_LONG);
+            textInputEditText.setText("");
+            snackbar.show();
         } else {
             Intent intent = new Intent(this, ChatMessage.class);
             intent.putExtra("chatUID", value[0]);
