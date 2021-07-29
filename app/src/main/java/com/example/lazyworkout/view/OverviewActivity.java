@@ -158,7 +158,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         String UNIQUE_WORK_NAME = "StartLockingServiceViaWorker";
         WorkManager workManager = WorkManager.getInstance(this);
 
-//        startService(new Intent(this, LockService.class));
+        startService(new Intent(this, LockService.class));
 
         // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
         // (same as the JobScheduler API), but in practice 15 doesn't work. Using 16 here
@@ -494,11 +494,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         Log.d(TAG, "onResume");
         super.onResume();
 
-        distanceGoal = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
-                .getFloat("goal", 0);
-        stepSize = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
-                .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
-
         isAllPermissionGranted();
 
         Sensor sensor = (Sensor) sensorManager.getDefaultSensor(Constant.DEFAULT_SENSOR);
@@ -507,6 +502,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "No sensor detected in this device",
                     Toast.LENGTH_LONG).show();
         }
+
     }
 
     @Override
@@ -653,6 +649,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
+
+        distanceGoal = getSharedPreferences(uid, Context.MODE_PRIVATE)
+                .getFloat("goal", Constant.DEFAULT_GOAL);
+        stepSize = getSharedPreferences(uid, Context.MODE_PRIVATE)
+                .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
     }
 }
 
