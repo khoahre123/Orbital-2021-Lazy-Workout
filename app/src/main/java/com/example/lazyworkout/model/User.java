@@ -8,6 +8,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.lazyworkout.util.Constant;
 import com.example.lazyworkout.util.Time;
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoLocation;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +29,7 @@ public class User {
     private float longestDay, currentStreak, longestStreak = 0;
     public TrackingRecord records = new TrackingRecord();
     private double latitude, longitude = 0;
-    private String geohash = "";
+    private String geohash = GeoFireUtils.getGeoHashForLocation(new GeoLocation(0,0));
     private List<String> lockedApps = new ArrayList<>();
     private int lockTimeMinute = Constant.LOCK_TIME;
 

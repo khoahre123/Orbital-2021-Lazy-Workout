@@ -12,7 +12,7 @@ public class AuthenticationHelper {
     public static String validateEmail(String email) {
         if (email.isEmpty()) {
             return "Email is required";
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!checkValidEmail(email)) {
             return "The email is invalid";
         } else {
             return null;
@@ -22,6 +22,8 @@ public class AuthenticationHelper {
     public static String validatePassword(String password) {
         if (password.isEmpty()) {
             return "Password is required";
+        } else if (password.length() < 6) {
+            return "Password cannot shorter than six characters";
         } else {
             return null;
         }
@@ -33,5 +35,9 @@ public class AuthenticationHelper {
         } else {
             return false;
         }
+    }
+
+    public static boolean checkValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }
