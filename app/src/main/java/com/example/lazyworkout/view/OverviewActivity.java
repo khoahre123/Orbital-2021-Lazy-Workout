@@ -128,11 +128,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         startTrackingService();
         startLockingServiceViaWorker();
 
-//        intent = new Intent(this, StepCountingService.class);
-
-//        startService(new Intent(getBaseContext(), LockService.class));//TODO
-
-
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerReceiver(broadcastReceiver, new IntentFilter(StepCountingService.BROADCAST_ACTION));
 
@@ -163,7 +158,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         String UNIQUE_WORK_NAME = "StartLockingServiceViaWorker";
         WorkManager workManager = WorkManager.getInstance(this);
 
-        startService(new Intent(this, LockService.class));
+//        startService(new Intent(this, LockService.class));
 
         // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
         // (same as the JobScheduler API), but in practice 15 doesn't work. Using 16 here
@@ -499,6 +494,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         Log.d(TAG, "onResume");
         super.onResume();
 
+        distanceGoal = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+                .getFloat("goal", 0);
+        stepSize = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+                .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
+
         isAllPermissionGranted();
 
         Sensor sensor = (Sensor) sensorManager.getDefaultSensor(Constant.DEFAULT_SENSOR);
@@ -615,7 +615,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                             streak++;
                             time = time - Time.ONE_DAY_MILLIS;
                             distance = user.getDistances(time);
-                            Log.d(TAG, "time = " + time + ",distance = " + distance + ", streak = " + streak);
                         }
                         Log.d(TAG, "current streak = " + streak);
                         getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("currentStreak", streak).apply();

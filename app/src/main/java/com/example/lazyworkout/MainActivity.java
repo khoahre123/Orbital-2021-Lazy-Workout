@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
             finish();
             Intent intent = new Intent(this, OverviewActivity.class);
-//            Intent intent = new Intent(this, TutorialActivity.class);
             startActivity(intent);
         } else {
             finish();

@@ -62,7 +62,7 @@
     <string name="initial_goal_letgo">Let\'s start with setting daily walking goal.</string>
     <string name="initial_lock_describe1">The chosen apps will be locked until midnight
         if you do not finish daily walking goal. </string>
-    <string name="initial_lock_describe_2">Tips: Choose apps that make you procastinate to take exercises!</string>
+    <string name="initial_lock_describe_2">Tips: Choose entertaining apps that tend to make you procastinate to take exercises!</string>
     <string name="time_picker_describe">Apps will be locked from this lock time to midnight if you do not finish daily walking goal. </string>
     <string name="lock_screen_msg">This app is locked because you have not achieved the goal today!
         We send you this cute Snoppy Dog for motivation. Come on brooo"</string>
