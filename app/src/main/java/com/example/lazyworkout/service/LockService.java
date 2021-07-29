@@ -220,7 +220,8 @@ public class LockService extends Service {
 
         Intent intent = new Intent(this, LockScreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getContext().startActivity(intent);
+        Log.d(TAG, "current context = " + this.toString());
+        startActivity(intent);
 
         return true;
     }

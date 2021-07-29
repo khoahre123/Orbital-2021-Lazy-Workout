@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:text="Setting"
+            android:textColor="#90000000"
             android:textStyle="bold"
             android:id="@+id/settingTextView"
             android:layout_margin="15dp"/>

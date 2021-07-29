@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:fontFamily="sans-serif-condensed"
-        android:text="Mission"
+        android:text="Current records"
         android:textSize="30dp" />
 
 
@@ -68,6 +68,7 @@
 
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,6 +110,7 @@
                 android:layout_marginTop="15dp"/>
 
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -158,13 +160,36 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:backgroundTint="@android:color/darker_gray"
+        android:layout_below="@id/spotlightAchievement"
+        android:layout_marginVertical="20dp"
+        android:layout_marginHorizontal="30dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/spotlightAchievement"
+        android:textColor="#90000000"
+        android:id="@+id/achievementTitle2"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Next challenges"
+        android:textSize="30dp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginHorizontal="30dp"
-        android:layout_below="@id/spotlightAchievement">
+        android:layout_below="@id/achievementTitle2">
+
+
 
         <TextView
             android:id="@+id/firstMissionText"
@@ -173,7 +198,7 @@
             android:textColor="@color/black"
             android:layout_marginTop="20dp"
             android:textSize="15dp"
-            android:text="Longest daily distance mission:" />
+            android:text="Longest distance per day:" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -219,7 +244,7 @@
             android:id="@+id/secondMissionText"
             android:layout_marginTop="20dp"
             android:textColor="@color/black"
-            android:text="Total distance mission:"/>
+            android:text="Total distance:"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -266,7 +291,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:textColor="@color/black"
-            android:text="Streak mission:" />
+            android:text="Longest streak:" />
 
         <LinearLayout
             android:layout_width="match_parent"

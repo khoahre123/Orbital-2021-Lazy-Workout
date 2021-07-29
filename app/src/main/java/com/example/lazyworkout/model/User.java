@@ -36,17 +36,6 @@ public class User {
     public User(String uid, String name) {
         this.uid = uid;
         this.name = name;
-//        this.goal = Constant.DEFAULT_GOAL;
-//        this.stepSize = Constant.DEFAULT_STEP_SIZE;
-//        this.longestDay = 0;
-//        this.currentStreak = 0;
-//        this.longestStreak = 0;
-//        this.latitude = 0;
-//        this.longitude = 0;
-//        this.geohash = "";
-//        this.lockedApps = new ArrayList<>();
-//        this.lockTimeMinute = Constant.LOCK_TIME;
-//        this.records = new TrackingRecord();
     }
 
     public User() {

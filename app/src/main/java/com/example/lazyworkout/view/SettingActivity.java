@@ -89,6 +89,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(new Intent(this, SettingStepActivity.class));
                 break;
 
+            case (R.id.listAppCardView):
+                startActivity(new Intent(this, SettingInstalledAppsActivity.class));
+                break;
+
+            case (R.id.lockedAppCardView):
+                startActivity(new Intent(this, SettingLockedAppsActivity.class));
+                break;
+
             case (R.id.lockTimeCardView):
                 MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                         .setTimeFormat(TimeFormat.CLOCK_12H)

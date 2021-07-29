@@ -202,7 +202,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 firestore.collection("userLookup").document("findUserByEmail").set(map, SetOptions.merge());
                                 startActivity(new Intent(LoginActivity.this, TutorialActivity.class));
                             } else {
-                                // TODO: just setting locksetting first
                                 startActivity(new Intent(LoginActivity.this, OverviewActivity.class));
                             }
 
