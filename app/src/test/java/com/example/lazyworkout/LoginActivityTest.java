@@ -16,7 +16,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Answers;
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -34,10 +36,11 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @PowerMockRunnerDelegate(JUnit4.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Patterns.class})
+@PrepareForTest({AuthenticationHelper.class})
 public class LoginActivityTest {
 
     private DatabaseReference mockedDatabaseReference;
@@ -46,21 +49,15 @@ public class LoginActivityTest {
     @Before
     public void before() {
         mockedDatabaseReference = Mockito.mock(DatabaseReference.class);
-        PowerMockito.mockStatic(Patterns.class);
+        mockStatic(AuthenticationHelper.class);
 
         FirebaseDatabase mockedFirebaseDatabase = Mockito.mock(FirebaseDatabase.class);
         when(mockedFirebaseDatabase.getReference()).thenReturn(mockedDatabaseReference);
 
-
     }
 
     @Test
-    public void validateEmail() {
-        Pattern pattern = Mockito.mock(Pattern.class);
-        Matcher matcher = Mockito.mock(Matcher.class);
-        PowerMockito.when(Patterns.EMAIL_ADDRESS).thenReturn(pattern);
-        when(pattern.matcher("zys=,q&")).thenReturn(matcher);
-        when(matcher.matches()).thenReturn(false);
+    public void validateEmail() throws Exception {
         assertEquals("Email is empty!","Email is required", AuthenticationHelper.validateEmail(""));
     }
 
