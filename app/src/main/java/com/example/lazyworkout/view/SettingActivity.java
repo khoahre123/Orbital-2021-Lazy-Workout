@@ -26,9 +26,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserInfo;
 import com.google.gson.internal.bind.DateTypeAdapter;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -45,6 +48,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private String goalSelected;
     private Integer footSelected;
     private String uid = FirebaseAuth.getInstance().getUid();
+    private String userType;
 
     Database db = new Database();
 
@@ -55,7 +59,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         initView();
+        for (UserInfo user: Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getProviderData()) {
 
+            if (user.getProviderId().equals("google.com")) {
+                userType = "google";
+            }
+        }
     }
 
     public void initView() {
@@ -134,11 +143,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
                             .putFloat("today_distance", StepCountingService.todayDistances).commit();
                 }
-
-                boolean doneSignout = db.signout();
-                stopService(new Intent(this, StepCountingService.class));
-                startActivity(new Intent(this, LoginActivity.class));
+                Log.d(TAG, userType);
+                if (userType.equals("google")) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(this, LoginActivity.class));
+                } else {
+                    boolean doneSignout = db.signout();
+                    stopService(new Intent(this, StepCountingService.class));
+                    startActivity(new Intent(this, LoginActivity.class));
+                }
                 break;
+
 
             default:
                 break;
