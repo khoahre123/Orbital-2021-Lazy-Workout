@@ -56,8 +56,8 @@ public class StepCountingService extends Service implements SensorEventListener,
     private static final int MICROSECONDS_IN_ONE_MINUTE = 60000000;
 
     //JUST FOR EMULATOR: fake sensor for emulator
-    public static int DEFAULT_SENSOR = Sensor.TYPE_STEP_COUNTER;
-    public static boolean IS_STEP_COUNTER = true;
+    public static int DEFAULT_SENSOR = Sensor.TYPE_ACCELEROMETER;
+    public static boolean IS_STEP_COUNTER = false;
 
     SensorManager sensorManager;
     Sensor stepCounterSensor;
@@ -80,6 +80,7 @@ public class StepCountingService extends Service implements SensorEventListener,
 
     private Database db = new Database();
     private FirebaseAuth fAuth = db.fAuth;
+    private String uid = FirebaseAuth.getInstance().getUid();
 
     NotificationManager notificationManager;
     public static boolean isServiceRunning;
@@ -98,14 +99,14 @@ public class StepCountingService extends Service implements SensorEventListener,
         Log.d(TAG, "onCreate");
         super.onCreate();
 
-        todayDistances = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+        todayDistances = getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getFloat("today_distance", 0);
 
         //JUST FOR EMULATOR
-        sinceBoot = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+        sinceBoot = getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getFloat("since_boot", 0);
 
-        stepSize = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+        stepSize = getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
 
         createNotificationChannel();
@@ -145,8 +146,7 @@ public class StepCountingService extends Service implements SensorEventListener,
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Getting data from sensor")
-                .setContentText("Keep up the good work!")
+                .setContentTitle("Counting steps")
                 .setSmallIcon(R.drawable.logo)
                 .setContentIntent(pendingIntent)
                 .setColor(getResources().getColor(R.color.pink))
@@ -178,10 +178,10 @@ public class StepCountingService extends Service implements SensorEventListener,
 
         if (fAuth.getCurrentUser() != null) {
             //JUST FOR EMULATOR
-            getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+            getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                     .putFloat("since_boot", sinceBoot).commit();
 
-            getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+            getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                     .putFloat("today_distance", todayDistances).commit();
 
             isServiceRunning = false;
@@ -239,14 +239,14 @@ public class StepCountingService extends Service implements SensorEventListener,
         super.onTaskRemoved(rootIntent);
 
         Log.d(TAG, "onTaskRemoved " + String.valueOf(todayDistances));
-        Log.d(TAG, "onTaskRemoved saved " + String.valueOf(getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+        Log.d(TAG, "onTaskRemoved saved " + String.valueOf(getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getFloat("today_distance", 0)));
 
         if (fAuth.getCurrentUser() != null) {
-            getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+            getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                     .putFloat("since_boot", sinceBoot).commit();
 
-            getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+            getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                     .putFloat("today_distance", todayDistances).commit();
             Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
             sendBroadcast(broadcastIntent);
@@ -270,15 +270,15 @@ public class StepCountingService extends Service implements SensorEventListener,
         } else {
             steps = computeSteps(event);
             sinceBoot = (float) (steps * stepSize);
-            float prevPause = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+            float prevPause = getSharedPreferences(uid, Context.MODE_PRIVATE)
                     .getFloat("pauseCount", -1);
             Log.d(TAG, "prev pause = " + prevPause);
             if (prevPause == -1) {
-                getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                         .putFloat("pauseCount", sinceBoot).commit();
             }
 
-            todayDistances = sinceBoot - getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+            todayDistances = sinceBoot - getSharedPreferences(uid, Context.MODE_PRIVATE)
                     .getFloat("pauseCount", 0);
 
             Log.d(TAG, "since boot " + sinceBoot);
@@ -292,11 +292,11 @@ public class StepCountingService extends Service implements SensorEventListener,
         if (sinceBoot > lastSaveDistances + Constant.SAVE_OFFSET_DISTANCES ||
                     (sinceBoot > 0 && System.currentTimeMillis() > lastSaveTime + Constant.SAVE_OFFSET_TIME)) {
 
-            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(uid);
             Map<String, Object> update = new HashMap<>();
-            update.put("longestDay", getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestDay", 0));
-            update.put("currentStreak", getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("currentStreak", 0));
-            update.put("longestStreak", getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestStreak", 0));
+            update.put("longestDay", getSharedPreferences(uid, MODE_PRIVATE).getFloat("longestDay", 0));
+            update.put("currentStreak", getSharedPreferences(uid, MODE_PRIVATE).getFloat("currentStreak", 0));
+            update.put("longestStreak", getSharedPreferences(uid, MODE_PRIVATE).getFloat("longestStreak", 0));
             userRef.update(update);
             Intent otherIntent = new Intent(BROADCAST_ACTION);
             otherIntent.putExtra("command", "update");
@@ -346,7 +346,7 @@ public class StepCountingService extends Service implements SensorEventListener,
 
                 // update pauseCount for the new day
                 if (todayDistances > 0) {
-                    getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                    getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                             .putFloat("pauseCount", sinceBoot).commit();
                 }
             }
@@ -374,7 +374,7 @@ public class StepCountingService extends Service implements SensorEventListener,
             float X = event.values[0];
             float Y = event.values[1];
             float Z = event.values[2];
-            float fakeSteps = (float) (steps + Math.sqrt(X*X + Y*Y + Z*Z));
+            float fakeSteps = (float) (0.01 * steps + 0.1 * Math.sqrt(X*X + Y*Y + Z*Z));
 //            Log.d("fakeSteps", String.valueOf(fakeSteps));
             return fakeSteps;
         }

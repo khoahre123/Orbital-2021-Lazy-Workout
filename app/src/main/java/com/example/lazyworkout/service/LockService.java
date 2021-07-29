@@ -51,6 +51,7 @@ public class LockService extends Service {
 
     UsageStatsManager usageStatsManager;
     ActivityManager activityManager;
+    private String uid = FirebaseAuth.getInstance().getUid();
 
     String prevTasks;
     String recentTasks = "";
@@ -102,8 +103,7 @@ public class LockService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Service is Running")
-                .setContentText("Listening for Screen Off/On events")
+                .setContentTitle("We are running..")
                 .setSmallIcon(R.drawable.logo)
                 .setContentIntent(pendingIntent)
                 .setColor(getResources().getColor(R.color.pink))
@@ -229,7 +229,7 @@ public class LockService extends Service {
     public void checkLockedApps(String recentTasks) {
 
         Log.d(TAG, "is running");
-        DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+        DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(uid);
         userRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();

@@ -117,9 +117,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         distanceGoal = getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getFloat("goal", Constant.DEFAULT_GOAL);
 
-        stepSize = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+        stepSize = getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getFloat("step_size", Constant.DEFAULT_STEP_SIZE);
-        lockMinute = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+        lockMinute = getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getInt("lock_minute", Constant.LOCK_TIME);
 
 
@@ -336,7 +336,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
         progressBar.setProgressWithAnimation(currentDistances);
         progressBar.setProgressMax(distanceGoal);
 
-        String currStreakTxt = getSharedPreferences(db.getID(), Context.MODE_PRIVATE)
+        String currStreakTxt = getSharedPreferences(uid, Context.MODE_PRIVATE)
                 .getString("current_streak", "calculating...");
         currStreak.setText("current streak: " + currStreakTxt);
         distancesTaken.setText(String.valueOf((int) currentDistances));
@@ -550,16 +550,16 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onSensorChanged(SensorEvent event) {
         float currentSteps = event.values[0];
-        Float todayDistance = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("todayDistance", 0);
-        Float totalDistances = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("totalDistances", 0);
-        Float longestDay = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestDay", 0);
+        Float todayDistance = getSharedPreferences(uid, MODE_PRIVATE).getFloat("todayDistance", 0);
+        Float totalDistances = getSharedPreferences(uid, MODE_PRIVATE).getFloat("totalDistances", 0);
+        Float longestDay = getSharedPreferences(uid, MODE_PRIVATE).getFloat("longestDay", 0);
         currentDistances = (float) (currentSteps * stepSize);
         todayDistance += currentDistances;
         totalDistances += currentDistances;
-        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("totalDistances", totalDistances).apply();
-        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
+        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("totalDistances", totalDistances).apply();
+        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
         if (todayDistance > longestDay) {
-            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
+            getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
         }
         Log.d(TAG, formatter.format(currentDistances));
         if (showSteps) {
@@ -578,7 +578,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
     public void getCurrentStreak() {
         if (uid != null) {
             Log.d(TAG, "get current streak start");
-            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+            DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(uid);
             userRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "get current streak ongoing");
@@ -588,20 +588,20 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                         Map<String, Object> map = document.getData();
                         int streak = 0;
                         float todayDistance = user.getDistances(Time.getToday());
-                        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
+                        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
                         // Check if the field has been created on firebase or not, if not then created. Also update value in local database
                         if (document.getLong("longestDay") == null) {
                             Map<String, Object> longestDay = new HashMap<>();
                             longestDay.put("longestDay", todayDistance);
-                            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
-                            FirebaseFirestore.getInstance().collection("users").document(db.getID()).set(longestDay, SetOptions.merge());
+                            getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
+                            FirebaseFirestore.getInstance().collection("users").document(uid).set(longestDay, SetOptions.merge());
                         } else { // Compare value of current distance vs longest distance and update if needed
-                            Integer longestDay = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestDay", 0));
+                            Integer longestDay = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("longestDay", 0));
                             if (todayDistance > longestDay) {
-                                getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
+                                getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("longestDay", todayDistance).apply();
                             }
                         }
-                        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
+                        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("todayDistance", todayDistance).apply();
                         Log.d(TAG, "goal = " + distanceGoal);
                         if (todayDistance >= distanceGoal) {
                             streak++;
@@ -616,25 +616,25 @@ public class OverviewActivity extends AppCompatActivity implements View.OnClickL
                             distance = user.getDistances(time);
                         }
                         Log.d(TAG, "current streak = " + streak);
-                        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("currentStreak", streak).apply();
+                        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("currentStreak", streak).apply();
                         // Check if the field has been created on firebase or not, if not then created. Also update value in local database
                         if (document.getLong("longestStreak") == null) {
                             Map<String, Object> longestStreak = new HashMap<>();
                             longestStreak.put("longestStreak", streak);
                             longestStreak.put("currentStreak", streak);
-                            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestStreak", streak).apply();
-                            FirebaseFirestore.getInstance().collection("users").document(db.getID()).set(longestStreak, SetOptions.merge());
+                            getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("longestStreak", streak).apply();
+                            FirebaseFirestore.getInstance().collection("users").document(uid).set(longestStreak, SetOptions.merge());
                         } else { // Compare value of current distance vs longest distance and update if needed
-                            Integer longestStreak = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestStreak", 0));
+                            Integer longestStreak = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("longestStreak", 0));
                             if (streak > longestStreak) {
-                                getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("longestStreak", streak).apply();
+                                getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("longestStreak", streak).apply();
                             }
                         }
                         currStreak.setText(" current streak: " + streak + " days");
-                        getSharedPreferences(db.getID(), Context.MODE_PRIVATE).edit()
+                        getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                                 .putString("current_streak", streak + " days").commit();
                         Integer totalDistances = Math.round(user.getTotalDistances());
-                        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("totalDistances", totalDistances).apply();
+                        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("totalDistances", totalDistances).apply();
                     } else {
                         Log.d(TAG, "no such document");
                     }

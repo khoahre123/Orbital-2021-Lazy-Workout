@@ -50,6 +50,7 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
     private Database db =  new Database();
     private float longestDistance;
     private Intent intent;
+    private String uid = FirebaseAuth.getInstance().getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +105,9 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
         bottomNav.setSelectedItemId(R.id.navAchievement);
 
         bottomNav.setOnNavigationItemSelectedListener(this);
-        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("dailyWalkingMission", 4).apply();
-        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("totalWalkingMission", 7).apply();
-        getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("streakMission", 2).apply();
+        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("dailyWalkingMission", 4).apply();
+        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("totalWalkingMission", 7).apply();
+        getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("streakMission", 2).apply();
     }
 
     @Override
@@ -134,33 +135,33 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
     }
 
     public void getDataFromLocal() {
-        Integer longestDistance = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("todayDistance", 0));
-        Integer totalDistances = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("totalDistances", 0));
-        Integer longestStreak = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("longestStreak", 0));
+        Integer longestDistance = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("todayDistance", 0));
+        Integer totalDistances = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("totalDistances", 0));
+        Integer longestStreak = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("longestStreak", 0));
         longestDayDistance.setText(String.format("%d km", longestDistance));
         currentDistance.setText(String.format("%d km", totalDistances));
         dayStreak.setText(String.format("%d days", longestStreak));
     }
 
     public void setMission() {
-        Integer dailyWalking = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("dailyWalkingMission", 4));
+        Integer dailyWalking = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("dailyWalkingMission", 4));
         dailyWalkingProgress.setMax(dailyWalking);
         dailyWalkingMission.setText(String.format(" / %d km", dailyWalking));
-        Integer totalWalking = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("totalWalkingMission", 7));
+        Integer totalWalking = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("totalWalkingMission", 7));
         totalWalkingProgress.setMax(totalWalking);
         totalWalkingMission.setText(String.format(" / %d km", totalWalking));
-        Integer streak = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("streakMission", 2));
+        Integer streak = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("streakMission", 2));
         streakProgress.setMax(streak);
         streakMission.setText(String.format(" / %d days", streak));
     }
 
     public void updateMission() {
-        Float todayDistance = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("todayDistance", 0);
-        Float totalDistances = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("totalDistances", 0);
-        Integer currentStreak = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("currentStreak", 0));
-        Float dailyWalking = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("dailyWalkingMission", 4);
-        Float totalWalking = getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("totalWalkingMission", 7);
-        Integer streak = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("streakMission", 2));
+        Float todayDistance = getSharedPreferences(uid, MODE_PRIVATE).getFloat("todayDistance", 0);
+        Float totalDistances = getSharedPreferences(uid, MODE_PRIVATE).getFloat("totalDistances", 0);
+        Integer currentStreak = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("currentStreak", 0));
+        Float dailyWalking = getSharedPreferences(uid, MODE_PRIVATE).getFloat("dailyWalkingMission", 4);
+        Float totalWalking = getSharedPreferences(uid, MODE_PRIVATE).getFloat("totalWalkingMission", 7);
+        Integer streak = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("streakMission", 2));
         if (todayDistance >= dailyWalking) {
             if (dailyWalking > 10) {
                 dailyWalking += 3;
@@ -171,7 +172,7 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
             dailyWalkingProgress.setProgress(0);
             dailyWalkingProgress.setMax(Math.round(dailyWalking));
             dailyWalkingNow.setText("0");
-            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("dailyWalkingMission", dailyWalking).apply();
+            getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("dailyWalkingMission", dailyWalking).apply();
         } else {
             dailyWalkingNow.setText(String.format("%.2f", todayDistance));
             dailyWalkingProgress.setProgress(Math.round(todayDistance));
@@ -187,7 +188,7 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
             totalWalkingProgress.setProgress(0);
             totalWalkingProgress.setMax(Math.round(totalWalking));
             totalWalkingNow.setText("0");
-            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("totalWalkingMission", totalWalking).apply();
+            getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("totalWalkingMission", totalWalking).apply();
         } else {
             totalWalkingNow.setText(String.format("%.2f", totalDistances));
             totalWalkingProgress.setProgress(Math.round(totalDistances));
@@ -203,7 +204,7 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
             streakProgress.setProgress(0);
             streakProgress.setMax(streak);
             streakNow.setText("0");
-            getSharedPreferences(db.getID(), MODE_PRIVATE).edit().putFloat("streakMission", streak).apply();
+            getSharedPreferences(uid, MODE_PRIVATE).edit().putFloat("streakMission", streak).apply();
         } else {
             streakNow.setText(String.format("%d", currentStreak));
             streakProgress.setProgress(currentStreak);
@@ -211,8 +212,8 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
     }
 
     public void getDataFromFirebase() {
-        Integer todayDistance = Math.round(getSharedPreferences(db.getID(), MODE_PRIVATE).getFloat("todayDistance", 0));
-        DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(db.getID());
+        Integer todayDistance = Math.round(getSharedPreferences(uid, MODE_PRIVATE).getFloat("todayDistance", 0));
+        DocumentReference userRef = db.fStore.collection(db.DB_NAME).document(uid);
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
@@ -225,20 +226,20 @@ public class AchievementActivity extends AppCompatActivity implements BottomNavi
                             longestDayDistance.setText(String.format("%d km", todayDistance));
                             Map<String, Object> update = new HashMap<>();
                             update.put("longestDay", todayDistance);
-                            FirebaseFirestore.getInstance().collection("users").document(db.getID()).update(update);
+                            FirebaseFirestore.getInstance().collection("users").document(uid).update(update);
                         } else {
                             longestDayDistance.setText(String.format("%.2f km", longestDay));
                         }
                         Float totalDistances = user.getTotalDistances();
                         currentDistance.setText(String.format("%.2f km", totalDistances));
                         Float longestStreak = user.getLongestStreak();
-                        String databaseStreak = getSharedPreferences(db.getID(), MODE_PRIVATE).getString("current_streak", "0 days");
+                        String databaseStreak = getSharedPreferences(uid, MODE_PRIVATE).getString("current_streak", "0 days");
                         Float todayStreak = Float.parseFloat(databaseStreak.substring(0, databaseStreak.length() - 4));
                         if (todayStreak > longestStreak) {
                             dayStreak.setText(String.format("%.2f days", todayStreak));
                             Map<String, Object> update = new HashMap<>();
                             update.put("longestStreak", todayStreak);
-                            FirebaseFirestore.getInstance().collection("users").document(db.getID()).update(update);
+                            FirebaseFirestore.getInstance().collection("users").document(uid).update(update);
                         } else {
                             dayStreak.setText(String.format("%.2f days", longestStreak));
                         }
