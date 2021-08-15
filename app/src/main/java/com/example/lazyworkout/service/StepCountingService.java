@@ -56,8 +56,10 @@ public class StepCountingService extends Service implements SensorEventListener,
     private static final int MICROSECONDS_IN_ONE_MINUTE = 60000000;
 
     //JUST FOR EMULATOR: fake sensor for emulator
-    public static int DEFAULT_SENSOR = Sensor.TYPE_ACCELEROMETER;
-    public static boolean IS_STEP_COUNTER = false;
+    public static int DEFAULT_SENSOR = Sensor.TYPE_STEP_COUNTER;
+    public static boolean IS_STEP_COUNTER = true;
+
+    float fakeSteps = 0;
 
     SensorManager sensorManager;
     Sensor stepCounterSensor;
@@ -374,7 +376,7 @@ public class StepCountingService extends Service implements SensorEventListener,
             float X = event.values[0];
             float Y = event.values[1];
             float Z = event.values[2];
-            float fakeSteps = (float) (0.01 * steps + 0.1 * Math.sqrt(X*X + Y*Y + Z*Z));
+            fakeSteps = (float) (fakeSteps + 0.1 * Math.sqrt(X*X + Y*Y + Z*Z));
 //            Log.d("fakeSteps", String.valueOf(fakeSteps));
             return fakeSteps;
         }

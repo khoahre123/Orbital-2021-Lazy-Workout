@@ -48,7 +48,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private String goalSelected;
     private Integer footSelected;
     private String uid = FirebaseAuth.getInstance().getUid();
-    private String userType;
+    private String userType = "firebase";
 
     Database db = new Database();
 
@@ -143,7 +143,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     getSharedPreferences(uid, Context.MODE_PRIVATE).edit()
                             .putFloat("today_distance", StepCountingService.todayDistances).commit();
                 }
-                Log.d(TAG, userType);
                 if (userType.equals("google")) {
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(this, LoginActivity.class));
